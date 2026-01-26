@@ -1,6 +1,90 @@
-import {Suspense} from 'react';
-import {Await, NavLink} from 'react-router';
-import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
+import { Suspense } from "react";
+import { Await } from "react-router";
+import type { FooterQuery, HeaderQuery } from "storefrontapi.generated";
+
+
+
+/**
+ * Dummy fallback menu
+ * (replace with Shopify menu later)
+ */
+const FALLBACK_FOOTER_MENU: FooterQuery["menu"] = {
+  id: "gid://shopify/Menu/199655620664",
+  items: [
+    {
+      id: "1",
+      title: "All Products",
+      url: "/products",
+      items: [],
+    },
+    {
+      id: "2",
+      title: "Collections",
+      url: "/collections",
+      items: [],
+    },
+    {
+      id: "3",
+      title: "Bestsellers",
+      url: "/collections/bestsellers",
+      items: [],
+    },
+    {
+      id: "4",
+      title: "New Arrivals",
+      url: "/collections/new",
+      items: [],
+    },
+    {
+      id: "5",
+      title: "About Us",
+      url: "/pages/about",
+      items: [],
+    },
+    {
+      id: "6",
+      title: "Careers",
+      url: "/pages/careers",
+      items: [],
+    },
+    {
+      id: "7",
+      title: "Contact",
+      url: "/pages/contact",
+      items: [],
+    },
+    {
+      id: "8",
+      title: "FAQ",
+      url: "/pages/faq",
+      items: [],
+    },
+    {
+      id: "9",
+      title: "Privacy Policy",
+      url: "/policies/privacy-policy",
+      items: [],
+    },
+    {
+      id: "10",
+      title: "Shipping Policy",
+      url: "/policies/shipping-policy",
+      items: [],
+    },
+    {
+      id: "11",
+      title: "Refund Policy",
+      url: "/policies/refund-policy",
+      items: [],
+    },
+    {
+      id: "12",
+      title: "Terms of Service",
+      url: "/policies/terms-of-service",
+      items: [],
+    },
+  ],
+};
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
@@ -16,114 +100,108 @@ export function Footer({
   return (
     <Suspense>
       <Await resolve={footerPromise}>
-        {(footer) => (
-          <footer className="footer">
-            {footer?.menu && header.shop.primaryDomain?.url && (
-              <FooterMenu
-                menu={footer.menu}
-                primaryDomainUrl={header.shop.primaryDomain.url}
-                publicStoreDomain={publicStoreDomain}
-              />
-            )}
-          </footer>
-        )}
+        {(footer) => {
+          // const menu = footer?.menu ?? FALLBACK_FOOTER_MENU;
+          const menu = FALLBACK_FOOTER_MENU;
+
+          return (
+            <footer className="border-t border-gray-200 bg-gray-50 py-16">
+              <div className="mx-auto max-w-7xl px-6">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-12">
+
+                  {/* Brand */}
+                  <div className="md:col-span-2">
+                    <div className="text-2xl font-light tracking-widest mb-4">
+                      LUXE SKIN
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      Premium science-backed skincare for radiant, healthy skin.
+                    </p>
+                  </div>
+
+                  {/* Dynamic Sections */}
+                  <FooterSection
+                    title="SHOP"
+                    items={menu.items.slice(0, 4)}
+                    publicStoreDomain={publicStoreDomain}
+                    primaryDomainUrl={header.shop.primaryDomain?.url}
+                  />
+                  <FooterSection
+                    title="COMPANY"
+                    items={menu.items.slice(4, 8)}
+                    publicStoreDomain={publicStoreDomain}
+                    primaryDomainUrl={header.shop.primaryDomain?.url}
+                  />
+                  <FooterSection
+                    title="SUPPORT"
+                    items={menu.items.slice(8, 12)}
+                    publicStoreDomain={publicStoreDomain}
+                    primaryDomainUrl={header.shop.primaryDomain?.url}
+                  />
+                </div>
+
+                {/* Bottom Bar */}
+                <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+                  <div>© {new Date().getFullYear()} LUXE SKIN. All rights reserved.</div>
+
+                  <div className="flex gap-6">
+                    <a href="#" className="hover:text-black">IG</a>
+                    <a href="#" className="hover:text-black">TW</a>
+                    <a href="#" className="hover:text-black">FB</a>
+                  </div>
+                </div>
+              </div>
+            </footer>
+          );
+        }}
       </Await>
     </Suspense>
   );
 }
 
-function FooterMenu({
-  menu,
-  primaryDomainUrl,
+function FooterSection({
+  title,
+  items,
   publicStoreDomain,
+  primaryDomainUrl,
 }: {
-  menu: FooterQuery['menu'];
-  primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
+  title: string;
+  items: FooterQuery["menu"]["items"];
   publicStoreDomain: string;
+  primaryDomainUrl?: string;
 }) {
   return (
-    <nav className="footer-menu" role="navigation">
-      {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
-        if (!item.url) return null;
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        const isExternal = !url.startsWith('/');
-        return isExternal ? (
-          <a href={url} key={item.id} rel="noopener noreferrer" target="_blank">
-            {item.title}
-          </a>
-        ) : (
-          <NavLink
-            end
-            key={item.id}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
-          >
-            {item.title}
-          </NavLink>
-        );
-      })}
-    </nav>
+    <div>
+      <h4 className="text-xs tracking-widest font-medium mb-4">
+        {title}
+      </h4>
+
+      <ul className="flex flex-col gap-3 text-sm text-gray-500">
+        {items.map((item) => {
+          if (!item.url) return null;
+
+          const url =
+            item.url.includes("myshopify.com") ||
+            item.url.includes(publicStoreDomain) ||
+            item.url.includes(primaryDomainUrl ?? "")
+              ? new URL(item.url).pathname
+              : item.url;
+
+          const isExternal = !url.startsWith("/");
+
+          return (
+            <li key={item.id}>
+              {isExternal ? (
+                <a href={url} target="_blank" rel="noopener noreferrer">
+                  {item.title}
+                </a>
+              ) : (
+                <a href={url}>{item.title}</a>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
-}
-
-const FALLBACK_FOOTER_MENU = {
-  id: 'gid://shopify/Menu/199655620664',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461633060920',
-      resourceId: 'gid://shopify/ShopPolicy/23358046264',
-      tags: [],
-      title: 'Privacy Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/privacy-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633093688',
-      resourceId: 'gid://shopify/ShopPolicy/23358013496',
-      tags: [],
-      title: 'Refund Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/refund-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633126456',
-      resourceId: 'gid://shopify/ShopPolicy/23358111800',
-      tags: [],
-      title: 'Shipping Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/shipping-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633159224',
-      resourceId: 'gid://shopify/ShopPolicy/23358079032',
-      tags: [],
-      title: 'Terms of Service',
-      type: 'SHOP_POLICY',
-      url: '/policies/terms-of-service',
-      items: [],
-    },
-  ],
-};
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'white',
-  };
 }
