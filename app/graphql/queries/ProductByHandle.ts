@@ -3,6 +3,7 @@ import { ProductBaseFieldsFragment } from '~/graphql/fragments/ProductBaseFields
 import { ImageFieldsFragment } from '~/graphql/fragments/ImageFieldsFragment';
 import { VariantFieldsFragment } from '~/graphql/fragments/VariantFieldsFragment';
 import { MoneyFieldsFragment } from '~/graphql/fragments/MoneyFieldsFragment';
+import { SkincareProductFragment } from '~/graphql/fragments/SkincareProductFragment';
 
 export const ProductByHandleQuery = `#graphql
     query ProductByHandle($handle: String!) {
@@ -24,10 +25,13 @@ export const ProductByHandleQuery = `#graphql
                     }
                 }
             }
+
+            ...SkincareProduct
         }
     }
     ${ProductBaseFieldsFragment}
     ${ImageFieldsFragment}
     ${VariantFieldsFragment}
     ${MoneyFieldsFragment}
+    ${SkincareProductFragment}
 `;
