@@ -1,8 +1,6 @@
 import { Suspense } from "react";
-import { Await } from "react-router";
+import { NavLink, Await } from "react-router";
 import type { FooterQuery, HeaderQuery } from "storefrontapi.generated";
-
-
 
 /**
  * Dummy fallback menu
@@ -14,7 +12,7 @@ const FALLBACK_FOOTER_MENU: FooterQuery["menu"] = {
     {
       id: "1",
       title: "All Products",
-      url: "/products",
+      url: "/products/all",
       items: [],
     },
     {
@@ -196,9 +194,10 @@ function FooterSection({
                   {item.title}
                 </a>
               ) : (
-                <a href={url}>{item.title}</a>
+                <NavLink to={url}>{item.title}</NavLink>
               )}
             </li>
+
           );
         })}
       </ul>

@@ -73,12 +73,28 @@ export function Header({
           </button>
 
           {/* Cart */}
-          <button className="icon-btn relative" onClick={() => open("cart")}>
+          {/* <button className="icon-btn relative" onClick={() => open("cart")}>
             🛒
             <span className="cart-count absolute -top-2 -right-2 bg-black text-white text-xs rounded-full px-2">
               <CartCount cart={cart} />
             </span>
-          </button>
+          </button> */}
+          <NavLink
+            to="/cart"
+            prefetch="intent"
+            aria-label="Open shopping cart"
+            className="icon-btn relative inline-flex items-center"
+          >
+            🛒
+            <span
+              className="cart-count absolute -top-2 -right-2 bg-black text-white text-xs rounded-full px-2"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <CartCount cart={cart} />
+            </span>
+          </NavLink>
+
 
           {/* Mobile menu */}
           <button

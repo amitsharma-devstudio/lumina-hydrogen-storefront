@@ -41,5 +41,18 @@ export const SkincareProductFragment = `#graphql
         }
       }
     }
+
+    ingredients: metafield(namespace: "custom", key: "lumina_hero_ingredients") {
+      references(first: 10) {
+        nodes {
+          ... on Metaobject {
+            id
+            field: field(key: "label") {
+              value
+            }
+          }
+        }
+      }
+    }
   }
 `;

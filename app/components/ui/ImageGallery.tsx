@@ -22,7 +22,7 @@ export const ImageGallery = ({ images, selectedImage, onImageSelect }) => {
           <button
             key={image.url || index}
             onClick={() => onImageSelect(image)}
-            className={`h-40 w-40 flex-shrink-0 overflow-hidden rounded-lg border-2 ${
+            className={`h-40 w-40 aspect-[4/5] bg-gray-50 mb-6 overflow-hidden flex-shrink-0 overflow-hidden rounded-lg border-2 ${
               selectedImage?.url === image.url ? 'border-black' : 'border-transparent hover:border-black'
             }`}
           >

@@ -12,6 +12,10 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import { ProductDetailPage } from '~/components/product/ProductDetailPage';
+
+
+import { ProductByHandleQuery } from '~/graphql/queries/ProductByHandle';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
@@ -46,7 +50,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   }
 
   const [{product}] = await Promise.all([
-    storefront.query(PRODUCT_QUERY, {
+    storefront.query(ProductByHandleQuery, {
       variables: {handle, selectedOptions: getSelectedProductOptions(request)},
     }),
     // Add other queries here, so that they are loaded in parallel
@@ -95,7 +99,13 @@ export default function Product() {
     selectedOrFirstAvailableVariant: selectedVariant,
   });
 
+  const props = {
+    ...product,
+    productOptions
+  };
+console.log("product", props)
   const {title, descriptionHtml} = product;
+  return <ProductDetailPage product= { props } />;
 
   return (
     <div className="product">
@@ -230,3 +240,37 @@ const PRODUCT_QUERY = `#graphql
   }
   ${PRODUCT_FRAGMENT}
 ` as const;
+
+//import { type LoaderFunctionArgs, useLoaderData } from 'react-router'; 
+// import { ProductByHandleQuery } from '~/graphql/queries/ProductByHandle';
+// import { ProductDetailPage } from '~/components/product/ProductDetailPage';
+
+// export async function loader({ context, params }: LoaderFunctionArgs) {
+//   const { storefront } = context;
+//   const { handle } = params;
+
+//   if (!handle) {
+//     throw new Response('No handle provided', { status: 400 });
+//   }
+
+//   // 1. Fetch data
+//   const data = await storefront.query(ProductByHandleQuery, {
+//     variables: { handle },
+//   });
+
+//   // 2. Safely check if the product exists
+//   if (!data?.product) {
+//     throw new Response('Product Not Found', { status: 404 });
+//   }
+
+//   // 3. Just return the object (No json() wrapper needed in RR7!)
+//   return { product: data.product };
+// }
+
+// export default function ProductRoute() {
+//   console.log("******** Inside ProductRoute");
+//   // Use the hook normally
+//   const { product } = useLoaderData<typeof loader>();
+//   console.log("Product Data:", product);
+//   return <ProductDetailPage product= { product } />;
+// }

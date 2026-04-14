@@ -6,12 +6,14 @@ export function AddToCartButton({
   children,
   disabled,
   lines,
+  className,
   onClick,
 }: {
   analytics?: unknown;
   children: React.ReactNode;
   disabled?: boolean;
   lines: Array<OptimisticCartLineInput>;
+  className?: string;
   onClick?: () => void;
 }) {
   return (
@@ -26,6 +28,7 @@ export function AddToCartButton({
           <button
             type="submit"
             onClick={onClick}
+            className={className}
             disabled={disabled ?? fetcher.state !== 'idle'}
           >
             {children}
