@@ -1,6 +1,5 @@
 import {Link} from 'react-router';
 import {Money} from '@shopify/hydrogen';
-import type {VariantOptionValue} from '@shopify/hydrogen';
 
 export function VariantPicker({options}: {options: any[]}) {
   return (
@@ -15,7 +14,7 @@ export function VariantPicker({options}: {options: any[]}) {
             </span>
 
             <div className="flex flex-wrap gap-3">
-              {option.optionValues.map((value: VariantOptionValue) => {
+              {option.optionValues.map((value: any) => {
                 const {name, isActive, to, isAvailable, firstSelectableVariant} = value;
 
                 return (

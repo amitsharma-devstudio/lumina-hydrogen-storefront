@@ -49,7 +49,15 @@ const PageHeader = () => (
 );
 
 // Filter Button Component
-const FilterButton = ({ category, isActive, onClick }) => (
+const FilterButton = ({
+  category,
+  isActive,
+  onClick,
+}: {
+  category: {id: string; label: string};
+  isActive: boolean;
+  onClick: () => void;
+}) => (
   <button
     onClick={onClick}
     className={`rounded-full border px-6 py-3 text-sm font-normal transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 ${
@@ -65,7 +73,13 @@ const FilterButton = ({ category, isActive, onClick }) => (
 );
 
 // Sort Select Component
-const SortSelect = ({ value, onChange }) => (
+const SortSelect = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+}) => (
   <div className="relative">
     <label htmlFor="sort-select" className="sr-only">
       Sort products
@@ -98,19 +112,25 @@ const SortSelect = ({ value, onChange }) => (
 );
 
 // Results Count Component
-const ResultsCount = ({ count }) => (
+const ResultsCount = ({ count }: {count: number}) => (
   <span className="ml-auto text-sm text-gray-500" aria-live="polite" aria-atomic="true">
     {count} {count === 1 ? 'product' : 'products'}
   </span>
 );
 
 // Filters Bar Component
-const FiltersBar = ({ 
-  activeCategory, 
-  onCategoryChange, 
-  sortValue, 
-  onSortChange, 
-  resultsCount 
+const FiltersBar = ({
+  activeCategory,
+  onCategoryChange,
+  sortValue,
+  onSortChange,
+  resultsCount,
+}: {
+  activeCategory: string;
+  onCategoryChange: (next: string) => void;
+  sortValue: string;
+  onSortChange: (next: string) => void;
+  resultsCount: number;
 }) => (
   <div 
     className="mb-8 flex flex-wrap items-center gap-4"
@@ -138,13 +158,19 @@ const FiltersBar = ({
 );
 
 // Product Grid Component
-const ProductGrid = ({ products, onQuickAdd }) => (
+const ProductGrid = ({
+  products,
+  onQuickAdd,
+}: {
+  products: Array<(typeof ALL_PRODUCTS)[number]>;
+  onQuickAdd: (product: (typeof ALL_PRODUCTS)[number]) => void;
+}) => (
   <div 
     className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
     role="list"
     aria-label="Product list"
   >
-    {products.map((product) => (
+    {products.map((product: (typeof ALL_PRODUCTS)[number]) => (
       <div key={product.id} role="listitem">
         <ProductCard product={product} onQuickAdd={onQuickAdd} />
       </div>
@@ -153,7 +179,7 @@ const ProductGrid = ({ products, onQuickAdd }) => (
 );
 
 // Empty State Component
-const EmptyState = ({ onReset }) => (
+const EmptyState = ({ onReset }: {onReset: () => void}) => (
   <div className="flex flex-col items-center justify-center py-20 text-center">
     <div className="mb-6 text-6xl opacity-30" aria-hidden="true">
       🛍️
@@ -206,7 +232,7 @@ export const ShopPage = () => {
 
   const displayedProducts = getSortedProducts();
 
-  const handleQuickAdd = (product) => {
+  const handleQuickAdd = (product: (typeof ALL_PRODUCTS)[number]) => {
     alert(`Added ${product.name} to cart!`);
     console.log('Quick add:', product);
   };

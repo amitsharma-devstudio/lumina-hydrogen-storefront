@@ -1,6 +1,23 @@
 import { useState } from 'react';
 
-export function ProductCard ({ product, onQuickAdd }) {
+type ProductCardProduct = {
+  id: number;
+  name: string;
+  category: string;
+  price: number | string;
+  image: string;
+  badge?: string;
+  rating?: number;
+  reviews?: number;
+};
+
+export function ProductCard({
+  product,
+  onQuickAdd,
+}: {
+  product: ProductCardProduct;
+  onQuickAdd: (product: ProductCardProduct) => void;
+}) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -89,13 +106,14 @@ export function ProductCard ({ product, onQuickAdd }) {
             ★★★★★
           </span>
           <span>
-            {product.rating} ({product.reviews})
+            {product.rating ?? 0} ({product.reviews ?? 0})
           </span>
           <span className="sr-only">
-            Rated {product.rating} out of 5 stars based on {product.reviews} reviews
+            Rated {product.rating ?? 0} out of 5 stars based on{' '}
+            {product.reviews ?? 0} reviews
           </span>
         </div>
       </div>
     </article>
   );
-};
+}

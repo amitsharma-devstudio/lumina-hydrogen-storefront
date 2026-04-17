@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import type { Product } from '@shopify/hydrogen/storefront-api-types';
 import { Money } from '@shopify/hydrogen';
 
 
@@ -106,7 +105,13 @@ const CheckIcon = () => (
 
 
 // Product Rating Component
-const ProductRating = ({ rating, reviewCount }) => (
+const ProductRating = ({
+  rating,
+  reviewCount,
+}: {
+  rating: number;
+  reviewCount: number;
+}) => (
   <div className="flex items-center gap-2 text-sm">
     <div className="flex items-center gap-1">
       <span className="text-black" aria-hidden="true">★★★★★</span>
@@ -119,11 +124,19 @@ const ProductRating = ({ rating, reviewCount }) => (
 );
 
 // Size Selector Component
-const SizeSelector = ({ options, selectedSize, onSizeChange }) => (
+const SizeSelector = ({
+  options,
+  selectedSize,
+  onSizeChange,
+}: {
+  options: Array<{id: string; label: string; price: number}>;
+  selectedSize: {id: string; label: string; price: number};
+  onSizeChange: (option: {id: string; label: string; price: number}) => void;
+}) => (
   <div>
     <label className="mb-2 block text-sm font-medium text-black">Size</label>
     <div className="flex flex-wrap gap-3" role="radiogroup" aria-label="Select product size">
-      {options.map((option) => (
+      {options.map((option: {id: string; label: string; price: number}) => (
         <button
           key={option.id}
           onClick={() => onSizeChange(option)}
@@ -143,7 +156,13 @@ const SizeSelector = ({ options, selectedSize, onSizeChange }) => (
 );
 
 // Quantity Selector Component
-const QuantitySelector = ({ quantity, onQuantityChange }) => (
+const QuantitySelector = ({
+  quantity,
+  onQuantityChange,
+}: {
+  quantity: number;
+  onQuantityChange: (next: number) => void;
+}) => (
   <div>
     <label htmlFor="quantity" className="mb-2 block text-sm font-medium text-black">
       Quantity
@@ -175,9 +194,13 @@ const QuantitySelector = ({ quantity, onQuantityChange }) => (
 );
 
 // Benefits List Component
-const BenefitsList = ({ benefits }) => (
+const BenefitsList = ({
+  benefits,
+}: {
+  benefits: Array<{id: number; text: string}>;
+}) => (
   <ul className="flex flex-col gap-3" role="list">
-    {benefits.map((benefit) => (
+    {benefits.map((benefit: {id: number; text: string}) => (
       <li key={benefit.id} className="flex items-center gap-3 text-sm text-gray-600">
         <CheckIcon />
         <span>{benefit.text}</span>
@@ -187,7 +210,15 @@ const BenefitsList = ({ benefits }) => (
 );
 
 // Accordion Item Component
-const AccordionItem = ({ item, isOpen, onToggle }) => (
+const AccordionItem = ({
+  item,
+  isOpen,
+  onToggle,
+}: {
+  item: {id: string; title: string; content: string};
+  isOpen: boolean;
+  onToggle: () => void;
+}) => (
   <div className="border-b border-gray-200">
     <button
       onClick={onToggle}
@@ -236,13 +267,19 @@ const AccordionItem = ({ item, isOpen, onToggle }) => (
 // };
 
 // Related Products Section Component
-const RelatedProducts = ({ products, onQuickAdd }) => (
+const RelatedProducts = ({
+  products,
+  onQuickAdd,
+}: {
+  products: any[];
+  onQuickAdd: (product: any) => void;
+}) => (
   <div className="mt-20">
     <h2 className="mb-8 text-5xl font-light tracking-tight text-black">
       You May Also Like
     </h2>
     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {products.map((product) => (
+      {products.map((product: any) => (
         <ProductCard key={product.id} product={product} onQuickAdd={onQuickAdd} />
       ))}
     </div>
@@ -250,12 +287,12 @@ const RelatedProducts = ({ products, onQuickAdd }) => (
 );
 
 // Ingredient Compatibility Engine
-function checkConflicts(currentProduct, routineProducts) {
-  const conflicts = [];
+function checkConflicts(currentProduct: any, routineProducts: any[]) {
+  const conflicts: any[] = [];
 
-  currentProduct.ingredients.forEach(ingredient => {
-    routineProducts.forEach(product => {
-      product.ingredients.forEach(otherIngredient => {
+  currentProduct.ingredients.forEach((ingredient: any) => {
+    routineProducts.forEach((product: any) => {
+      product.ingredients.forEach((otherIngredient: any) => {
         if (
           ingredient.conflicts_with.includes(otherIngredient.id)
         ) {
@@ -272,7 +309,7 @@ function checkConflicts(currentProduct, routineProducts) {
   return conflicts;
 }
 
-const CompatibilityWarning = ({ conflicts }) => {
+const CompatibilityWarning = ({ conflicts }: {conflicts: any[]}) => {
   if (!conflicts.length) return null;
 
   return (
@@ -285,7 +322,7 @@ const CompatibilityWarning = ({ conflicts }) => {
       </h3>
 
       <ul className="mt-4 space-y-2 text-sm text-red-700">
-        {conflicts.map((conflict, index) => (
+        {conflicts.map((conflict: any, index: number) => (
           <li key={index}>
             {conflict.ingredient} may react with {conflict.conflictsWith} in{" "}
             {conflict.product}
@@ -296,7 +333,7 @@ const CompatibilityWarning = ({ conflicts }) => {
   );
 };
 
-const IngredientBlend = ({ ingredients }) => (
+const IngredientBlend = ({ ingredients }: {ingredients: any[]}) => (
   <section aria-labelledby="ingredient-blend" className="mt-6">
     <h3 id="ingredient-blend" className="text-sm font-medium text-black">
       Key Active Ingredients
@@ -315,7 +352,7 @@ const IngredientBlend = ({ ingredients }) => (
   </section>
 );
 
-const RoutinePlacement = ({ routine }) => (
+const RoutinePlacement = ({ routine }: {routine: any}) => (
   <section className="mt-6 rounded-xl border border-gray-200 p-4">
     <p className="text-sm text-gray-600">
       <strong className="text-black">
@@ -328,7 +365,7 @@ const RoutinePlacement = ({ routine }) => (
   </section>
 );
 
-const CompatibilityInfo = ({ data }) => (
+const CompatibilityInfo = ({ data }: {data: any}) => (
   <section
     className="mt-6 rounded-xl bg-gray-50 p-4 text-sm"
     aria-label="Ingredient compatibility"
@@ -349,7 +386,7 @@ const CompatibilityInfo = ({ data }) => (
 
 // ==================== MAIN PDP COMPONENT ====================
 interface ProductDetailPageProps {
-  product: Product;
+  product: any;
 }
 
 
@@ -358,9 +395,13 @@ export const ProductDetailPage = ({ product }: ProductDetailPageProps) => {
   const [selectedSize, setSelectedSize] = useState(SIZE_OPTIONS[0]);
   const [quantity, setQuantity] = useState(1);
 
-  const images = product.images?.nodes.map((node) => ({ ...node }));
-  const rating = product.rating ? parseFloat(JSON.parse(product.rating.value)) : 0;
-  const reviewCount = product.reviewCount ? parseInt(product.reviewCount.value, 10) : 0;
+  const images = (product.images?.nodes ?? []).map((node: any) => ({...node}));
+  const rating = product?.rating?.value
+    ? parseFloat(String(product.rating.value))
+    : 0;
+  const reviewCount = product?.reviewCount?.value
+    ? parseInt(String(product.reviewCount.value), 10)
+    : 0;
   const description = product.descriptionHtml || product.description || '';
   const selectedVariant= product.selectedOrFirstAvailableVariant
 
@@ -378,7 +419,7 @@ export const ProductDetailPage = ({ product }: ProductDetailPageProps) => {
     alert(`Added ${quantity} × ${selectedSize.label} to cart!`);
   };
 
-  const handleQuickAdd = (product) => {
+  const handleQuickAdd = (product: any) => {
     console.log('Quick add:', product);
     alert(`Added ${product.name} to cart!`);
   };
@@ -408,7 +449,7 @@ export const ProductDetailPage = ({ product }: ProductDetailPageProps) => {
 
             {/* Price */}
             <div className="text-3xl font-light text-black">
-              <Money data={selectedVariant?.price} />
+              {selectedVariant?.price ? <Money data={selectedVariant.price} /> : null}
             </div>
 
             {/* Hero Claim (Metafield) */}
@@ -443,7 +484,7 @@ export const ProductDetailPage = ({ product }: ProductDetailPageProps) => {
               />
             </div> */}
             <div className="product-actions">
-              <VariantPicker options={product.productOptions} />
+              <VariantPicker options={product.productOptions ?? []} />
               
               <div className="mt-8 w-full">
                 <AddToCartButton

@@ -1,30 +1,16 @@
-// import { Hero } from '~/components/home/Hero';
-// import { FeaturedCollections } from '~/components/home/FeaturedCollections';
-// import { FeaturedProducts } from '~/components/home/FeaturedProducts';
-// import { PromoBanner } from '~/components/home/PromoBanner';
-// import { Newsletter } from '~/components/home/Newsletter';
-
-// export default function Home() {
-//   return (
-//     <main className="flex flex-col gap-24">
-//       <Hero />
-//       <FeaturedCollections />
-//       {/* <FeaturedProducts /> */}
-//       {/* <PromoBanner /> */}
-//       <Newsletter />
-//     </main>
-//   );
-// }
-
 import {Await, useLoaderData, Link} from 'react-router';
-import type {Route} from './+types/_index';
+import type {Route} from './+types/($locale)._index';
 import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
+import {HomeHero} from '~/components/home/HomeHero';
+import {HomeFeatures} from '~/components/home/HomeFeatures';
+import {HomeNewsletter} from '~/components/home/HomeNewsletter';
+import {HomeCollections} from '~/components/home/HomeCollections';
+import {HomeProductCard} from '~/components/home/HomeProductCard';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -50,8 +36,10 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
     // Add other queries here, so that they are loaded in parallel
   ]);
 
+  const nodes = collections.nodes ?? [];
   return {
-    featuredCollection: collections.nodes[0],
+    featuredCollection: nodes[0],
+    curatedCollections: nodes.slice(1, 5),
   };
 }
 
@@ -77,58 +65,61 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
-    <div className="home">
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
-    </div>
+    <main className="home">
+      <HomeHero />
+      <Bestsellers products={data.recommendedProducts} />
+      <HomeCollections collections={data.curatedCollections ?? []} />
+      <HomeFeatures />
+      <HomeNewsletter />
+    </main>
   );
 }
 
-function FeaturedCollection({
-  collection,
-}: {
-  collection: FeaturedCollectionFragment;
-}) {
-  if (!collection) return null;
-  const image = collection?.image;
-  return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image data={image} sizes="100vw" />
-        </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
-  );
-}
-
-function RecommendedProducts({
+function Bestsellers({
   products,
 }: {
   products: Promise<RecommendedProductsQuery | null>;
 }) {
   return (
-    <div className="recommended-products">
-      <h2>Recommended Products</h2>
-      <Suspense fallback={<div>Loading...</div>}>
+    <section className="bg-neutral-50 py-20" aria-labelledby="bestsellers">
+      <div className="mx-auto max-w-7xl px-6">
+        <header className="mb-16">
+          <div className="mb-2 text-xs uppercase tracking-[0.15em] text-neutral-500">
+            BESTSELLERS
+          </div>
+          <h2
+            id="bestsellers"
+            className="text-4xl font-light tracking-tight text-black md:text-5xl"
+          >
+            Our Signature Collection
+          </h2>
+        </header>
+
+        <Suspense fallback={<div className="text-neutral-500">Loading…</div>}>
         <Await resolve={products}>
           {(response) => (
-            <div className="recommended-products-grid">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {response
                 ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
+                    <HomeProductCard key={product.id} product={product} />
                   ))
                 : null}
             </div>
           )}
         </Await>
-      </Suspense>
-      <br />
-    </div>
+        </Suspense>
+
+        <div className="mt-10">
+          <Link
+            to="/products/all"
+            prefetch="intent"
+            className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm text-black transition-colors hover:border-black"
+          >
+            View all products
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -147,7 +138,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
   }
   query FeaturedCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
+    collections(first: 5, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...FeaturedCollection
       }

@@ -6,76 +6,94 @@ import type { FooterQuery, HeaderQuery } from "storefrontapi.generated";
  * Dummy fallback menu
  * (replace with Shopify menu later)
  */
-const FALLBACK_FOOTER_MENU: FooterQuery["menu"] = {
+const FALLBACK_MENU_ITEM_BASE = {
+  resourceId: null,
+  tags: [] as string[],
+  type: "HTTP" as const,
+};
+
+const FALLBACK_FOOTER_MENU: NonNullable<FooterQuery["menu"]> = {
   id: "gid://shopify/Menu/199655620664",
   items: [
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "1",
       title: "All Products",
       url: "/products/all",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "2",
       title: "Collections",
       url: "/collections",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "3",
       title: "Bestsellers",
       url: "/collections/bestsellers",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "4",
       title: "New Arrivals",
       url: "/collections/new",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "5",
       title: "About Us",
       url: "/pages/about",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "6",
       title: "Careers",
       url: "/pages/careers",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "7",
       title: "Contact",
       url: "/pages/contact",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "8",
       title: "FAQ",
       url: "/pages/faq",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "9",
       title: "Privacy Policy",
       url: "/policies/privacy-policy",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "10",
       title: "Shipping Policy",
       url: "/policies/shipping-policy",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "11",
       title: "Refund Policy",
       url: "/policies/refund-policy",
       items: [],
     },
     {
+      ...FALLBACK_MENU_ITEM_BASE,
       id: "12",
       title: "Terms of Service",
       url: "/policies/terms-of-service",
@@ -100,7 +118,7 @@ export function Footer({
       <Await resolve={footerPromise}>
         {(footer) => {
           // const menu = footer?.menu ?? FALLBACK_FOOTER_MENU;
-          const menu = FALLBACK_FOOTER_MENU;
+          const menu: NonNullable<FooterQuery["menu"]> = FALLBACK_FOOTER_MENU;
 
           return (
             <footer className="border-t border-gray-200 bg-gray-50 py-16">
@@ -164,7 +182,7 @@ function FooterSection({
   primaryDomainUrl,
 }: {
   title: string;
-  items: FooterQuery["menu"]["items"];
+  items: NonNullable<FooterQuery["menu"]>["items"];
   publicStoreDomain: string;
   primaryDomainUrl?: string;
 }) {
@@ -175,7 +193,7 @@ function FooterSection({
       </h4>
 
       <ul className="flex flex-col gap-3 text-sm text-gray-500">
-        {items.map((item) => {
+        {items.map((item: NonNullable<FooterQuery["menu"]>["items"][number]) => {
           if (!item.url) return null;
 
           const url =

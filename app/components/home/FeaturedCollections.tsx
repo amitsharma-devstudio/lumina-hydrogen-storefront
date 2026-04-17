@@ -12,7 +12,7 @@ const products = [
 
 // FeaturedProducts Section Component
 export function FeaturedCollections() {
-  const handleQuickAdd = (product) => {
+  const handleQuickAdd = (product: any) => {
     alert(`Added ${product.name} to cart!`);
     console.log('Quick add:', product);
   };

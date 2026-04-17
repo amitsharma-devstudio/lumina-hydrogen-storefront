@@ -1,5 +1,5 @@
 import {useLoaderData, data, type HeadersFunction} from 'react-router';
-import type {Route} from './+types/cart';
+import type {Route} from './+types/($locale).cart';
 import type {CartQueryDataReturn} from '@shopify/hydrogen';
 import {CartForm} from '@shopify/hydrogen';
 import { Money } from '@shopify/hydrogen';
@@ -109,6 +109,17 @@ export async function loader({context}: Route.LoaderArgs) {
 
 export default function Cart() {
   const cart = useLoaderData<typeof loader>();
+  if (!cart) {
+    return (
+      <main className="min-h-screen bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-12">
+          <h1 className="text-4xl font-light text-neutral-900">Your Cart</h1>
+          <p className="mt-4 text-neutral-500">Your cart is empty.</p>
+        </div>
+      </main>
+    );
+  }
+
   const {lines, cost, checkoutUrl} = cart;
 
   console.log('Cart Data:', cart);

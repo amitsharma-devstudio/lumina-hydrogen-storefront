@@ -1,6 +1,16 @@
 import { Image } from '@shopify/hydrogen';
 
-export const ImageGallery = ({ images, selectedImage, onImageSelect }) => {
+type GalleryImage = {url?: string; altText?: string} & Record<string, unknown>;
+
+export const ImageGallery = ({
+  images,
+  selectedImage,
+  onImageSelect,
+}: {
+  images: GalleryImage[];
+  selectedImage: GalleryImage;
+  onImageSelect: (image: GalleryImage) => void;
+}) => {
   return (
     <div className="flex flex-col gap-4">
       {/* Main Image Container: Controls exact dimensions */}
@@ -18,7 +28,7 @@ export const ImageGallery = ({ images, selectedImage, onImageSelect }) => {
 
       {/* Thumbnails: Controls exact small dimensions */}
       <div className="flex gap-3 justify-center sm:justify-start flex-wrap pb-2">
-        {images.map((image, index) => (
+        {images.map((image: GalleryImage, index: number) => (
           <button
             key={image.url || index}
             onClick={() => onImageSelect(image)}

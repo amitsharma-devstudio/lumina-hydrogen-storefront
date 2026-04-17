@@ -1,6 +1,7 @@
 
 import {Link} from 'react-router';
 import {Image, Money, CartForm} from '@shopify/hydrogen';
+import type {CurrencyCode} from '@shopify/hydrogen/storefront-api-types';
 const MOCK_ROUTINE = [
   {
     id: '1',
@@ -12,7 +13,9 @@ const MOCK_ROUTINE = [
       url: 'https://cdn.shopify.com/s/files/1/0551/4566/0472/products/soft-cleanser.jpg?v=1620000000',
       altText: 'Step 1',
     },
-    priceRange: { minVariantPrice: { amount: '42.0', currencyCode: 'USD' } },
+    priceRange: {
+      minVariantPrice: { amount: '42.0', currencyCode: 'USD' as CurrencyCode },
+    },
     variants: { nodes: [{ id: 'variant-1', availableForSale: true }] }
   },
   {
@@ -25,7 +28,9 @@ const MOCK_ROUTINE = [
       url: 'https://cdn.shopify.com/s/files/1/0551/4566/0472/products/serum-bottle.jpg?v=1620000000',
       altText: 'Step 2',
     },
-    priceRange: { minVariantPrice: { amount: '88.0', currencyCode: 'USD' } },
+    priceRange: {
+      minVariantPrice: { amount: '88.0', currencyCode: 'USD' as CurrencyCode },
+    },
     variants: { nodes: [{ id: 'variant-2', availableForSale: true }] }
   },
   {
@@ -38,12 +43,14 @@ const MOCK_ROUTINE = [
       url: 'https://cdn.shopify.com/s/files/1/0551/4566/0472/products/cream-jar.jpg?v=1620000000',
       altText: 'Step 3',
     },
-    priceRange: { minVariantPrice: { amount: '64.0', currencyCode: 'USD' } },
+    priceRange: {
+      minVariantPrice: { amount: '64.0', currencyCode: 'USD' as CurrencyCode },
+    },
     variants: { nodes: [{ id: 'variant-3', availableForSale: true }] }
   },
 ];
 
-export function CompleteTheRoutine({product}: {product: any}) {
+export function CompleteTheRoutine({product}: {product?: any}) {
   const routineItems = MOCK_ROUTINE; // Testing with mock data
   const currentProductHandle = 'lumina-glow-serum'; // In reality: product.handle
 
@@ -68,8 +75,10 @@ export function CompleteTheRoutine({product}: {product: any}) {
   );
 }
 
-function itemLoop(items, currentHandle) {
-  return items.map((item) => {
+type RoutineItem = (typeof MOCK_ROUTINE)[number];
+
+function itemLoop(items: RoutineItem[], currentHandle: string) {
+  return items.map((item: RoutineItem) => {
     const isCurrent = item.handle === currentHandle;
     
     return (
