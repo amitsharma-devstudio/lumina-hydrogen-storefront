@@ -1,18 +1,9 @@
 import {Link} from 'react-router';
 import {Image} from '@shopify/hydrogen';
 import type {ReactNode} from 'react';
+import {toClientPath} from '~/lib/homepage';
 
-type HeroLink = {label?: string | null; url?: string | null} | null | undefined;
-
-type HomeHeroData = {
-  headline?: string | null;
-  subhead?: string | null;
-  primaryCta?: HeroLink;
-  secondaryCta?: HeroLink;
-  startingFromLabel?: string | null;
-  startingFromValue?: string | null;
-  image?: any | null;
-} | null;
+import type {HeroLink, HomeHeroData} from '~/lib/homepage';
 
 function Cta({
   link,
@@ -31,13 +22,7 @@ function Cta({
 
   // Shopify metaobject URL fields require absolute URLs (Option B).
   // We still prefer client-side routing for internal links when possible.
-  let path: string | null = null;
-  try {
-    const u = new URL(href);
-    path = `${u.pathname}${u.search}${u.hash}`;
-  } catch {
-    path = href.startsWith('/') ? href : null;
-  }
+  const path = toClientPath(href);
 
   if (path && path.startsWith('/')) {
     return (
@@ -60,8 +45,6 @@ function Cta({
 }
 
 export function HomeHero({hero}: {hero?: HomeHeroData}) {
-  console.log(hero);
-  console.log(hero?.image);
   return (
     <section className="bg-white pt-6 md:pt-8">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-10 px-6 py-6 md:grid-cols-2 md:gap-16 md:py-8">

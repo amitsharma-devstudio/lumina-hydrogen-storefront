@@ -10,6 +10,7 @@ import {HomeFeatures} from '~/components/home/HomeFeatures';
 import {HomeNewsletter} from '~/components/home/HomeNewsletter';
 import {HomeCollections} from '~/components/home/HomeCollections';
 import {HomeProductCard} from '~/components/home/HomeProductCard';
+import {buildHomeHeroData} from '~/lib/homepage';
 
 const BESTSELLERS_COLLECTION_HANDLE = 'bestsellers';
 const NEW_ARRIVALS_COLLECTION_HANDLE = 'new-arrivals';
@@ -44,98 +45,17 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
 
   const nodes = collections.nodes ?? [];
   const heroNode = hero?.metaobjects?.nodes?.[0] ?? null;
-  const heroFields = (heroNode?.fields ?? []) as Array<{
-    key: string;
-    value?: string | null;
-    reference?: any;
-  }>;
-
-  const heroGet = (key: string) => heroFields.find((f) => f.key === key);
-  const heroText = (key: string) => heroGet(key)?.value ?? null;
-
-  const parseLinkValue = (raw: string | null) => {
-    if (!raw) return null;
-    try {
-      const parsed: any = JSON.parse(raw);
-      if (parsed && typeof parsed === 'object') {
-        const url =
-          typeof parsed.url === 'string'
-            ? parsed.url
-            : typeof parsed.href === 'string'
-              ? parsed.href
-              : typeof parsed.destination === 'string'
-                ? parsed.destination
-                : null;
-        const text =
-          typeof parsed.text === 'string'
-            ? parsed.text
-            : typeof parsed.label === 'string'
-              ? parsed.label
-              : typeof parsed.title === 'string'
-                ? parsed.title
-                : typeof parsed.anchorText === 'string'
-                  ? parsed.anchorText
-                  : null;
-        if (url || text) return {url, text};
-      }
-    } catch {
-      // ignore
-    }
-    return null;
-  };
-
-  const parseMoneyValue = (raw: string | null) => {
-    if (!raw) return null;
-    try {
-      const parsed: any = JSON.parse(raw);
-      if (
-        parsed &&
-        typeof parsed === 'object' &&
-        typeof parsed.amount === 'string' &&
-        (typeof parsed.currency_code === 'string' ||
-          typeof parsed.currencyCode === 'string')
-      ) {
-        const amount = Number(parsed.amount);
-        if (!Number.isFinite(amount)) return null;
-        const currency =
-          typeof parsed.currency_code === 'string'
-            ? parsed.currency_code
-            : parsed.currencyCode;
-        return new Intl.NumberFormat(undefined, {
-          style: 'currency',
-          currency,
-          maximumFractionDigits: 0,
-        }).format(amount);
-      }
-    } catch {
-      // ignore
-    }
-    return null;
-  };
-
-  const primaryLink = parseLinkValue(heroText('primary_cta_url'));
-  const secondaryLink = parseLinkValue(heroText('secondary_cta_url'));
-
-  const heroImage =
-    heroGet('image')?.reference?.image ??
-    heroGet('image')?.reference ??
-    null;
+  const heroFields = (heroNode?.fields ?? []) as any[];
 
   return {
     featuredCollection: nodes[0],
     curatedCollections: nodes.slice(1, 5),
     hero: heroNode
-      ? {
-          headline: heroText('headline'),
-          subhead: heroText('subhead'),
-          primaryCta: {label: primaryLink?.text, url: primaryLink?.url},
-          secondaryCta: {label: secondaryLink?.text, url: secondaryLink?.url},
-          startingFromLabel: heroText('starting_from_label'),
-          startingFromValue:
-            parseMoneyValue(heroText('starting_from_value')) ??
-            heroText('starting_from_value'),
-          image: heroImage,
-        }
+      ? buildHomeHeroData({
+          fields: heroFields,
+          locale: context.storefront.i18n.language,
+          imageKey: 'image',
+        })
       : null,
   };
 }
