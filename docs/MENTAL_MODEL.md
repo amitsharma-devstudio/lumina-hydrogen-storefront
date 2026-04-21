@@ -106,32 +106,13 @@ These exist to handle “invalid option combos”, adjacent variants, and smooth
 
 **Route**: `app/routes/($locale)._index.tsx`
 
-### What the loader is doing (minute details)
+### How the loader + UI is structured
 
-The home page intentionally uses a **critical + deferred** pattern:
+- **Critical**: query what’s needed to render the initial HTML without placeholders (above-the-fold decisions).
+- **Deferred**: kick off optional queries and render them with **`Suspense` + `Await`** so they don’t block SSR.
 
-- **Critical** (`loadCriticalData`)
-  - Runs `context.storefront.query(FEATURED_COLLECTION_QUERY)` and **awaits** it.
-  - This means SSR HTML can render the main “featured collection” without placeholders.
-- **Deferred** (`loadDeferredData`)
-  - Starts `context.storefront.query(RECOMMENDED_PRODUCTS_QUERY)` but does **not** await.
-  - Errors are **caught and converted to `null`**, so the page still returns `200` even if recommendations fail.
-
-In the `loader()` you’ll see:
-- `const deferredData = loadDeferredData(args);` (returns promises)
-- `const criticalData = await loadCriticalData(args);` (blocks)
-- `return {...deferredData, ...criticalData};` (merges both)
-
-### Why `Suspense` + `Await` is used
-
-`recommendedProducts` is a **Promise**, so the UI renders it like this:
-
-- `<Suspense fallback=...>` renders the fallback while the Promise is pending.
-- `<Await resolve={products}>` “unwraps” the Promise once it resolves and passes the resolved value into a render function.
-
-Architect interview answer:
-- “We treat below-the-fold content as **non-blocking** to improve TTFB/LCP and isolate failure.”
-- “SSR returns quickly with critical HTML; deferred content streams in without a client fetch waterfall.”
+Interview one-liner:
+- “Critical data blocks SSR, deferred data streams in; failures in deferred sections don’t 500 the page.”
 
 ### What we will change (and what we will keep)
 
@@ -154,10 +135,9 @@ We will change:
 - Reusable fragments live in `app/graphql/fragments/**`.
 - Codegen types land in `storefrontapi.generated.d.ts`.
 
-### How to talk about it in interviews
+### Interview phrasing
 
-- “Fragments are our **domain schema**. They prevent query sprawl and ensure UI contracts are explicit.”
-- “Each route has *one* critical query for above-the-fold, and defers below-the-fold queries to improve TTFB/LCP.”
+- “Fragments are our domain schema; they stabilize UI contracts and reduce query sprawl.”
 
 ## Shopify Storefront GraphQL primer (for newbies)
 
@@ -196,22 +176,7 @@ Meaning: same query returns **localized pricing/content** depending on the shopp
 
 ### PDP pattern: handle + selectedOptions
 
-Your PDP uses the canonical pattern:
-
-- Fetch product by **handle** (stable URL id)
-- Compute variant selection using **selected options** from the URL
-
-See `app/graphql/queries/ProductByHandle.ts`:
-
-- `product(handle: $handle)` fetches the product “root”
-- `selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ...)` picks the right variant
-- `variants(first: 10)` loads a small set of variants for option UI
-- `images(first: 10)` loads gallery images
-- `...SkincareProduct` fetches metafields/metaobjects for your domain content
-
-Architect interview answer:
-- “We use URL-selected options so variant selection is shareable, SEO-safe, and stable across navigation.”
-- “We keep variant payload bounded (first: 10) until UX proves we need more.”
+See the PDP section above. The key idea is: **URL-selected options** drive variant selection on the server.
 
 ### Metafields/metaobjects in GraphQL (your examples)
 

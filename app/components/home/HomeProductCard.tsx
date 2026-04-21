@@ -1,11 +1,10 @@
 import {Link} from 'react-router';
 import {Image, Money} from '@shopify/hydrogen';
-import type {RecommendedProductFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
 
-export function HomeProductCard({product}: {product: RecommendedProductFragment}) {
+export function HomeProductCard({product}: {product: any}) {
   const variantUrl = useVariantUrl(product.handle);
-  const image = product.featuredImage;
+  const image = product.featuredImage ?? product.images?.nodes?.[0] ?? null;
 
   return (
     <article className="group cursor-pointer transition-transform duration-300 hover:-translate-y-1">
@@ -20,7 +19,9 @@ export function HomeProductCard({product}: {product: RecommendedProductFragment}
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               />
             ) : (
-              <div className="h-full w-full" />
+              <div className="flex h-full w-full items-center justify-center text-xs uppercase tracking-[0.15em] text-neutral-400">
+                No image
+              </div>
             )}
 
             <div className="pointer-events-none absolute bottom-3 left-3 right-3 rounded-lg bg-white px-4 py-3 text-center text-sm font-medium opacity-0 shadow-md transition-opacity duration-300 group-hover:opacity-100">

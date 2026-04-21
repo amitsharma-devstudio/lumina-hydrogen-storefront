@@ -8,6 +8,61 @@ import {
 import type { HeaderQuery, CartApiQueryFragment } from "storefrontapi.generated";
 import { useAside } from "~/components/Aside";
 
+function Icon({
+  name,
+}: {
+  name: 'search' | 'cart' | 'menu';
+}) {
+  const common = 'h-4 w-4';
+  switch (name) {
+    case 'search':
+      return (
+        <svg
+          className={common}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          aria-hidden="true"
+        >
+          <path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+      );
+    case 'cart':
+      return (
+        <svg
+          className={common}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          aria-hidden="true"
+        >
+          <path d="M6 6h15l-2 9H7L6 6Z" />
+          <path d="M6 6 5 3H2" />
+          <path d="M8 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" />
+          <path d="M18 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" />
+        </svg>
+      );
+    case 'menu':
+      return (
+        <svg
+          className={common}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          aria-hidden="true"
+        >
+          <path d="M4 6h16" />
+          <path d="M4 12h16" />
+          <path d="M4 18h16" />
+        </svg>
+      );
+  }
+}
+
 const FALLBACK_HEADER_MENU = {
   id: "gid://shopify/Menu/199655587896",
   items: [
@@ -34,17 +89,19 @@ export function Header({
   const { shop, menu } = header;
 
   return (
-    <header className="bg-white border-b">
-      <nav className="nav-container mx-auto flex items-center justify-between px-6 py-4">
+    <header className="bg-white border-b border-neutral-100">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         {/* Logo */}
-        <div className="logo font-bold tracking-widest text-xl">
-          <NavLink to="/" prefetch="intent">
-            LUXE SKIN
-          </NavLink>
-        </div>
+        <NavLink
+          to="/"
+          prefetch="intent"
+          className="text-sm font-semibold tracking-[0.22em] text-black"
+        >
+          LUXE SKIN
+        </NavLink>
 
         {/* Nav Links */}
-        <ul className="nav-links hidden md:flex gap-8">
+        <ul className="hidden items-center gap-10 md:flex">
           {(menu || FALLBACK_HEADER_MENU).items.slice(0, 3).map((item) => {
             if (!item.url) return null;
 
@@ -57,7 +114,10 @@ export function Header({
 
             return (
               <li key={item.id}>
-                <NavLink to={url} className="text-sm font-medium">
+                <NavLink
+                  to={url}
+                  className="text-sm text-neutral-600 transition-colors hover:text-black"
+                >
                   {item.title}
                 </NavLink>
               </li>
@@ -66,10 +126,14 @@ export function Header({
         </ul>
 
         {/* Icons */}
-        <div className="nav-icons flex items-center gap-4">
-          {/* Search */}
-          <button className="icon-btn" onClick={() => open("search")}>
-            🔍
+        <div className="flex items-center gap-5">
+          <button
+            type="button"
+            onClick={() => open("search")}
+            aria-label="Search"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-black"
+          >
+            <Icon name="search" />
           </button>
 
           {/* Cart */}
@@ -83,11 +147,11 @@ export function Header({
             to="/cart"
             prefetch="intent"
             aria-label="Open shopping cart"
-            className="icon-btn relative inline-flex items-center"
+            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-black"
           >
-            🛒
+            <Icon name="cart" />
             <span
-              className="cart-count absolute -top-2 -right-2 bg-black text-white text-xs rounded-full px-2"
+              className="cart-count absolute -top-2 -right-2 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-black px-1 text-[11px] leading-[18px] text-white"
               aria-live="polite"
               aria-atomic="true"
             >
@@ -98,10 +162,12 @@ export function Header({
 
           {/* Mobile menu */}
           <button
-            className="icon-btn mobile-menu-btn md:hidden"
+            type="button"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-black md:hidden"
             onClick={() => open("mobile")}
+            aria-label="Open menu"
           >
-            ☰
+            <Icon name="menu" />
           </button>
         </div>
       </nav>
