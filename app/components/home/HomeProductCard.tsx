@@ -9,7 +9,7 @@ export function HomeProductCard({product}: {product: any}) {
   return (
     <article className="group cursor-pointer transition-transform duration-300 hover:-translate-y-1">
       <Link to={variantUrl} prefetch="intent" className="block">
-        <div className="relative mb-4 overflow-hidden rounded-2xl bg-neutral-50">
+        <div className="relative mb-4 overflow-hidden rounded-3xl bg-neutral-50 ring-1 ring-black/5 transition-shadow duration-300 group-hover:shadow-[0_18px_55px_rgba(0,0,0,0.10)]">
           <div className="relative aspect-[3/4]">
             {image ? (
               <Image
@@ -24,17 +24,16 @@ export function HomeProductCard({product}: {product: any}) {
               </div>
             )}
 
-            <div className="pointer-events-none absolute bottom-3 left-3 right-3 rounded-lg bg-white px-4 py-3 text-center text-sm font-medium opacity-0 shadow-md transition-opacity duration-300 group-hover:opacity-100">
-              Quick Add
+            <div className="pointer-events-none absolute inset-x-3 bottom-3 rounded-2xl bg-white/90 px-4 py-3 text-center text-sm font-medium text-black opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
+              View details
             </div>
           </div>
         </div>
 
         <div className="flex flex-col gap-1">
-          <div className="text-xs uppercase tracking-[0.12em] text-neutral-500">
-            Product
-          </div>
-          <h3 className="text-lg font-normal text-black">{product.title}</h3>
+          <h3 className="text-lg font-normal tracking-tight text-black">
+            {product.title}
+          </h3>
           <div className="mt-1 text-base text-black">
             <Money data={product.priceRange.minVariantPrice} />
           </div>

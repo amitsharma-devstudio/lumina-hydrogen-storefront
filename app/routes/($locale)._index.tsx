@@ -96,11 +96,28 @@ export default function Homepage() {
     <main className="home">
       <HomeHero hero={data.hero} />
       <Bestsellers products={data.bestsellers} />
-      <NewArrivals products={data.newArrivals} />
       <HomeCollections collections={data.curatedCollections ?? []} />
+      <NewArrivals products={data.newArrivals} />
       <HomeFeatures />
       <HomeNewsletter />
     </main>
+  );
+}
+
+function ProductGridSkeleton({count = 4}: {count?: number}) {
+  return (
+    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {Array.from({length: count}).map((_, i) => (
+        <div key={i} className="animate-pulse" aria-hidden="true">
+          <div className="relative mb-4 overflow-hidden rounded-2xl bg-neutral-100">
+            <div className="relative aspect-[3/4]" />
+          </div>
+          <div className="h-3 w-20 rounded bg-neutral-100" />
+          <div className="mt-3 h-5 w-3/4 rounded bg-neutral-100" />
+          <div className="mt-3 h-4 w-24 rounded bg-neutral-100" />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -124,19 +141,34 @@ function NewArrivals({
           </h2>
         </header>
 
-        <Suspense fallback={<div className="text-neutral-500">Loading…</div>}>
+        <Suspense fallback={<ProductGridSkeleton />}>
           <Await resolve={products}>
-            {(response) => (
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                {(response?.collection?.products?.nodes ?? []).map(
-                  (product: any) => (
+            {(response) => {
+              const nodes = response?.collection?.products?.nodes ?? [];
+              if (!response?.collection || nodes.length === 0) {
+                return <ProductGridSkeleton />;
+              }
+
+              return (
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                  {nodes.map((product: any) => (
                     <HomeProductCard key={product.id} product={product} />
-                  ),
-                )}
-              </div>
-            )}
+                  ))}
+                </div>
+              );
+            }}
           </Await>
         </Suspense>
+
+        <div className="mt-10">
+          <Link
+            to="/collections/new-arrivals"
+            prefetch="intent"
+            className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm text-black transition-colors hover:border-black"
+          >
+            View all products
+          </Link>
+        </div>
       </div>
     </section>
   );
@@ -162,23 +194,28 @@ function Bestsellers({
           </h2>
         </header>
 
-        <Suspense fallback={<div className="text-neutral-500">Loading…</div>}>
+        <Suspense fallback={<ProductGridSkeleton />}>
           <Await resolve={products}>
-            {(response) => (
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                {(response?.collection?.products?.nodes ?? []).map(
-                  (product: any) => (
+            {(response) => {
+              const nodes = response?.collection?.products?.nodes ?? [];
+              if (!response?.collection || nodes.length === 0) {
+                return <ProductGridSkeleton />;
+              }
+
+              return (
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                  {nodes.map((product: any) => (
                     <HomeProductCard key={product.id} product={product} />
-                  ),
-                )}
-              </div>
-            )}
+                  ))}
+                </div>
+              );
+            }}
           </Await>
         </Suspense>
 
         <div className="mt-10">
           <Link
-            to="/products/all"
+            to="/collections/bestsellers"
             prefetch="intent"
             className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm text-black transition-colors hover:border-black"
           >
