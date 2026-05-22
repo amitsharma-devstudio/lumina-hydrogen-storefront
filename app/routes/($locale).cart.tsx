@@ -1,13 +1,13 @@
 import {useLoaderData, data, type HeadersFunction} from 'react-router';
 import type {Route} from './+types/($locale).cart';
 import type {CartQueryDataReturn} from '@shopify/hydrogen';
-import {CartForm} from '@shopify/hydrogen';
-import { Money } from '@shopify/hydrogen';
-import { Image } from '@shopify/hydrogen';
-import {CartMain} from '~/components/CartMain';
+import {CartForm, useOptimisticCart} from '@shopify/hydrogen';
+import {CartPageEmpty} from '~/components/cart/CartPageEmpty';
+import {CartPageLineItem} from '~/components/cart/CartPageLineItem';
+import {CartOrderSummary} from '~/components/cart/CartOrderSummary';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: `Hydrogen | Cart`}];
+  return [{title: 'Your Cart | Lumina'}];
 };
 
 export const headers: HeadersFunction = ({actionHeaders}) => actionHeaders;
@@ -39,12 +39,10 @@ export async function action({request, context}: Route.ActionArgs) {
     case CartForm.ACTIONS.DiscountCodesUpdate: {
       const formDiscountCode = inputs.discountCode;
 
-      // User inputted discount code
       const discountCodes = (
         formDiscountCode ? [formDiscountCode] : []
       ) as string[];
 
-      // Combine discount codes already applied on cart
       discountCodes.push(...inputs.discountCodes);
 
       result = await cart.updateDiscountCodes(discountCodes);
@@ -53,12 +51,10 @@ export async function action({request, context}: Route.ActionArgs) {
     case CartForm.ACTIONS.GiftCardCodesUpdate: {
       const formGiftCardCode = inputs.giftCardCode;
 
-      // User inputted gift card code
       const giftCardCodes = (
         formGiftCardCode ? [formGiftCardCode] : []
       ) as string[];
 
-      // Combine gift card codes already applied on cart
       giftCardCodes.push(...inputs.giftCardCodes);
 
       result = await cart.updateGiftCardCodes(giftCardCodes);
@@ -108,132 +104,42 @@ export async function loader({context}: Route.LoaderArgs) {
 }
 
 export default function Cart() {
-  const cart = useLoaderData<typeof loader>();
-  if (!cart) {
-    return (
-      <main className="min-h-screen bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-12">
-          <h1 className="text-4xl font-light text-neutral-900">Your Cart</h1>
-          <p className="mt-4 text-neutral-500">Your cart is empty.</p>
-        </div>
-      </main>
-    );
+  const originalCart = useLoaderData<typeof loader>();
+  const cart = useOptimisticCart(originalCart);
+  const lines = cart?.lines?.nodes ?? [];
+  const hasLines = lines.length > 0;
+
+  if (!hasLines) {
+    return <CartPageEmpty />;
   }
 
-  const {lines, cost, checkoutUrl} = cart;
-
-  console.log('Cart Data:', cart);
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-12">
-        {/* Header */}
-        <div className="mb-12">
-          <p className="text-xs tracking-widest text-neutral-500 mb-2">
-            SHOPPING CART
-          </p>
-          <h1 className="text-4xl font-light text-neutral-900">
+    <main className="cart-page bg-white">
+      <div className="mx-auto max-w-7xl px-4 pb-12 pt-6 sm:px-6 lg:pt-8">
+        <header className="mb-5 flex items-baseline justify-between gap-4 lg:mb-6">
+          <h1 className="text-3xl font-light tracking-tight text-neutral-900 lg:text-4xl">
             Your Cart
           </h1>
-        </div>
+          {cart?.totalQuantity ? (
+            <p className="shrink-0 text-sm text-neutral-500">
+              {cart.totalQuantity}{' '}
+              {cart.totalQuantity === 1 ? 'item' : 'items'}
+            </p>
+          ) : null}
+        </header>
 
-        {/* Main Grid: Cart Items + Order Summary */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* LEFT: Cart Items (takes 2 columns) */}
-          <div className="lg:col-span-2 space-y-6">
-            {lines.nodes.map((line) => (
-              <div key={line.id} className="border border-neutral-200 rounded-2xl p-6">
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                  {/* Product Image - Using Hydrogen's Image component for optimization */}
-                  <div className="w-full sm:w-32 h-48 sm:h-32 bg-neutral-100 rounded-xl flex-shrink-0 overflow-hidden">
-                    {line.merchandise.image && (
-                      <Image
-                        data={line.merchandise.image}
-                        aspectRatio="1/1"
-                        sizes="128px"
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                  </div>
-
-                  {/* Product Details */}
-                  <div className="flex-1 flex flex-col">
-                    <div className="flex justify-between mb-4">
-                      <div>
-                        <h3 className="font-medium text-neutral-900">
-                          {line.merchandise.product.title}
-                        </h3>
-                        <p className="text-sm text-neutral-500 mt-1">
-                          {line.merchandise.title !== 'Default Title' ? line.merchandise.title : ''}
-                        </p>
-                      </div>
-                      {/* Dynamic Price */}
-                      <p className="font-medium text-neutral-900">
-                        <Money data={line.cost.totalAmount} />
-                      </p>
-                    </div>
-
-                    <div className="mt-auto flex items-center justify-between">
-                      {/* Quantity Controls */}
-                      <div className="flex items-center gap-4 border border-neutral-200 rounded-lg px-4 py-2">
-                        <button className="text-lg text-neutral-600">−</button>
-                        <span className="w-8 text-center">{line.quantity}</span>
-                        <button className="text-lg text-neutral-600">+</button>
-                      </div>
-                      <button className="text-sm text-neutral-500 underline">Remove</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3 lg:gap-10">
+          <div className="space-y-5 lg:col-span-2">
+            {lines.map((line) => (
+              <CartPageLineItem key={line.id} line={line} />
             ))}
           </div>
 
-          {/* RIGHT: Order Summary */}
-          <div className="lg:col-span-1">
-            <div className="bg-neutral-50 rounded-2xl p-6 sticky top-6">
-              <h2 className="text-lg font-medium mb-6">Order Summary</h2>
-
-              <div className="space-y-3 text-sm mb-4">
-                <div className="flex justify-between">
-                  <span className="text-neutral-600">Subtotal</span>
-                  <span className="text-neutral-900">
-                    <Money data={cost.subtotalAmount ?? 0} />
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-neutral-600">Tax</span>
-                  <span className="text-neutral-900">
-                    {cost.totalTaxAmount && <Money data={cost.totalTaxAmount} />}
-                  </span>
-                </div>
-              </div>
-
-              <div className="border-t border-neutral-200 my-4"></div>
-
-              <div className="flex justify-between text-lg font-medium mb-6">
-                <span>Total</span>
-                <span><Money data={cost.totalAmount ?? {}} /></span>
-              </div>
-
-              {/* Checkout Link */}
-              <a
-                href={checkoutUrl}
-                style={{color: '#fff'}}
-                className="block w-full rounded-xl bg-primary py-3 text-center text-sm font-medium text-primary-foreground visited:text-primary-foreground active:text-primary-foreground hover:bg-primary-hover"
-              >
-                Continue to Checkout
-              </a>
-            </div>
+          <div className="w-full lg:col-span-1">
+            <CartOrderSummary cart={cart} stableCart={originalCart} />
           </div>
-
         </div>
       </div>
     </main>
-  )
-  // return (
-  //   <div className="cart">
-  //     <h1>Cart</h1>
-  //     <CartMain layout="page" cart={cart} />
-  //   </div>
-  // );
+  );
 }

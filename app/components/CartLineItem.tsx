@@ -1,6 +1,9 @@
-import type {CartLineUpdateInput} from '@shopify/hydrogen/storefront-api-types';
 import type {CartLayout} from '~/components/CartMain';
-import {CartForm, Image, type OptimisticCartLine} from '@shopify/hydrogen';
+import {Image, type OptimisticCartLine} from '@shopify/hydrogen';
+import {
+  CartLineRemoveForm,
+  CartLineUpdateForm,
+} from '~/components/cart/cartLineMutations';
 import {useVariantUrl} from '~/lib/variants';
 import {Link} from 'react-router';
 import {ProductPrice} from './ProductPrice';
@@ -82,87 +85,32 @@ function CartLineQuantity({line}: {line: CartLine}) {
   return (
     <div className="cart-line-quantity">
       <small>Quantity: {quantity} &nbsp;&nbsp;</small>
-      <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
+      <CartLineUpdateForm lines={[{id: lineId, quantity: prevQuantity}]}>
         <button
+          type="submit"
           aria-label="Decrease quantity"
           disabled={quantity <= 1 || !!isOptimistic}
-          name="decrease-quantity"
-          value={prevQuantity}
         >
           <span>&#8722; </span>
         </button>
-      </CartLineUpdateButton>
+      </CartLineUpdateForm>
       &nbsp;
-      <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
+      <CartLineUpdateForm lines={[{id: lineId, quantity: nextQuantity}]}>
         <button
+          type="submit"
           aria-label="Increase quantity"
-          name="increase-quantity"
-          value={nextQuantity}
           disabled={!!isOptimistic}
         >
           <span>&#43;</span>
         </button>
-      </CartLineUpdateButton>
+      </CartLineUpdateForm>
       &nbsp;
-      <CartLineRemoveButton lineIds={[lineId]} disabled={!!isOptimistic} />
+      <CartLineRemoveForm lineIds={[lineId]} disabled={!!isOptimistic}>
+        <button type="submit" disabled={!!isOptimistic}>
+          Remove
+        </button>
+      </CartLineRemoveForm>
     </div>
   );
 }
 
-/**
- * A button that removes a line item from the cart. It is disabled
- * when the line item is new, and the server hasn't yet responded
- * that it was successfully added to the cart.
- */
-function CartLineRemoveButton({
-  lineIds,
-  disabled,
-}: {
-  lineIds: string[];
-  disabled: boolean;
-}) {
-  return (
-    <CartForm
-      fetcherKey={getUpdateKey(lineIds)}
-      route="/cart"
-      action={CartForm.ACTIONS.LinesRemove}
-      inputs={{lineIds}}
-    >
-      <button disabled={disabled} type="submit">
-        Remove
-      </button>
-    </CartForm>
-  );
-}
-
-function CartLineUpdateButton({
-  children,
-  lines,
-}: {
-  children: React.ReactNode;
-  lines: CartLineUpdateInput[];
-}) {
-  const lineIds = lines.map((line) => line.id);
-
-  return (
-    <CartForm
-      fetcherKey={getUpdateKey(lineIds)}
-      route="/cart"
-      action={CartForm.ACTIONS.LinesUpdate}
-      inputs={{lines}}
-    >
-      {children}
-    </CartForm>
-  );
-}
-
-/**
- * Returns a unique key for the update action. This is used to make sure actions modifying the same line
- * items are not run concurrently, but cancel each other. For example, if the user clicks "Increase quantity"
- * and "Decrease quantity" in rapid succession, the actions will cancel each other and only the last one will run.
- * @param lineIds - line ids affected by the update
- * @returns
- */
-function getUpdateKey(lineIds: string[]) {
-  return [CartForm.ACTIONS.LinesUpdate, ...lineIds].join('-');
-}

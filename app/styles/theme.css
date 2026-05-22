@@ -61,3 +61,15 @@
   --lumina-primary-hover: var(--color-primary-hover);
   --lumina-foreground: var(--color-foreground);
 }
+
+/* Cart page: override reset.css h1 margins */
+.cart-page h1 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Cart page: reset global input margins so promo fields align with Apply buttons */
+.cart-page .cart-order-summary input {
+  margin-top: 0;
+  margin-bottom: 0;
+}

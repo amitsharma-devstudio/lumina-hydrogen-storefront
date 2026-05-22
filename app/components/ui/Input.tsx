@@ -1,14 +1,23 @@
-import type { InputHTMLAttributes } from 'react';
+import {forwardRef, type InputHTMLAttributes} from 'react';
+import {inputFieldClass} from '~/lib/theme';
 
-type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
 };
 
-export function Input({className = '', ...props}: InputProps) {
+function mergeClass(...parts: Array<string | undefined>) {
+  return parts.filter(Boolean).join(' ');
+}
+
+export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  {className = '', ...props},
+  ref,
+) {
   return (
     <input
+      ref={ref}
       {...props}
-      className={`px-6 py-3 border rounded-full ${className}`}
+      className={mergeClass(inputFieldClass, className)}
     />
   );
-}
+});

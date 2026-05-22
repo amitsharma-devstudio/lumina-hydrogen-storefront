@@ -11,13 +11,21 @@ Design tokens live in **`app/styles/theme.css`**. Tailwind utilities (`bg-primar
 | Page background | `--color-background` |
 | Font stack | `--font-sans`, `--font-display` |
 
-## Buttons in code
+## UI components (preferred)
 
-Prefer helpers from **`app/lib/theme.ts`**:
+Use **`app/components/ui/`** so controls stay aligned and themed:
 
-- `btnPrimaryClass` — standard CTA
-- `btnPrimaryCompactClass` — PDP “Add to bag”
-- `btnSecondaryClass` — outline
+| Component | Use for |
+|-----------|---------|
+| `Button` | `primary`, `secondary`, `apply`, `link` variants |
+| `PrimaryLink` | Checkout / external primary CTAs |
+| `Input` | Text, email, etc. (`h-11`) |
+| `Select` | Dropdowns |
+| `Textarea` | Multi-line text |
+| `FormField` | Label + control |
+| `InputGroup` | Input + button row (`items-stretch`) |
+
+Low-level class strings live in **`app/lib/theme.ts`** when you need one-off composition.
 - `chipSelectedClass` / `chipHoverClass` — variant pills
 
 ## Legacy CSS
