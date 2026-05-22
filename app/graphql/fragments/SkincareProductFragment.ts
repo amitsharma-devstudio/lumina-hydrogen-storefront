@@ -64,6 +64,16 @@ export const SkincareProductFragment = `#graphql
       }
     }
 
+    productBenefits: metafield(namespace: "custom", key: "lumina_product_benefits") {
+      references(first: 5) {
+        nodes {
+          ... on Metaobject {
+            ...MetaobjectFields
+          }
+        }
+      }
+    }
+
     reviewCount: metafield(namespace: "custom", key: "lumina_reviews") {
       id
       type

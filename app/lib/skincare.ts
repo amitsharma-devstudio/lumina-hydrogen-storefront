@@ -38,6 +38,7 @@ export type SkincareIntelligence = {
   skinTypes: string[];
   safeWith: string[];
   avoidWith: string[];
+  benefits: string[];
   regimen: RegimenDisplay | null;
 };
 
@@ -223,9 +224,8 @@ export function resolveRegimen(product: {
       const products = parseRoutineProducts(product.routineProducts);
       if (!products.length) return null;
       return {
-        title: 'The Lumina Regimen',
-        description:
-          'Our products are designed to work in synergy. Follow this sequence for optimal skin health.',
+        title: 'Complete your routine',
+        description: null,
         products,
       };
     })()
@@ -252,6 +252,7 @@ export function buildSkincareIntelligence(product: any): SkincareIntelligence {
     skinTypes: parseLabelList(product?.skinTypes),
     safeWith: parseLabelList(product?.safeWith),
     avoidWith: parseLabelList(product?.avoidWith),
+    benefits: parseLabelList(product?.productBenefits),
     regimen: resolveRegimen(product),
   };
 }

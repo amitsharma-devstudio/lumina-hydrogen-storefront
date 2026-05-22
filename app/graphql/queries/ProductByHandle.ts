@@ -22,7 +22,7 @@ export const ProductByHandleQuery = `#graphql
                 ...VariantFields
             }
 
-            variants(first: 10) {
+            variants(first: 100) {
                 nodes {
                     ...VariantFields
                 }

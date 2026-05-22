@@ -4,6 +4,7 @@ export const VariantFieldsFragment = `#graphql
     id
     title
     availableForSale
+    quantityAvailable
     selectedOptions {
       name
       value

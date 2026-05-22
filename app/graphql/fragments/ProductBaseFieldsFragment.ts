@@ -4,6 +4,7 @@ export const ProductBaseFieldsFragment = `#graphql
         title
         vendor
         handle
+        description
         descriptionHtml
         
         encodedVariantExistence

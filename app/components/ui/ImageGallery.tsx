@@ -1,8 +1,46 @@
-import { Image } from '@shopify/hydrogen';
+import {Image} from '@shopify/hydrogen';
 
 type GalleryImage = {url?: string; altText?: string} & Record<string, unknown>;
 
-export const ImageGallery = ({
+const thumbButtonClass = (isSelected: boolean) =>
+  `relative shrink-0 overflow-hidden rounded-md border-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 ${
+    isSelected
+      ? 'border-black'
+      : 'border-transparent hover:border-neutral-400'
+  }`;
+
+function Thumbnail({
+  image,
+  index,
+  isSelected,
+  onSelect,
+  className,
+}: {
+  image: GalleryImage;
+  index: number;
+  isSelected: boolean;
+  onSelect: () => void;
+  className: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-label={`View image ${index + 1}`}
+      aria-current={isSelected ? 'true' : undefined}
+      className={`${thumbButtonClass(isSelected)} bg-white ${className}`}
+    >
+      <Image
+        data={image}
+        aspectRatio="1/1"
+        sizes="64px"
+        className="h-full w-full object-contain"
+      />
+    </button>
+  );
+}
+
+export function ImageGallery({
   images,
   selectedImage,
   onImageSelect,
@@ -10,40 +48,73 @@ export const ImageGallery = ({
   images: GalleryImage[];
   selectedImage: GalleryImage;
   onImageSelect: (image: GalleryImage) => void;
-}) => {
+}) {
+  if (!images.length) {
+    return (
+      <div
+        className="flex aspect-[4/5] max-h-[min(360px,50vh)] w-full items-center justify-center rounded-xl bg-white text-sm text-neutral-500"
+        aria-hidden="true"
+      >
+        No images
+      </div>
+    );
+  }
+
+  const selectedUrl = selectedImage?.url;
+
   return (
-    <div className="flex flex-col gap-4">
-      {/* Main Image Container: Controls exact dimensions */}
-      <div className="relative w-full max-w-[500px] overflow-hidden rounded-2xl bg-gray-100">
-        <div className="aspect-[3/4]"> 
-          <Image
-            data={selectedImage}
-            // aspectRatio ensures the CDN crops it perfectly to these dimensions
-            aspectRatio="3/4" 
-            sizes="(min-width: 45em) 500px, 100vw"
-            className="h-full w-full object-cover"
-          />
+    <div className="w-full">
+      <div className="flex gap-3">
+        {/* Desktop: vertical thumbnails on the left */}
+        <div
+          className="hidden max-h-[min(420px,55vh)] shrink-0 flex-col gap-2 overflow-y-auto overscroll-contain pr-0.5 lg:flex"
+          role="list"
+          aria-label="Product image thumbnails"
+        >
+          {images.map((image, index) => (
+            <Thumbnail
+              key={image.url || index}
+              image={image}
+              index={index}
+              isSelected={selectedUrl === image.url}
+              onSelect={() => onImageSelect(image)}
+              className="h-14 w-14"
+            />
+          ))}
+        </div>
+
+        {/* Main image */}
+        <div className="min-w-0 flex-1">
+          <div className="relative overflow-hidden rounded-xl bg-white">
+            <div className="flex aspect-[4/5] max-h-[min(360px,50vh)] w-full items-center justify-center lg:max-h-[min(420px,55vh)]">
+              <Image
+                data={selectedImage}
+                aspectRatio="4/5"
+                sizes="(min-width: 1024px) 420px, 100vw"
+                className="h-full w-full object-contain"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Thumbnails: Controls exact small dimensions */}
-      <div className="flex gap-3 justify-center sm:justify-start flex-wrap pb-2">
-        {images.map((image: GalleryImage, index: number) => (
-          <button
+      {/* Mobile: horizontal scroll below main image */}
+      <div
+        className="mt-3 flex gap-2 overflow-x-auto overscroll-x-contain pb-1 lg:hidden"
+        role="list"
+        aria-label="Product image thumbnails"
+      >
+        {images.map((image, index) => (
+          <Thumbnail
             key={image.url || index}
-            onClick={() => onImageSelect(image)}
-            className={`h-40 w-40 aspect-[4/5] bg-gray-50 mb-6 overflow-hidden flex-shrink-0 overflow-hidden rounded-lg border-2 ${
-              selectedImage?.url === image.url ? 'border-black' : 'border-transparent hover:border-black'
-            }`}
-          >
-            <Image
-              data={image}
-              aspectRatio="1/1"
-              className="h-full w-full object-cover"
-            />
-          </button>
+            image={image}
+            index={index}
+            isSelected={selectedUrl === image.url}
+            onSelect={() => onImageSelect(image)}
+            className="h-12 w-12"
+          />
         ))}
       </div>
     </div>
   );
-};
+}

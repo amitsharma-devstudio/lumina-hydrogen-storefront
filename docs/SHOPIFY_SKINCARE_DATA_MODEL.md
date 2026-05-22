@@ -84,6 +84,7 @@ One regimen entry powers the **“Complete the routine”** strip for many produ
 | `skin_compatibility` | List → `lumina_label` | Skin type pills |
 | `lumina_safe_with` | List → `lumina_label` | Green compatibility pills |
 | `lumina_avoid_with` | List → `lumina_label` | Amber “avoid” pills |
+| `lumina_product_benefits` | List → `lumina_label` | Trust lines under Add to cart (e.g. free shipping, vegan) |
 | **`lumina_regimen`** | **Metaobject → `lumina_regimen`** | **Shared routine carousel (preferred)** |
 | `lumina_routine_products` | List → **Product** | Per-product override (optional) |
 
@@ -114,6 +115,38 @@ You only edit the product list **once** on the regimen metaobject.
 | `skin_compatibility` | Normal, Dry, Combination |
 | `lumina_safe_with` | Niacinamide, Ceramides |
 | `lumina_avoid_with` | Pure Vitamin C (L-Ascorbic Acid) |
+| `lumina_product_benefits` | → `Free shipping over $75`, → `30-day guarantee`, → `Vegan & cruelty-free` |
+
+---
+
+## Inventory on the storefront (PDP / Add to cart)
+
+Admin **“22 available across all locations”** is not always the same number the **Storefront API** uses for `availableForSale`. The API only counts stock that can fulfill **online orders** for the shopper’s market.
+
+**In Shopify Admin, verify:**
+
+1. Product is **Active** and published to the **Online Store** sales channel.
+2. Inventory is at a location that **fulfills online orders** (Settings → Locations).
+3. The variant you’re viewing (e.g. 100ml vs 200ml) has stock — totals can be split per variant.
+4. **Storefront API** access includes **“Read product inventory”** (`unauthenticated_read_product_inventory`) so Hydrogen can read `quantityAvailable` on variants.
+
+**Hydrogen:** `app/lib/variantAvailability.ts` treats a variant as purchasable when `availableForSale` is true **or** `quantityAvailable > 0`.
+
+---
+
+## Where to create & show the routine metaobject
+
+**Create once in Admin:** Content → Metaobjects → `lumina_regimen` → add entry (e.g. `core-3-step`) with ordered **products** list.
+
+**Assign per product:** Product → Metafields → `lumina_regimen` → pick that entry. Many serums can share the same regimen.
+
+| Surface | Purpose |
+|---------|---------|
+| **PDP — quick strip** (`RegimenQuickStrip`) | Right column under Add to cart. Shows metaobject title + 3 steps; highlights **current product**. Best for learning metaobjects in context. |
+| **PDP — full section** (`CompleteTheRoutine`) | Below the fold (`#complete-routine`). Large visual routine with images and “Add step to bag”. |
+| **Homepage (optional later)** | One featured regimen for brand story — not per SKU. Use when you want marketing, not product-specific context. |
+
+**Recommendation for this dummy project:** configure regimens in Admin, assign on 2–3 products, showcase on **PDP only** (strip + full section). Skip homepage until you need a hero “Shop the routine” block.
 
 ---
 

@@ -17,7 +17,10 @@ export function CompleteTheRoutine({
   if (!items.length) return null;
 
   return (
-    <section className="mt-32 border-t border-gray-100 bg-[#FAFAFA] pt-24">
+    <section
+      id="complete-routine"
+      className="mt-32 border-t border-gray-100 bg-[#FAFAFA] pt-24 scroll-mt-24"
+    >
       <div className="mx-auto max-w-6xl px-4">
         <div className="mb-16 text-center">
           <h2 className="mb-4 font-serif text-3xl italic">{regimen.title}</h2>
