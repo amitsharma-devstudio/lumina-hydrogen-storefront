@@ -73,3 +73,13 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+
+/* Catalog PLP: reset.css gives every <section> 2rem vertical padding — override on PLP */
+main.catalog-plp section {
+  padding: 0;
+}
+
+/* Catalog PLP: Hydrogen pagination links must not reserve space when hidden */
+.catalog-pagination a[href=''] {
+  display: none !important;
+}

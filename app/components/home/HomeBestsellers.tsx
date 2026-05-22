@@ -25,7 +25,7 @@ export function HomeBestsellers({products}: {products: CollectionProductList}) {
 
         <div className="mt-10">
           <Link
-            to="/collections/bestsellers"
+            to="/collections/bestseller"
             prefetch="intent"
             className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm text-foreground transition-colors hover:border-primary"
           >

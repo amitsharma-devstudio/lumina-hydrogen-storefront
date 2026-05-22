@@ -6,56 +6,75 @@ import {BestsellersProductsQuery} from '~/graphql/queries/BestsellersProductsQue
 import {NewArrivalsProductsQuery} from '~/graphql/queries/NewArrivalsProductsQuery';
 import {buildHomeHeroData, type MetaobjectField} from '~/lib/homepage';
 import {getCollectionProductNodes} from '~/components/home/productsSection.types';
+import {
+  BESTSELLERS_HANDLE_CANDIDATES,
+  filterMerchandisingCollections,
+  HOMEPAGE_CURATED_HANDLE_CANDIDATES,
+  NEW_ARRIVALS_HANDLE_CANDIDATES,
+  resolveCollectionHandle,
+} from '~/lib/storeCollections';
 
 export const HOME_HERO_METAOBJECT_TYPE = 'home_hero';
-export const BESTSELLERS_COLLECTION_HANDLE = 'bestsellers';
-export const NEW_ARRIVALS_COLLECTION_HANDLE = 'new-arrivals';
 
 const HOMEPAGE_COLLECTION_EXCLUDE = new Set([
-  BESTSELLERS_COLLECTION_HANDLE,
-  NEW_ARRIVALS_COLLECTION_HANDLE,
+  ...BESTSELLERS_HANDLE_CANDIDATES,
+  ...NEW_ARRIVALS_HANDLE_CANDIDATES,
 ]);
-
-const CURATED_COLLECTION_HANDLES = [
-  'cleansers',
-  'serums',
-  'moisturizers',
-  'masks',
-] as const;
 
 export function selectCuratedCollections(
   nodes: FeaturedCollectionFragment[],
 ): FeaturedCollectionFragment[] {
   const byHandle = new Map(nodes.map((c) => [c.handle, c]));
-  const curatedFromHandles = CURATED_COLLECTION_HANDLES.map(
-    (handle) => byHandle.get(handle),
-  ).filter((c): c is FeaturedCollectionFragment => Boolean(c));
 
-  if (curatedFromHandles.length > 0) return curatedFromHandles;
+  const curatedFromHandles = HOMEPAGE_CURATED_HANDLE_CANDIDATES.flatMap(
+    (candidates) => {
+      const match = resolveCollectionHandle(byHandle, candidates);
+      return match ? [match] : [];
+    },
+  );
 
-  return nodes
+  if (curatedFromHandles.length > 0) return curatedFromHandles.slice(0, 4);
+
+  return filterMerchandisingCollections(nodes)
     .filter((c) => !HOMEPAGE_COLLECTION_EXCLUDE.has(c.handle))
     .slice(0, 4);
 }
 
+async function loadCollectionProductsByHandle(
+  storefront: Storefront,
+  query: string,
+  handleCandidates: readonly string[],
+) {
+  for (const handle of handleCandidates) {
+    const response = await storefront.query(query, {variables: {handle}});
+    const nodes = getCollectionProductNodes(response);
+    if (nodes.length > 0) {
+      return nodes;
+    }
+  }
+  return [];
+}
+
 export async function loadHomepageData(storefront: Storefront) {
-  const [
-    featuredCollectionsResponse,
-    heroResponse,
-    bestsellersResponse,
-    newArrivalsResponse,
-  ] = await Promise.all([
-    storefront.query(FeaturedCollectionsQuery),
-    storefront.query(HomeHeroQuery, {
-      variables: {type: HOME_HERO_METAOBJECT_TYPE},
-    }),
-    storefront.query(BestsellersProductsQuery, {
-      variables: {handle: BESTSELLERS_COLLECTION_HANDLE},
-    }),
-    storefront.query(NewArrivalsProductsQuery, {
-      variables: {handle: NEW_ARRIVALS_COLLECTION_HANDLE},
-    }),
-  ]);
+  const [featuredCollectionsResponse, heroResponse, bestsellers, newArrivals] =
+    await Promise.all([
+      storefront.query(FeaturedCollectionsQuery, {
+        variables: {first: 24},
+      }),
+      storefront.query(HomeHeroQuery, {
+        variables: {type: HOME_HERO_METAOBJECT_TYPE},
+      }),
+      loadCollectionProductsByHandle(
+        storefront,
+        BestsellersProductsQuery,
+        BESTSELLERS_HANDLE_CANDIDATES,
+      ),
+      loadCollectionProductsByHandle(
+        storefront,
+        NewArrivalsProductsQuery,
+        NEW_ARRIVALS_HANDLE_CANDIDATES,
+      ),
+    ]);
 
   const collectionNodes: FeaturedCollectionFragment[] =
     featuredCollectionsResponse.collections?.nodes ?? [];
@@ -71,7 +90,7 @@ export async function loadHomepageData(storefront: Storefront) {
           imageKey: 'image',
         })
       : null,
-    bestsellers: getCollectionProductNodes(bestsellersResponse),
-    newArrivals: getCollectionProductNodes(newArrivalsResponse),
+    bestsellers,
+    newArrivals,
   };
 }

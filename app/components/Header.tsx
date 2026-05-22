@@ -66,7 +66,7 @@ function Icon({
 const FALLBACK_HEADER_MENU = {
   id: "gid://shopify/Menu/199655587896",
   items: [
-    { id: "1", title: "Shop", url: "/products" },
+    { id: "1", title: "Shop", url: "/collections/all" },
     { id: "2", title: "Collections", url: "/collections" },
     { id: "3", title: "About", url: "/pages/about" },
   ],

@@ -19,7 +19,7 @@ const FALLBACK_FOOTER_MENU: NonNullable<FooterQuery["menu"]> = {
       ...FALLBACK_MENU_ITEM_BASE,
       id: "1",
       title: "All Products",
-      url: "/products/all",
+      url: "/collections/all",
       items: [],
     },
     {
@@ -33,14 +33,14 @@ const FALLBACK_FOOTER_MENU: NonNullable<FooterQuery["menu"]> = {
       ...FALLBACK_MENU_ITEM_BASE,
       id: "3",
       title: "Bestsellers",
-      url: "/collections/bestsellers",
+      url: "/collections/bestseller",
       items: [],
     },
     {
       ...FALLBACK_MENU_ITEM_BASE,
       id: "4",
       title: "New Arrivals",
-      url: "/collections/new",
+      url: "/collections/new-arrivals",
       items: [],
     },
     {

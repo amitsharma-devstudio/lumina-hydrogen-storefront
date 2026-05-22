@@ -2,10 +2,10 @@ import {useCallback, useRef, useState} from 'react';
 import {Link} from 'react-router';
 import {Image} from '@shopify/hydrogen';
 import {getProductCarouselImages} from '~/lib/productImages';
-import type {CollectionProductNode} from '~/components/home/productsSection.types';
+import type {ProductCardProduct} from '~/components/product/productCard.types';
 
 type CarouselProduct = Pick<
-  CollectionProductNode,
+  ProductCardProduct,
   'title' | 'featuredImage' | 'images'
 >;
 

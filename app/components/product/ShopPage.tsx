@@ -1,6 +1,9 @@
 
 import { useState } from 'react';
-import { ProductCard } from './ProductCard';
+/**
+ * @deprecated Demo-only shop UI with mock data. Production catalog uses
+ * `/collections/all` and `CollectionProductsPage` + `ProductCard`.
+ */
 
 // ==================== CONSTANTS ====================
 const CATEGORIES = [
@@ -157,6 +160,37 @@ const FiltersBar = ({
   </div>
 );
 
+type DemoProduct = (typeof ALL_PRODUCTS)[number];
+
+function DemoShopProductCard({
+  product,
+  onQuickAdd,
+}: {
+  product: DemoProduct;
+  onQuickAdd: (product: DemoProduct) => void;
+}) {
+  return (
+    <article className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+      <img
+        src={product.image}
+        alt={product.name}
+        className="aspect-square w-full object-cover"
+      />
+      <div className="p-4">
+        <h3 className="text-sm font-medium text-neutral-900">{product.name}</h3>
+        <p className="mt-1 text-sm text-neutral-600">${product.price}</p>
+        <button
+          type="button"
+          onClick={() => onQuickAdd(product)}
+          className="mt-3 w-full rounded-full bg-primary py-2 text-xs font-medium text-primary-foreground"
+        >
+          Quick add
+        </button>
+      </div>
+    </article>
+  );
+}
+
 // Product Grid Component
 const ProductGrid = ({
   products,
@@ -172,7 +206,7 @@ const ProductGrid = ({
   >
     {products.map((product: (typeof ALL_PRODUCTS)[number]) => (
       <div key={product.id} role="listitem">
-        <ProductCard product={product} onQuickAdd={onQuickAdd} />
+        <DemoShopProductCard product={product} onQuickAdd={onQuickAdd} />
       </div>
     ))}
   </div>

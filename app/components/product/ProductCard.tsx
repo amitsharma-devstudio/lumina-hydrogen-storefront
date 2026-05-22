@@ -1,118 +1,35 @@
-import { useState } from 'react';
+import {Link} from 'react-router';
+import {Money} from '@shopify/hydrogen';
+import {useVariantUrl} from '~/lib/variants';
+import {ProductCardImageCarousel} from '~/components/home/ProductCardImageCarousel';
+import type {ProductCardProduct} from '~/components/product/productCard.types';
 
-type ProductCardProduct = {
-  id: number;
-  name: string;
-  category: string;
-  price: number | string;
-  image: string;
-  badge?: string;
-  rating?: number;
-  reviews?: number;
-};
-
-export function ProductCard({
-  product,
-  onQuickAdd,
-}: {
-  product: ProductCardProduct;
-  onQuickAdd: (product: ProductCardProduct) => void;
-}) {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+export function ProductCard({product}: {product: ProductCardProduct}) {
+  const variantUrl = useVariantUrl(product.handle);
 
   return (
-    <article
-      className="group cursor-pointer transition-transform duration-300 hover:-translate-y-1"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          console.log('Navigate to product:', product.id);
-        }
-      }}
-      aria-label={`View ${product.name} details`}
-    >
-      {/* Image Container */}
-      <div className="relative mb-4 overflow-hidden rounded-2xl bg-gray-100">
-        {/* Aspect Ratio Container - 3:4 ratio */}
-        <div className="relative aspect-[3/4]">
-          {/* Loading Skeleton */}
-          {!imageLoaded && (
-            <div className="absolute inset-0 animate-pulse bg-gray-200" />
-          )}
-          
-          {/* Product Image */}
-          <img
-            src={product.image}
-            alt={product.name}
-            className={`h-full w-full object-cover transition-all duration-500 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            } ${isHovered ? 'scale-105' : 'scale-100'}`}
-            onLoad={() => setImageLoaded(true)}
-            loading="lazy"
-          />
+    <article className="group/card flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.07)]">
+      <ProductCardImageCarousel product={product} productUrl={variantUrl} />
 
-          {/* Badge */}
-          {product.badge && (
-            <div
-              className="absolute left-3 top-3 rounded-xl bg-white px-3 py-1.5 text-xs font-medium shadow-sm"
-              aria-label={`Product badge: ${product.badge}`}
-            >
-              {product.badge}
-            </div>
-          )}
-
-          {/* Quick Add Button */}
-          <button
-            className={`absolute bottom-3 left-3 right-3 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-md transition-opacity duration-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-              isHovered ? 'opacity-100' : 'opacity-0'
-            }`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onQuickAdd(product);
-            }}
-            aria-label={`Quick add ${product.name} to cart`}
-          >
-            Quick Add
-          </button>
-        </div>
-      </div>
-
-      {/* Product Info */}
-      <div className="flex flex-col gap-1">
-        {/* Category */}
-        <div className="text-xs uppercase tracking-wider text-gray-500">
-          {product.category}
-        </div>
-
-        {/* Product Name */}
-        <h3 className="text-lg font-normal text-black">
-          {product.name}
-        </h3>
-
-        {/* Price */}
-        <div className="mt-1 text-base text-black">
-          ${product.price}
-        </div>
-
-        {/* Rating */}
-        <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
-          <span className="text-[10px] text-black" aria-hidden="true">
-            ★★★★★
-          </span>
-          <span>
-            {product.rating ?? 0} ({product.reviews ?? 0})
-          </span>
-          <span className="sr-only">
-            Rated {product.rating ?? 0} out of 5 stars based on{' '}
-            {product.reviews ?? 0} reviews
-          </span>
-        </div>
+      <div className="flex flex-1 flex-col px-3.5 pb-4 pt-3.5">
+        <Link
+          to={variantUrl}
+          prefetch="intent"
+          className="flex flex-1 flex-col justify-between gap-2.5"
+        >
+          <h3 className="line-clamp-2 text-[13px] font-medium leading-snug tracking-tight text-neutral-900 transition-colors group-hover/card:text-black sm:text-sm">
+            {product.title}
+          </h3>
+          <div className="flex items-baseline justify-between gap-2 border-t border-neutral-100 pt-2.5">
+            <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+              From
+            </span>
+            <Money
+              data={product.priceRange.minVariantPrice}
+              className="text-base font-light tabular-nums tracking-tight text-neutral-900"
+            />
+          </div>
+        </Link>
       </div>
     </article>
   );
