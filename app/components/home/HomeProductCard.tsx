@@ -1,45 +1,36 @@
 import {Link} from 'react-router';
-import {Image, Money} from '@shopify/hydrogen';
+import {Money} from '@shopify/hydrogen';
 import {useVariantUrl} from '~/lib/variants';
+import {ProductCardImageCarousel} from '~/components/home/ProductCardImageCarousel';
+import type {CollectionProductNode} from '~/components/home/productsSection.types';
 
-export function HomeProductCard({product}: {product: any}) {
+export function HomeProductCard({product}: {product: CollectionProductNode}) {
   const variantUrl = useVariantUrl(product.handle);
-  const image = product.featuredImage ?? product.images?.nodes?.[0] ?? null;
 
   return (
-    <article className="group cursor-pointer transition-transform duration-300 hover:-translate-y-1">
-      <Link to={variantUrl} prefetch="intent" className="block">
-        <div className="relative mb-4 overflow-hidden rounded-3xl bg-neutral-50 ring-1 ring-black/5 transition-shadow duration-300 group-hover:shadow-[0_18px_55px_rgba(0,0,0,0.10)]">
-          <div className="relative aspect-[3/4]">
-            {image ? (
-              <Image
-                data={image}
-                alt={image.altText || product.title}
-                sizes="(min-width: 45em) 300px, 50vw"
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-xs uppercase tracking-[0.15em] text-neutral-400">
-                No image
-              </div>
-            )}
+    <article className="group/card flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.07)]">
+      <ProductCardImageCarousel product={product} productUrl={variantUrl} />
 
-            <div className="pointer-events-none absolute inset-x-3 bottom-3 rounded-2xl bg-white/90 px-4 py-3 text-center text-sm font-medium text-black opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
-              View details
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <h3 className="text-lg font-normal tracking-tight text-black">
+      <div className="flex flex-1 flex-col px-3.5 pb-4 pt-3.5">
+        <Link
+          to={variantUrl}
+          prefetch="intent"
+          className="flex flex-1 flex-col justify-between gap-2.5"
+        >
+          <h3 className="line-clamp-2 text-[13px] font-medium leading-snug tracking-tight text-neutral-900 transition-colors group-hover/card:text-black sm:text-sm">
             {product.title}
           </h3>
-          <div className="mt-1 text-base text-black">
-            <Money data={product.priceRange.minVariantPrice} />
+          <div className="flex items-baseline justify-between gap-2 border-t border-neutral-100 pt-2.5">
+            <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+              From
+            </span>
+            <Money
+              data={product.priceRange.minVariantPrice}
+              className="text-base font-light tabular-nums tracking-tight text-neutral-900"
+            />
           </div>
-        </div>
-      </Link>
+        </Link>
+      </div>
     </article>
   );
 }
-

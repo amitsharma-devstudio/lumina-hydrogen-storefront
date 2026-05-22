@@ -4,6 +4,7 @@ import {getPaginationVariables, Analytics, Image} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {HomeProductCard} from '~/components/home/HomeProductCard';
+import {PRODUCT_GRID_CLASSNAME} from '~/components/home/productGridClasses';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -175,7 +176,7 @@ export default function Collection() {
       <section className="mx-auto max-w-7xl px-6 py-14">
         <PaginatedResourceSection<ProductItemFragment>
           connection={collection.products}
-          resourcesClassName="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
+          resourcesClassName={PRODUCT_GRID_CLASSNAME}
           autoLoadNext={{maxAutoLoads: 2}}
         >
           {({node: product}) => <HomeProductCard key={product.id} product={product} />}
@@ -209,7 +210,7 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
       width
       height
     }
-    images(first: 1) {
+    images(first: 5) {
       nodes {
         id
         altText

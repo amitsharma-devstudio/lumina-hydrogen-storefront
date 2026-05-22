@@ -1,89 +1,24 @@
-import { useState } from 'react';
+import {useState} from 'react';
 
-import { Money } from '@shopify/hydrogen';
-
-
-import { ProductCard } from './ProductCard';
+import {Money} from '@shopify/hydrogen';
 import { ImageGallery } from '~/components/ui/ImageGallery';
 import { VariantPicker } from '~/components/VariantPicker';
 import { AddToCartButton } from '~/components/AddToCartButton';
 import { Accordion } from '~/components/ui/Accordion';
-import { CompleteTheRoutine } from '~/components/CompleteTheRoutine';
-
-// ==================== CONSTANTS ====================
-
-const PRODUCT_IMAGES = [
-  'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800',
-  'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800',
-  'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800',
-  'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=800'
-];
-
-const SIZE_OPTIONS = [
-  { id: 'size-30ml', label: '30ml', price: 68 },
-  { id: 'size-50ml', label: '50ml', price: 98 }
-];
+import {CompleteTheRoutine} from '~/components/CompleteTheRoutine';
+import {HomeProductCard} from '~/components/home/HomeProductCard';
+import {
+  CompatibilityCard,
+  IngredientBlendCard,
+  RoutinePlacementCard,
+} from '~/components/product/SkincareIntelligence';
+import {buildSkincareIntelligence} from '~/lib/skincare';
 
 const PRODUCT_BENEFITS = [
   { id: 1, text: 'Free shipping on orders over $75' },
   { id: 2, text: '30-day money-back guarantee' },
   { id: 3, text: 'Cruelty-free and vegan' }
 ];
-
-const ACCORDION_ITEMS = [
-  {
-    id: 'ingredients',
-    title: 'Ingredients',
-    content: 'Water, Sodium Hyaluronate (High, Medium, Low Molecular Weight), Glycerin, Pentylene Glycol, Panthenol, Sodium PCA, Allantoin, Phenoxyethanol, Ethylhexylglycerin'
-  },
-  {
-    id: 'how-to-use',
-    title: 'How to Use',
-    content: 'Apply 2-3 drops to clean, damp skin morning and evening. Gently press into skin until absorbed. Follow with moisturizer. Can be used daily.'
-  },
-  {
-    id: 'shipping',
-    title: 'Shipping & Returns',
-    content: 'Free standard shipping on orders over $75. Orders ship within 1-2 business days. 30-day return policy for unopened products.'
-  }
-];
-
-const RELATED_PRODUCTS = [
-  { id: 2, name: 'Gentle Foaming Cleanser', category: 'Cleanser', price: 45, image: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=600', rating: 4.7, reviews: 189 },
-  { id: 4, name: 'Vitamin C Brightening Serum', category: 'Serum', price: 75, image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600', rating: 4.6, reviews: 156 },
-  { id: 6, name: 'Niacinamide Serum', category: 'Serum', price: 58, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600', badge: 'BESTSELLER', rating: 4.8, reviews: 267 }
-];
-
-// MetaFields.
-const HERO_CLAIM = "Clinically proven 72-hour hydration";
-
-const INGREDIENT_BLEND = [
-  {
-    name: "Hyaluronic Acid",
-    inci: "Sodium Hyaluronate",
-    percentage: "2%",
-    molecularWeight: "Multi-weight",
-    target: "Multi-layer hydration",
-  },
-  {
-    name: "Panthenol",
-    inci: "Pro-Vitamin B5",
-    percentage: "1%",
-    target: "Barrier repair",
-  },
-];
-
-const ROUTINE_INFO = {
-  step: 2,
-  label: "Hydration Step",
-  use: "AM & PM",
-};
-
-const COMPATIBILITY = {
-  safeWith: ["Niacinamide", "Ceramides"],
-  avoidWith: ["Pure Vitamin C (L-Ascorbic Acid)"],
-};
-
 
 // ==================== SUB-COMPONENTS ====================
 
@@ -269,10 +204,8 @@ const AccordionItem = ({
 // Related Products Section Component
 const RelatedProducts = ({
   products,
-  onQuickAdd,
 }: {
   products: any[];
-  onQuickAdd: (product: any) => void;
 }) => (
   <div className="mt-20">
     <h2 className="mb-8 text-5xl font-light tracking-tight text-black">
@@ -280,109 +213,11 @@ const RelatedProducts = ({
     </h2>
     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {products.map((product: any) => (
-        <ProductCard key={product.id} product={product} onQuickAdd={onQuickAdd} />
+        <HomeProductCard key={product.id} product={product} />
       ))}
     </div>
   </div>
 );
-
-// Ingredient Compatibility Engine
-function checkConflicts(currentProduct: any, routineProducts: any[]) {
-  const conflicts: any[] = [];
-
-  currentProduct.ingredients.forEach((ingredient: any) => {
-    routineProducts.forEach((product: any) => {
-      product.ingredients.forEach((otherIngredient: any) => {
-        if (
-          ingredient.conflicts_with.includes(otherIngredient.id)
-        ) {
-          conflicts.push({
-            ingredient: ingredient.name,
-            conflictsWith: otherIngredient.name,
-            product: product.title
-          });
-        }
-      });
-    });
-  });
-
-  return conflicts;
-}
-
-const CompatibilityWarning = ({ conflicts }: {conflicts: any[]}) => {
-  if (!conflicts.length) return null;
-
-  return (
-    <section
-      role="alert"
-      className="mt-8 rounded-xl border border-red-200 bg-red-50 p-6"
-    >
-      <h3 className="text-lg font-medium text-red-800">
-        Ingredient Compatibility Notice
-      </h3>
-
-      <ul className="mt-4 space-y-2 text-sm text-red-700">
-        {conflicts.map((conflict: any, index: number) => (
-          <li key={index}>
-            {conflict.ingredient} may react with {conflict.conflictsWith} in{" "}
-            {conflict.product}
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-};
-
-const IngredientBlend = ({ ingredients }: {ingredients: any[]}) => (
-  <section aria-labelledby="ingredient-blend" className="mt-6">
-    <h3 id="ingredient-blend" className="text-sm font-medium text-black">
-      Key Active Ingredients
-    </h3>
-
-    <ul className="mt-3 space-y-2 text-sm text-gray-600">
-      {ingredients.map((ing, idx) => (
-        <li key={idx}>
-          <strong className="text-black">{ing.name}</strong>{" "}
-          <span className="text-gray-500">
-            ({ing.inci}) — {ing.target}
-          </span>
-        </li>
-      ))}
-    </ul>
-  </section>
-);
-
-const RoutinePlacement = ({ routine }: {routine: any}) => (
-  <section className="mt-6 rounded-xl border border-gray-200 p-4">
-    <p className="text-sm text-gray-600">
-      <strong className="text-black">
-        Step {routine.step}: {routine.label}
-      </strong>
-    </p>
-    <p className="mt-1 text-sm text-gray-500">
-      Use in your routine: {routine.use}
-    </p>
-  </section>
-);
-
-const CompatibilityInfo = ({ data }: {data: any}) => (
-  <section
-    className="mt-6 rounded-xl bg-gray-50 p-4 text-sm"
-    aria-label="Ingredient compatibility"
-  >
-    <p className="text-gray-700">
-      <strong>Safe to use with:</strong>{" "}
-      {data.safeWith.join(", ")}
-    </p>
-
-    <p className="mt-2 text-gray-700">
-      <strong>Avoid pairing with:</strong>{" "}
-      {data.avoidWith.join(", ")}
-    </p>
-  </section>
-);
-
-
 
 // ==================== MAIN PDP COMPONENT ====================
 interface ProductDetailPageProps {
@@ -391,38 +226,12 @@ interface ProductDetailPageProps {
 
 
 export const ProductDetailPage = ({ product }: ProductDetailPageProps) => {
-
-  const [selectedSize, setSelectedSize] = useState(SIZE_OPTIONS[0]);
-  const [quantity, setQuantity] = useState(1);
-
+  const skincare = buildSkincareIntelligence(product);
   const images = (product.images?.nodes ?? []).map((node: any) => ({...node}));
-  const rating = product?.rating?.value
-    ? parseFloat(String(product.rating.value))
-    : 0;
-  const reviewCount = product?.reviewCount?.value
-    ? parseInt(String(product.reviewCount.value), 10)
-    : 0;
   const description = product.descriptionHtml || product.description || '';
-  const selectedVariant= product.selectedOrFirstAvailableVariant
+  const selectedVariant = product.selectedOrFirstAvailableVariant;
 
   const [selectedImage, setSelectedImage] = useState(images?.[0] || {});
-
-  const handleAddToCart = () => {
-    const cartItem = {
-      name: 'Hyaluronic Acid Serum',
-      size: selectedSize.label,
-      price: selectedSize.price,
-      quantity: quantity,
-      total: selectedSize.price * quantity
-    };
-    console.log('Add to cart:', cartItem);
-    alert(`Added ${quantity} × ${selectedSize.label} to cart!`);
-  };
-
-  const handleQuickAdd = (product: any) => {
-    console.log('Quick add:', product);
-    alert(`Added ${product.name} to cart!`);
-  };
 
   return (
     <main className="min-h-screen bg-white py-20">
@@ -445,7 +254,10 @@ export const ProductDetailPage = ({ product }: ProductDetailPageProps) => {
             </div>
 
             {/* Rating */}
-            <ProductRating rating={rating} reviewCount={reviewCount} />
+            <ProductRating
+              rating={skincare.rating}
+              reviewCount={skincare.reviewCount}
+            />
 
             {/* Price */}
             <div className="text-3xl font-light text-black">
@@ -453,22 +265,26 @@ export const ProductDetailPage = ({ product }: ProductDetailPageProps) => {
             </div>
 
             {/* Hero Claim (Metafield) */}
-            <p className="text-sm font-medium text-black">
-              {HERO_CLAIM}
-            </p>
+            {skincare.heroClaim ? (
+              <p className="text-sm font-medium text-black">{skincare.heroClaim}</p>
+            ) : null}
 
             {/* Description */}
             <div className="leading-relaxed text-gray-600" >
               {description}
             </div>
             {/* Ingredient Blend */}
-            <IngredientBlend ingredients={INGREDIENT_BLEND} />
+            <IngredientBlendCard ingredients={skincare.ingredients} />
 
-            {/* Routine Placement */}
-            <RoutinePlacement routine={ROUTINE_INFO} />
+            {skincare.routine ? (
+              <RoutinePlacementCard routine={skincare.routine} />
+            ) : null}
 
-            {/* Compatibility */}
-            <CompatibilityInfo data={COMPATIBILITY} />
+            <CompatibilityCard
+              skinTypes={skincare.skinTypes}
+              safeWith={skincare.safeWith}
+              avoidWith={skincare.avoidWith}
+            />
 
             {/* Options */}
             {/* <div className="flex flex-col gap-4 pt-4">
@@ -511,23 +327,23 @@ export const ProductDetailPage = ({ product }: ProductDetailPageProps) => {
             <BenefitsList benefits={PRODUCT_BENEFITS} />
             <div className="mt-12 border-t border-gray-200">
       {/* Dynamic Metafield: How to Use */}
-      {true && (
+      {skincare.howToUse ? (
         <Accordion title="How to Use">
-          <p>{'howToUse'}</p>
+          <p>{skincare.howToUse}</p>
         </Accordion>
-      )}
+      ) : null}
 
-      {/* Dynamic Metafield: Ingredients */}
-      {/* {ingredients && (
+      {skincare.fullIngredients ? (
         <Accordion title="Full Ingredients">
-          <p>{ingredients}</p>
+          <p>{skincare.fullIngredients}</p>
         </Accordion>
-      )} */}
+      ) : null}
 
-      {/* Static/Policy Info */}
-      <Accordion title="Shipping & Returns">
-        <p>{'shippingPolicy'}</p>
-      </Accordion>
+      {skincare.shippingAndReturns ? (
+        <Accordion title="Shipping & Returns">
+          <p>{skincare.shippingAndReturns}</p>
+        </Accordion>
+      ) : null}
     </div>
 
             {/* Accordion */}
@@ -537,8 +353,13 @@ export const ProductDetailPage = ({ product }: ProductDetailPageProps) => {
         </div>
 
         {/* Related Products */}
-        <CompleteTheRoutine />
-        <RelatedProducts products={RELATED_PRODUCTS} onQuickAdd={handleQuickAdd} />
+        {skincare.regimen ? (
+          <CompleteTheRoutine
+            regimen={skincare.regimen}
+            currentHandle={product.handle}
+          />
+        ) : null}
+        <RelatedProducts products={product.recommendations ?? []} />
       </section>
     </main>
   );

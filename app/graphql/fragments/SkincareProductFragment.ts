@@ -1,5 +1,69 @@
+import {RoutineProductFieldsFragment} from '~/graphql/fragments/RoutineProductFieldsFragment';
+
+/** Shared metaobject field selection for skincare PDP intelligence. */
+const MetaobjectFields = `#graphql
+  fragment MetaobjectFields on Metaobject {
+    id
+    type
+    fields {
+      key
+      value
+    }
+  }
+` as const;
+
 export const SkincareProductFragment = `#graphql
   fragment SkincareProduct on Product {
+    heroClaim: metafield(namespace: "custom", key: "lumina_hero_claim") {
+      id
+      type
+      value
+    }
+
+    howToUse: metafield(namespace: "custom", key: "lumina_how_to_use") {
+      id
+      type
+      value
+    }
+
+    fullIngredients: metafield(namespace: "custom", key: "lumina_full_ingredients") {
+      id
+      type
+      value
+    }
+
+    shippingAndReturns: metafield(namespace: "custom", key: "lumina_shipping_returns") {
+      id
+      type
+      value
+    }
+
+    amPm: metafield(namespace: "custom", key: "lumina_am_pm") {
+      id
+      type
+      value
+    }
+
+    safeWith: metafield(namespace: "custom", key: "lumina_safe_with") {
+      references(first: 10) {
+        nodes {
+          ... on Metaobject {
+            ...MetaobjectFields
+          }
+        }
+      }
+    }
+
+    avoidWith: metafield(namespace: "custom", key: "lumina_avoid_with") {
+      references(first: 10) {
+        nodes {
+          ... on Metaobject {
+            ...MetaobjectFields
+          }
+        }
+      }
+    }
+
     reviewCount: metafield(namespace: "custom", key: "lumina_reviews") {
       id
       type
@@ -22,22 +86,16 @@ export const SkincareProductFragment = `#graphql
       references(first: 10) {
         nodes {
           ... on Metaobject {
-            id
-            field: field(key: "label") {
-              value
-            }
+            ...MetaobjectFields
           }
         }
       }
     }
-    
+
     skinCare: metafield(namespace: "custom", key: "lumina_skin_care") {
       reference {
         ... on Metaobject {
-          id
-          field: field(key: "label") {
-            value
-          }
+          ...MetaobjectFields
         }
       }
     }
@@ -46,13 +104,43 @@ export const SkincareProductFragment = `#graphql
       references(first: 10) {
         nodes {
           ... on Metaobject {
-            id
-            field: field(key: "label") {
-              value
+            ...MetaobjectFields
+          }
+        }
+      }
+    }
+
+    regimen: metafield(namespace: "custom", key: "lumina_regimen") {
+      reference {
+        ... on Metaobject {
+          id
+          type
+          handle
+          fields {
+            key
+            value
+            references(first: 5) {
+              nodes {
+                ... on Product {
+                  ...RoutineProductFields
+                }
+              }
             }
           }
         }
       }
     }
+
+    routineProducts: metafield(namespace: "custom", key: "lumina_routine_products") {
+      references(first: 5) {
+        nodes {
+          ... on Product {
+            ...RoutineProductFields
+          }
+        }
+      }
+    }
   }
+  ${MetaobjectFields}
+  ${RoutineProductFieldsFragment}
 `;

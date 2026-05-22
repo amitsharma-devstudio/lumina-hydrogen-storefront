@@ -181,8 +181,12 @@ See the PDP section above. The key idea is: **URL-selected options** drive varia
 ### Metafields/metaobjects in GraphQL (your examples)
 
 In `app/graphql/fragments/SkincareProductFragment.ts` you query custom product data:
-- scalar metafields like `lumina_rating`, `lumina_reviews`
-- reference metafields that point to **metaobjects**, using `references { nodes { ... on Metaobject { field(key: ...) }}}`
+- scalar metafields like `lumina_rating`, `lumina_reviews`, `lumina_am_pm`
+- reference metafields that point to **metaobjects**, using `references { nodes { ... on Metaobject { fields { key value } } } }`
+- routine carousel: **`lumina_regimen`** metaobject (preferred) or `lumina_routine_products` fallback
+
+**Admin setup guide:** `docs/SHOPIFY_SKINCARE_DATA_MODEL.md`  
+**Parsing helpers:** `app/lib/skincare.ts`
 
 This is Shopify’s “CMS inside Shopify” model:
 - **Metafield** = custom field attached to a resource (product/variant/etc).
