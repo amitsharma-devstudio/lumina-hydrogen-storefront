@@ -27,7 +27,7 @@ export function HomeNewArrivals({products}: {products: CollectionProductList}) {
           <Link
             to="/collections/new-arrivals"
             prefetch="intent"
-            className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm text-black transition-colors hover:border-black"
+            className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm text-foreground transition-colors hover:border-primary"
           >
             View all products
           </Link>

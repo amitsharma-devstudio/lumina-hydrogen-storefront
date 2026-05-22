@@ -17,8 +17,8 @@ function Cta({
   const href = link?.url ?? '';
   const className =
     variant === 'primary'
-      ? 'inline-flex items-center gap-2 rounded-full !bg-black px-16 py-4 text-sm !text-white hover:!text-white transition-opacity hover:opacity-80'
-      : 'inline-flex items-center rounded-full border border-neutral-200 bg-white px-16 py-4 text-sm text-black transition-colors hover:border-black';
+      ? 'inline-flex items-center gap-2 rounded-full !bg-primary px-16 py-4 text-sm !text-primary-foreground transition-opacity hover:!bg-primary-hover hover:!text-primary-foreground'
+      : 'inline-flex items-center rounded-full border border-neutral-200 bg-white px-16 py-4 text-sm text-foreground transition-colors hover:border-primary';
 
   // Shopify metaobject URL fields require absolute URLs (Option B).
   // We still prefer client-side routing for internal links when possible.

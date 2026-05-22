@@ -3,9 +3,9 @@ import {Image} from '@shopify/hydrogen';
 type GalleryImage = {url?: string; altText?: string} & Record<string, unknown>;
 
 const thumbButtonClass = (isSelected: boolean) =>
-  `relative shrink-0 overflow-hidden rounded-md border-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 ${
+  `relative shrink-0 overflow-hidden rounded-md border-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
     isSelected
-      ? 'border-black'
+      ? 'border-primary'
       : 'border-transparent hover:border-neutral-400'
   }`;
 

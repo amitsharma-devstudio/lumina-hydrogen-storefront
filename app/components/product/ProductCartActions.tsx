@@ -9,6 +9,7 @@ import type {CartLineUpdateInput} from '@shopify/hydrogen/storefront-api-types';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import type {RootLoader} from '~/root';
 import {AddToCartButton} from '~/components/AddToCartButton';
+import {btnPrimaryCompactClass} from '~/lib/theme';
 
 type SelectedVariant = {
   id: string;
@@ -18,8 +19,7 @@ type SelectedVariant = {
 
 type CartLine = OptimisticCartLine<CartApiQueryFragment>;
 
-const addButtonClass =
-  'h-12 min-h-12 flex-1 rounded-sm bg-black px-6 text-[11px] font-medium uppercase tracking-[0.2em] text-white transition-opacity hover:opacity-85 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:opacity-100';
+const addButtonClass = btnPrimaryCompactClass;
 
 function formatVariantLabel(
   options: Array<{name: string; value: string}> | undefined,
@@ -85,7 +85,7 @@ function PremiumQuantityBox({
         onClick={onDecrease}
         disabled={decreaseDisabled}
         aria-label="Decrease quantity"
-        className="flex h-full w-11 items-center justify-center text-neutral-500 transition-colors hover:text-black disabled:cursor-not-allowed disabled:opacity-30"
+        className="flex h-full w-11 items-center justify-center text-neutral-500 transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
       >
         −
       </button>
@@ -99,7 +99,7 @@ function PremiumQuantityBox({
         onClick={onIncrease}
         disabled={increaseDisabled}
         aria-label="Increase quantity"
-        className="flex h-full w-11 items-center justify-center text-neutral-500 transition-colors hover:text-black disabled:cursor-not-allowed disabled:opacity-30"
+        className="flex h-full w-11 items-center justify-center text-neutral-500 transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
       >
         +
       </button>
@@ -188,7 +188,7 @@ function ProductCartActionsInner({
             type="submit"
             aria-label="Decrease quantity"
             disabled={displayQty <= 1 || Boolean(selectedLine.isOptimistic)}
-            className="flex h-full w-11 items-center justify-center text-neutral-500 transition-colors hover:text-black disabled:cursor-not-allowed disabled:opacity-30"
+            className="flex h-full w-11 items-center justify-center text-neutral-500 transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
           >
             −
           </button>
@@ -202,7 +202,7 @@ function ProductCartActionsInner({
             type="submit"
             aria-label="Increase quantity"
             disabled={Boolean(selectedLine.isOptimistic)}
-            className="flex h-full w-11 items-center justify-center text-neutral-500 transition-colors hover:text-black disabled:cursor-not-allowed disabled:opacity-30"
+            className="flex h-full w-11 items-center justify-center text-neutral-500 transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
           >
             +
           </button>

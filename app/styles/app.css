@@ -4,8 +4,9 @@
   --cart-aside-summary-height: 250px;
   --grid-item-width: 355px;
   --header-height: 64px;
-  --color-dark: #000;
-  --color-light: #fff;
+  /* Mapped from app/styles/theme.css — edit brand colors there */
+  --color-dark: var(--lumina-primary, #b8572a);
+  --color-light: var(--color-background, #fff);
 }
 
 img {

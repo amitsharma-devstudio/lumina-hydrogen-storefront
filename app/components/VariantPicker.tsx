@@ -1,6 +1,7 @@
 import {useNavigate} from 'react-router';
 import {Money, type MappedProductOptions} from '@shopify/hydrogen';
 import {isVariantPurchasable} from '~/lib/variantAvailability';
+import {chipHoverClass, chipSelectedClass} from '~/lib/theme';
 
 export function VariantPicker({
   options,
@@ -55,8 +56,8 @@ export function VariantPicker({
                       relative flex items-center justify-center rounded-sm border px-4 py-3 text-sm transition-all duration-200
                       ${
                         selected
-                          ? 'border-black bg-black text-white'
-                          : 'border-gray-200 bg-white text-black hover:border-black'
+                          ? chipSelectedClass
+                          : `border-gray-200 bg-white text-foreground ${chipHoverClass}`
                       }
                       ${!isPurchasable ? 'opacity-40' : ''}
                       ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}

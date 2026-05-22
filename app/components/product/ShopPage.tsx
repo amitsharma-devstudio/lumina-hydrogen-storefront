@@ -60,10 +60,10 @@ const FilterButton = ({
 }) => (
   <button
     onClick={onClick}
-    className={`rounded-full border px-6 py-3 text-sm font-normal transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 ${
+    className={`rounded-full border px-6 py-3 text-sm font-normal transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
       isActive
-        ? 'border-black bg-black text-white'
-        : 'border-gray-300 bg-white text-black hover:border-black hover:bg-black hover:text-white'
+        ? 'border-primary bg-primary text-primary-foreground'
+        : 'border-gray-300 bg-white text-foreground hover:border-primary hover:bg-primary hover:text-primary-foreground'
     }`}
     aria-pressed={isActive}
     aria-label={`Filter by ${category.label}`}
@@ -88,7 +88,7 @@ const SortSelect = ({
       id="sort-select"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="appearance-none rounded-full border border-gray-300 bg-white px-6 py-3 pr-10 text-sm font-normal focus:border-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+      className="appearance-none rounded-full border border-gray-300 bg-white px-6 py-3 pr-10 text-sm font-normal focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
       aria-label="Sort products by"
     >
       {SORT_OPTIONS.map((option) => (
@@ -192,7 +192,7 @@ const EmptyState = ({ onReset }: {onReset: () => void}) => (
     </p>
     <button
       onClick={onReset}
-      className="rounded-full bg-black px-8 py-4 text-sm font-medium text-white transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+      className="rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground transition-opacity hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
     >
       Reset Filters
     </button>

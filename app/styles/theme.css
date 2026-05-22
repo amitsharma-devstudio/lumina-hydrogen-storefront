@@ -1,0 +1,63 @@
+/**
+ * Lumina global design tokens (Tailwind v4 @theme + CSS variables).
+ * Change colors, type, and radius here to retheme the storefront.
+ */
+@theme {
+  /* —— Brand: rich premium orange —— */
+  --color-brand-50: #fdf6f2;
+  --color-brand-100: #f9e8de;
+  --color-brand-200: #f0d0bc;
+  --color-brand-500: #b8572a;
+  --color-brand-600: #9a4722;
+  --color-brand-700: #7d3a1c;
+
+  /* Semantic aliases (use in components: bg-primary, text-foreground, etc.) */
+  --color-primary: var(--color-brand-500);
+  --color-primary-hover: var(--color-brand-600);
+  --color-primary-active: var(--color-brand-700);
+  --color-primary-foreground: #ffffff;
+  --color-primary-muted: var(--color-brand-50);
+
+  --color-foreground: #1c1917;
+  --color-foreground-muted: #57534e;
+  --color-background: #ffffff;
+  --color-background-muted: #fafaf9;
+  --color-border: #e7e5e4;
+  --color-border-strong: #d6d3d1;
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-display: var(--font-sans);
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+
+  --tracking-tight: -0.025em;
+  --tracking-wide: 0.05em;
+  --tracking-widest: 0.12em;
+
+  /* Radius */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* Focus ring tied to brand */
+  --default-ring-color: var(--color-primary);
+}
+
+:root {
+  --color-dark: var(--color-primary);
+  --color-light: var(--color-background);
+  --lumina-primary: var(--color-primary);
+  --lumina-primary-hover: var(--color-primary-hover);
+  --lumina-foreground: var(--color-foreground);
+}

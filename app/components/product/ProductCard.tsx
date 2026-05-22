@@ -69,7 +69,7 @@ export function ProductCard({
 
           {/* Quick Add Button */}
           <button
-            className={`absolute bottom-3 left-3 right-3 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-md transition-opacity duration-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 ${
+            className={`absolute bottom-3 left-3 right-3 rounded-lg bg-white px-4 py-3 text-sm font-medium shadow-md transition-opacity duration-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
               isHovered ? 'opacity-100' : 'opacity-0'
             }`}
             onClick={(e) => {

@@ -48,14 +48,14 @@ export function RegimenQuickStrip({
                 prefetch="intent"
                 className={`flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-colors ${
                   isCurrent
-                    ? 'border-black bg-white shadow-sm'
-                    : 'border-neutral-200 bg-white hover:border-neutral-400'
+                    ? 'border-primary bg-white shadow-sm'
+                    : 'border-neutral-200 bg-white hover:border-primary/40'
                 }`}
               >
                 <span
                   className={`flex h-9 w-9 shrink-0 flex-col items-center justify-center rounded-full text-[9px] font-bold leading-tight ${
                     isCurrent
-                      ? 'bg-black text-white'
+                      ? 'bg-primary text-primary-foreground'
                       : 'bg-neutral-100 text-neutral-700'
                   }`}
                 >

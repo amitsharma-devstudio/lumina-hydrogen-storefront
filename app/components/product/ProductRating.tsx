@@ -16,7 +16,7 @@ export function ProductRating({
           <span
             key={index}
             className={
-              index < filledStars ? 'text-black' : 'text-neutral-300'
+              index < filledStars ? 'text-primary' : 'text-neutral-300'
             }
           >
             ★

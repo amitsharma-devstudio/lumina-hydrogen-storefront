@@ -45,8 +45,8 @@ export function CompleteTheRoutine({
                 <div
                   className={`mb-6 flex h-14 w-14 flex-col items-center justify-center rounded-full border transition-all ${
                     isCurrent
-                      ? 'border-black bg-black text-white'
-                      : 'border-gray-200 bg-white text-black'
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-gray-200 bg-white text-foreground'
                   }`}
                 >
                   <span className="text-[10px] font-bold">{item.step}</span>
@@ -90,7 +90,7 @@ export function CompleteTheRoutine({
                       <Link
                         to={`/products/${item.handle}`}
                         prefetch="intent"
-                        className="border-b border-black pb-1 text-[10px] font-bold uppercase hover:border-gray-400 hover:text-gray-400"
+                        className="border-b border-primary pb-1 text-[10px] font-bold uppercase hover:border-primary-hover hover:text-primary-hover"
                       >
                         Add step to bag +
                       </Link>

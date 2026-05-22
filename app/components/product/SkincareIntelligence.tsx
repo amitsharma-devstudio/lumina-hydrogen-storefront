@@ -16,7 +16,7 @@ function Pill({
     neutral: 'bg-neutral-100 text-neutral-800 ring-neutral-200/80',
     safe: 'bg-emerald-50 text-emerald-900 ring-emerald-200/80',
     avoid: 'bg-amber-50 text-amber-900 ring-amber-200/80',
-    accent: 'bg-black text-white ring-black',
+    accent: 'bg-primary text-primary-foreground ring-primary',
   };
   return (
     <span
@@ -61,7 +61,7 @@ export function RoutinePlacementCard({routine}: {routine: RoutineStepDisplay}) {
       aria-label="Routine placement"
     >
       <div className="flex flex-wrap items-center gap-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-sm font-medium text-white">
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
           {routine.step}
         </span>
         <div>

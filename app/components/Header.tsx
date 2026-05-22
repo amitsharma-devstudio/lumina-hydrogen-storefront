@@ -139,7 +139,7 @@ export function Header({
           {/* Cart */}
           {/* <button className="icon-btn relative" onClick={() => open("cart")}>
             🛒
-            <span className="cart-count absolute -top-2 -right-2 bg-black text-white text-xs rounded-full px-2">
+            <span className="cart-count absolute -top-2 -right-2 rounded-full bg-primary px-2 text-xs text-primary-foreground">
               <CartCount cart={cart} />
             </span>
           </button> */}
@@ -151,7 +151,7 @@ export function Header({
           >
             <Icon name="cart" />
             <span
-              className="cart-count absolute -top-2 -right-2 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-black px-1 text-[11px] leading-[18px] text-white"
+              className="cart-count absolute -top-2 -right-2 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-primary px-1 text-[11px] leading-[18px] text-primary-foreground"
               aria-live="polite"
               aria-atomic="true"
             >

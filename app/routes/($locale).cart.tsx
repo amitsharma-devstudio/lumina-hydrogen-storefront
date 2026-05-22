@@ -219,7 +219,7 @@ export default function Cart() {
               <a
                 href={checkoutUrl}
                 style={{color: '#fff'}}
-                className="block w-full text-center bg-black text-white visited:text-white active:text-white py-3 rounded-xl text-sm font-medium hover:bg-neutral-800"
+                className="block w-full rounded-xl bg-primary py-3 text-center text-sm font-medium text-primary-foreground visited:text-primary-foreground active:text-primary-foreground hover:bg-primary-hover"
               >
                 Continue to Checkout
               </a>

@@ -1,6 +1,6 @@
 export function PromoBanner() {
   return (
-    <section className="bg-black text-white py-20">
+    <section className="bg-primary py-20 text-primary-foreground">
       <div className="max-w-5xl mx-auto px-6 text-center">
         <h2 className="text-4xl font-semibold">
           End of Season Sale
