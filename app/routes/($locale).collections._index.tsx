@@ -1,6 +1,7 @@
-import {useLoaderData} from 'react-router';
+import {Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).collections._index';
 import {CollectionCard} from '~/components/collection/CollectionCard';
+import {Breadcrumbs} from '~/components/ui/Breadcrumbs';
 import {PRODUCT_GRID_CLASSNAME} from '~/components/home/productGridClasses';
 import type {CollectionCardCollection} from '~/lib/collectionCoverImage';
 import {FeaturedCollectionFragment as FeaturedCollectionFragmentDoc} from '~/graphql/fragments/FeaturedCollectionFragment';
@@ -8,6 +9,7 @@ import {
   filterMerchandisingCollections,
   sortStoreCollections,
 } from '~/lib/storeCollections';
+import {btnPrimaryLinkClass} from '~/lib/theme';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Collections | Lumina'}];
@@ -29,27 +31,28 @@ export default function Collections() {
   const {collections} = useLoaderData<typeof loader>();
 
   return (
-    <main className="bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-16 lg:py-20">
-        <header className="mb-12 lg:mb-16">
-          <p className="mb-2 text-xs uppercase tracking-[0.15em] text-neutral-500">
-            Shop by collection
-          </p>
-          <h1 className="text-4xl font-light tracking-tight text-neutral-900 md:text-5xl">
-            All Collections
-          </h1>
-          <p className="mt-4 max-w-2xl text-base text-neutral-600">
-            Browse by routine and category. For every product in the store, see{' '}
-            <a
-              href="/collections/all"
-              className="font-medium text-primary underline-offset-2 hover:underline"
+    <main className="collections-index bg-white">
+      <section className="border-b border-neutral-100">
+        <div className="mx-auto max-w-7xl px-6 py-6 md:py-8">
+          <Breadcrumbs
+            items={[
+              {label: 'Home', to: '/'},
+              {label: 'Collections'},
+            ]}
+          />
+          <div className="mt-6">
+            <Link
+              to="/collections/all"
+              prefetch="intent"
+              className={`${btnPrimaryLinkClass} rounded-full px-8 py-3.5 text-sm`}
             >
               Shop all products
-            </a>
-            .
-          </p>
-        </header>
+            </Link>
+          </div>
+        </div>
+      </section>
 
+      <div className="mx-auto max-w-7xl px-6 py-12 lg:py-16">
         {collections.length > 0 ? (
           <div className={PRODUCT_GRID_CLASSNAME}>
             {collections.map((collection, index) => (

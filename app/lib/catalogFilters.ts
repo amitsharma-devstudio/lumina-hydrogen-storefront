@@ -2,6 +2,8 @@
 export const CATALOG_FILTER_GROUPS = [
   {param: 'skin', prefix: 'skin:', label: 'Skin type'},
   {param: 'concern', prefix: 'concern:', label: 'Concern'},
+  {param: 'badge', prefix: 'badge:', label: 'Badge'},
+  {param: 'active', prefix: 'active:', label: 'Active'},
 ] as const;
 
 export type CatalogFilterParam = (typeof CATALOG_FILTER_GROUPS)[number]['param'];

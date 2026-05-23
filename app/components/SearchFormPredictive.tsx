@@ -4,7 +4,7 @@ import {
   type FormProps,
   type Fetcher,
 } from 'react-router';
-import React, {useRef, useEffect} from 'react';
+import React, {useRef} from 'react';
 import type {PredictiveSearchReturn} from '~/lib/search';
 import {useAside} from './Aside';
 
@@ -58,18 +58,17 @@ export function SearchFormPredictive({
     );
   }
 
-  // ensure the passed input has a type of search, because SearchResults
-  // will select the element based on the input
-  useEffect(() => {
-    inputRef?.current?.setAttribute('type', 'search');
-  }, []);
-
   if (typeof children !== 'function') {
     return null;
   }
 
   return (
-    <fetcher.Form {...props} className={className} onSubmit={resetInput}>
+    <fetcher.Form
+      {...props}
+      autoComplete="off"
+      className={className}
+      onSubmit={resetInput}
+    >
       {children({inputRef, fetcher, fetchResults, goToSearch})}
     </fetcher.Form>
   );

@@ -14,10 +14,12 @@ export function CatalogFilterBar({
   activeFilters,
   filterOptions,
   sort,
+  layout = 'sidebar',
 }: {
   activeFilters: CatalogActiveFilters;
   filterOptions: CatalogFilterOptions;
   sort: CatalogSortKey;
+  layout?: 'sidebar' | 'drawer';
 }) {
   const {pathname} = useLocation();
   const activeCount = countActiveCatalogFilters(activeFilters);
@@ -27,9 +29,15 @@ export function CatalogFilterBar({
 
   if (!hasAnyOptions) return null;
 
+  const isDrawer = layout === 'drawer';
+
   return (
     <div role="region" aria-label="Product filters" className="text-left">
-      <div className="mb-4 flex items-center justify-between gap-3 border-b border-neutral-200 pb-3 lg:block">
+      <div
+        className={`mb-4 flex items-center justify-between gap-3 border-b border-neutral-200 pb-3 ${
+          isDrawer ? '' : 'lg:block'
+        }`}
+      >
         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-500">
           Filter
         </p>
@@ -53,6 +61,7 @@ export function CatalogFilterBar({
             activeFilters={activeFilters}
             sort={sort}
             pathname={pathname}
+            layout={layout}
           />
         ))}
       </div>
@@ -67,6 +76,7 @@ function FilterGroup({
   activeFilters,
   sort,
   pathname,
+  layout,
 }: {
   param: CatalogFilterParam;
   label: string;
@@ -74,13 +84,21 @@ function FilterGroup({
   activeFilters: CatalogActiveFilters;
   sort: CatalogSortKey;
   pathname: string;
+  layout: 'sidebar' | 'drawer';
 }) {
+  const isDrawer = layout === 'drawer';
   if (options.length === 0) return null;
 
   return (
     <div>
       <p className="mb-2.5 text-xs font-medium text-neutral-800">{label}</p>
-      <ul className="flex flex-wrap gap-2 lg:flex-col lg:items-stretch">
+      <ul
+        className={
+          isDrawer
+            ? 'flex flex-col gap-2'
+            : 'flex flex-wrap gap-2 lg:flex-col lg:items-stretch'
+        }
+      >
         {options.map((option) => {
           const isActive = activeFilters[param] === option.value;
           const next = toggleCatalogFilter(
@@ -91,11 +109,11 @@ function FilterGroup({
           const href = `${pathname}${catalogFiltersQueryString(next, sort)}`;
 
           return (
-            <li key={option.tag} className="lg:w-full">
+            <li key={option.tag} className={isDrawer ? '' : 'lg:w-full'}>
               <Link
                 to={href}
                 prefetch="intent"
-                className={`inline-flex w-full justify-center rounded-full border px-4 py-2 text-xs font-medium transition-colors lg:justify-start ${
+                className={`inline-flex w-full justify-start rounded-full border px-4 py-2.5 text-sm font-medium transition-colors ${
                   isActive
                     ? 'border-primary bg-primary text-primary-foreground'
                     : 'border-neutral-200 bg-white text-neutral-700 hover:border-primary hover:text-primary'

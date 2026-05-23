@@ -27,10 +27,13 @@ export function Aside({
   children,
   heading,
   type,
+  asideClassName,
 }: {
   children?: React.ReactNode;
   type: AsideType;
   heading: React.ReactNode;
+  /** Extra class on the drawer panel (e.g. search-drawer). */
+  asideClassName?: string;
 }) {
   const {type: activeType, close} = useAside();
   const expanded = type === activeType;
@@ -59,7 +62,7 @@ export function Aside({
       role="dialog"
     >
       <button className="close-outside" onClick={close} />
-      <aside>
+      <aside className={asideClassName}>
         <header>
           <h3>{heading}</h3>
           <button className="close reset" onClick={close} aria-label="Close">

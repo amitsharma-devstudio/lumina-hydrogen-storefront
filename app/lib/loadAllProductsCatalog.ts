@@ -22,8 +22,8 @@ const FALLBACK_CATALOG_META: Pick<
 > = {
   id: 'gid://lumina/Catalog/all-products',
   handle: 'all',
-  title: 'Shop All',
-  description: 'Browse our full range of skincare.',
+  title: 'Shop all',
+  description: null,
   image: null,
 };
 

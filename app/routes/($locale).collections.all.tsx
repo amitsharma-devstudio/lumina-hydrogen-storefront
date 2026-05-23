@@ -33,8 +33,7 @@ export default function AllProductsCollection() {
       sort={sort}
       filters={filters}
       filterOptions={filterOptions}
-      eyebrow="Shop"
-      showHeroImage={Boolean(collection.image?.url)}
+      showHeroImage={false}
     />
   );
 }

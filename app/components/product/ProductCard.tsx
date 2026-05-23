@@ -4,16 +4,24 @@ import {useVariantUrl} from '~/lib/variants';
 import {ProductCardImageCarousel} from '~/components/home/ProductCardImageCarousel';
 import type {ProductCardProduct} from '~/components/product/productCard.types';
 
-export function ProductCard({product}: {product: ProductCardProduct}) {
+export function ProductCard({
+  product,
+  productUrl: productUrlOverride,
+}: {
+  product: ProductCardProduct;
+  /** Override link target (e.g. search results with tracking params). */
+  productUrl?: string;
+}) {
   const variantUrl = useVariantUrl(product.handle);
+  const productUrl = productUrlOverride ?? variantUrl;
 
   return (
     <article className="group/card flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.07)]">
-      <ProductCardImageCarousel product={product} productUrl={variantUrl} />
+      <ProductCardImageCarousel product={product} productUrl={productUrl} />
 
       <div className="flex flex-1 flex-col px-3.5 pb-4 pt-3.5">
         <Link
-          to={variantUrl}
+          to={productUrl}
           prefetch="intent"
           className="flex flex-1 flex-col justify-between gap-2.5"
         >

@@ -1,6 +1,10 @@
-import {Link, useFetcher, type Fetcher} from 'react-router';
-import {Image, Money} from '@shopify/hydrogen';
+import {useFetcher, type Fetcher} from 'react-router';
 import React, {useRef, useEffect} from 'react';
+import {PredictiveSearchGroup} from '~/components/search/PredictiveSearchGroup';
+import {
+  PredictiveSearchRow,
+  PredictiveSearchTextRow,
+} from '~/components/search/PredictiveSearchRow';
 import {
   getEmptyPredictiveSearchResult,
   urlWithTrackingParams,
@@ -88,9 +92,8 @@ function SearchResultsPredictiveArticles({
   if (!articles.length) return null;
 
   return (
-    <div className="predictive-search-result" key="articles">
-      <h5>Articles</h5>
-      <ul>
+    <PredictiveSearchGroup eyebrow="Journal">
+      <ul className="overflow-hidden rounded-xl border border-neutral-200/90 bg-white">
         {articles.map((article) => {
           const articleUrl = urlWithTrackingParams({
             baseUrl: `/blogs/${article.blog.handle}/${article.handle}`,
@@ -99,25 +102,16 @@ function SearchResultsPredictiveArticles({
           });
 
           return (
-            <li className="predictive-search-result-item" key={article.id}>
-              <Link onClick={closeSearch} to={articleUrl}>
-                {article.image?.url && (
-                  <Image
-                    alt={article.image.altText ?? ''}
-                    src={article.image.url}
-                    width={50}
-                    height={50}
-                  />
-                )}
-                <div>
-                  <span>{article.title}</span>
-                </div>
-              </Link>
-            </li>
+            <PredictiveSearchTextRow
+              key={article.id}
+              to={articleUrl}
+              title={article.title}
+              onNavigate={closeSearch}
+            />
           );
         })}
       </ul>
-    </div>
+    </PredictiveSearchGroup>
   );
 }
 
@@ -129,9 +123,8 @@ function SearchResultsPredictiveCollections({
   if (!collections.length) return null;
 
   return (
-    <div className="predictive-search-result" key="collections">
-      <h5>Collections</h5>
-      <ul>
+    <PredictiveSearchGroup eyebrow="Collections">
+      <ul className="space-y-2">
         {collections.map((collection) => {
           const collectionUrl = urlWithTrackingParams({
             baseUrl: `/collections/${collection.handle}`,
@@ -140,25 +133,17 @@ function SearchResultsPredictiveCollections({
           });
 
           return (
-            <li className="predictive-search-result-item" key={collection.id}>
-              <Link onClick={closeSearch} to={collectionUrl}>
-                {collection.image?.url && (
-                  <Image
-                    alt={collection.image.altText ?? ''}
-                    src={collection.image.url}
-                    width={50}
-                    height={50}
-                  />
-                )}
-                <div>
-                  <span>{collection.title}</span>
-                </div>
-              </Link>
-            </li>
+            <PredictiveSearchRow
+              key={collection.id}
+              to={collectionUrl}
+              title={collection.title}
+              image={collection.image}
+              onNavigate={closeSearch}
+            />
           );
         })}
       </ul>
-    </div>
+    </PredictiveSearchGroup>
   );
 }
 
@@ -170,9 +155,8 @@ function SearchResultsPredictivePages({
   if (!pages.length) return null;
 
   return (
-    <div className="predictive-search-result" key="pages">
-      <h5>Pages</h5>
-      <ul>
+    <PredictiveSearchGroup eyebrow="Pages">
+      <ul className="overflow-hidden rounded-xl border border-neutral-200/90 bg-white">
         {pages.map((page) => {
           const pageUrl = urlWithTrackingParams({
             baseUrl: `/pages/${page.handle}`,
@@ -181,17 +165,16 @@ function SearchResultsPredictivePages({
           });
 
           return (
-            <li className="predictive-search-result-item" key={page.id}>
-              <Link onClick={closeSearch} to={pageUrl}>
-                <div>
-                  <span>{page.title}</span>
-                </div>
-              </Link>
-            </li>
+            <PredictiveSearchTextRow
+              key={page.id}
+              to={pageUrl}
+              title={page.title}
+              onNavigate={closeSearch}
+            />
           );
         })}
       </ul>
-    </div>
+    </PredictiveSearchGroup>
   );
 }
 
@@ -203,9 +186,8 @@ function SearchResultsPredictiveProducts({
   if (!products.length) return null;
 
   return (
-    <div className="predictive-search-result" key="products">
-      <h5>Products</h5>
-      <ul>
+    <PredictiveSearchGroup eyebrow="Products">
+      <ul className="space-y-2">
         {products.map((product) => {
           const productUrl = urlWithTrackingParams({
             baseUrl: `/products/${product.handle}`,
@@ -213,29 +195,21 @@ function SearchResultsPredictiveProducts({
             term: term.current,
           });
 
-          const price = product?.selectedOrFirstAvailableVariant?.price;
-          const image = product?.selectedOrFirstAvailableVariant?.image;
+          const variant = product?.selectedOrFirstAvailableVariant;
+
           return (
-            <li className="predictive-search-result-item" key={product.id}>
-              <Link to={productUrl} onClick={closeSearch}>
-                {image && (
-                  <Image
-                    alt={image.altText ?? ''}
-                    src={image.url}
-                    width={50}
-                    height={50}
-                  />
-                )}
-                <div>
-                  <p>{product.title}</p>
-                  <small>{price && <Money data={price} />}</small>
-                </div>
-              </Link>
-            </li>
+            <PredictiveSearchRow
+              key={product.id}
+              to={productUrl}
+              title={product.title}
+              image={variant?.image}
+              price={variant?.price}
+              onNavigate={closeSearch}
+            />
           );
         })}
       </ul>
-    </div>
+    </PredictiveSearchGroup>
   );
 }
 
@@ -268,9 +242,14 @@ function SearchResultsPredictiveEmpty({
   }
 
   return (
-    <p>
-      No results found for <q>{term.current}</q>
-    </p>
+    <div className="rounded-xl border border-neutral-200/90 bg-neutral-50/80 px-4 py-6 text-center">
+      <p className="text-xs uppercase tracking-[0.15em] text-neutral-500">
+        No matches
+      </p>
+      <p className="mt-2 text-sm text-neutral-700">
+        Nothing found for &ldquo;{term.current}&rdquo;
+      </p>
+    </div>
   );
 }
 
@@ -293,7 +272,9 @@ function usePredictiveSearch(): UsePredictiveSearchReturn {
   // capture the search input element as a ref
   useEffect(() => {
     if (!inputRef.current) {
-      inputRef.current = document.querySelector('input[type="search"]');
+      inputRef.current = document.querySelector(
+        '.search-drawer [data-search-input]',
+      );
     }
   }, []);
 
