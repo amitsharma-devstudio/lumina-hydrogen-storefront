@@ -37,7 +37,10 @@ Your store titles → expected handles:
 5. `/products/{hero-handle}` — PDP + add to cart
 6. `/cart` — checkout CTA
 
-## Optional later (v2)
+## Homepage metaobjects (optional — fallbacks work without them)
 
-- [ ] `home_hero` metaobject
+- [ ] `home_hero` — headline, image, CTAs (see `HOME_PAGE_METAOBJECTS.md`)
+- [ ] `home_promo_banner` — 2+ slides for promo carousel
+
+## Optional later (v2)
 - [ ] `lumina_regimen` + PDP metafields (see `SHOPIFY_SKINCARE_DATA_MODEL.md`)

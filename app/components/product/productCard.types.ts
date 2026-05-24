@@ -3,6 +3,7 @@ export type ProductCardProduct = {
   id: string;
   handle: string;
   title: string;
+  tags?: string[];
   featuredImage?: {
     id?: string;
     url?: string | null;

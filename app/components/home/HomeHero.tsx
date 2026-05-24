@@ -1,9 +1,7 @@
 import {Link} from 'react-router';
 import {Image} from '@shopify/hydrogen';
 import type {ReactNode} from 'react';
-import {toClientPath} from '~/lib/homepage';
-
-import type {HeroLink, HomeHeroData} from '~/lib/homepage';
+import {toClientPath, type HeroLink, type HomeHeroData} from '~/lib/homepage';
 
 function Cta({
   link,
@@ -17,11 +15,9 @@ function Cta({
   const href = link?.url ?? '';
   const className =
     variant === 'primary'
-      ? 'inline-flex items-center gap-2 rounded-full !bg-primary px-16 py-4 text-sm !text-primary-foreground transition-opacity hover:!bg-primary-hover hover:!text-primary-foreground'
-      : 'inline-flex items-center rounded-full border border-neutral-200 bg-white px-16 py-4 text-sm text-foreground transition-colors hover:border-primary';
+      ? 'inline-flex items-center gap-2 rounded-full !bg-primary px-10 py-4 text-sm font-medium !text-primary-foreground shadow-[0_8px_24px_rgba(184,87,42,0.35)] transition-colors hover:!bg-primary-hover hover:!text-primary-foreground md:px-14'
+      : 'inline-flex items-center rounded-full border border-neutral-200 bg-white px-10 py-4 text-sm text-foreground transition-colors hover:border-primary md:px-14';
 
-  // Shopify metaobject URL fields require absolute URLs (Option B).
-  // We still prefer client-side routing for internal links when possible.
   const path = toClientPath(href);
 
   if (path && path.startsWith('/')) {
@@ -44,25 +40,27 @@ function Cta({
   );
 }
 
-export function HomeHero({hero}: {hero?: HomeHeroData}) {
+export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
   return (
-    <section className="bg-white pt-6 md:pt-8">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-10 px-6 py-6 md:grid-cols-2 md:gap-16 md:py-8">
-        <div className="order-2 flex flex-col gap-8 md:order-1">
-          {hero?.headline ? (
-            <h1 className="max-w-[12ch] text-[3.25rem] font-[300] leading-[1.02] tracking-[-0.03em] text-black sm:text-[4rem] md:text-[5rem]">
-              {hero.headline}
-            </h1>
-          ) : null}
-
-          {hero?.subhead ? (
-            <p className="max-w-xl overflow-hidden text-lg leading-relaxed text-neutral-500 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:5] md:text-xl">
+    <section className="relative overflow-hidden border-b border-brand-100 bg-[#fbfaf8]">
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-8 px-6 py-8 md:grid-cols-[0.9fr_1.1fr] md:gap-12 md:py-12 lg:min-h-[680px]">
+        <div className="order-2 flex flex-col justify-center gap-8 py-4 md:order-1">
+          <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.14em] text-neutral-500">
+            <span className="text-primary">Lumina</span>
+            <span className="h-px w-8 bg-brand-200" aria-hidden />
+            <span>Barrier-first skincare</span>
+          </div>
+          <h1 className="max-w-[11ch] text-[3rem] font-[300] leading-[1.02] text-black sm:text-[3.75rem] md:text-[4.75rem]">
+            {hero.headline}
+          </h1>
+          {hero.subhead ? (
+            <p className="max-w-xl text-lg leading-relaxed text-neutral-600 md:text-xl">
               {hero.subhead}
             </p>
           ) : null}
 
-          <div className="flex flex-col items-start gap-3">
-            {hero?.primaryCta?.url ? (
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap">
+            {hero.primaryCta?.url ? (
               <Cta link={hero.primaryCta} variant="primary">
                 {hero.primaryCta.label || 'Shop Now'}
                 <svg
@@ -80,40 +78,77 @@ export function HomeHero({hero}: {hero?: HomeHeroData}) {
               </Cta>
             ) : null}
 
-            {hero?.secondaryCta?.url ? (
+            {hero.secondaryCta?.url ? (
               <Cta link={hero.secondaryCta} variant="secondary">
                 {hero.secondaryCta.label || 'Our Story'}
               </Cta>
             ) : null}
           </div>
+
+          <dl className="grid max-w-xl grid-cols-3 border-y border-brand-100 py-5">
+            <div>
+              <dt className="text-[10px] uppercase tracking-[0.14em] text-neutral-500">
+                Clinical
+              </dt>
+              <dd className="mt-1 text-sm font-medium text-neutral-950">
+                Tested actives
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[10px] uppercase tracking-[0.14em] text-neutral-500">
+                Clean
+              </dt>
+              <dd className="mt-1 text-sm font-medium text-neutral-950">
+                Fragrance-aware
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[10px] uppercase tracking-[0.14em] text-neutral-500">
+                Ritual
+              </dt>
+              <dd className="mt-1 text-sm font-medium text-neutral-950">
+                AM to PM
+              </dd>
+            </div>
+          </dl>
         </div>
 
-        <div className="order-1 relative md:order-2">
-          {hero?.image ? (
+        <div className="order-1 relative min-h-[430px] md:order-2 md:min-h-full">
+          {hero.image?.url ? (
             <Image
               data={hero.image}
-              alt={hero.image?.altText ?? 'Skincare'}
-              className="h-[440px] w-full rounded-2xl object-cover sm:h-[520px] md:h-[600px]"
+              alt={hero.image?.altText ?? 'Lumina skincare'}
+              className="h-[430px] w-full rounded-[2rem] object-cover shadow-[0_24px_80px_rgba(28,25,23,0.12)] ring-1 ring-black/5 sm:h-[520px] md:h-full"
               loading="eager"
               sizes="(min-width: 45em) 50vw, 100vw"
             />
-          ) : (
-            <div className="aspect-[4/5] w-full max-h-[600px] rounded-2xl bg-neutral-100 md:aspect-[3/4]" />
-          )}
+          ) : null}
 
-          {hero?.startingFromValue ? (
-            <div className="absolute bottom-4 left-4 z-10 rounded-2xl bg-white p-6 shadow-[0_10px_40px_rgba(0,0,0,0.10)] md:-bottom-6 md:-left-6">
-              <div className="text-xs text-neutral-500">
+          {hero.startingFromValue ? (
+            <div className="absolute bottom-4 left-4 z-10 max-w-[220px] rounded-2xl border border-brand-100 bg-white/95 p-5 shadow-[0_16px_50px_rgba(28,25,23,0.14)] backdrop-blur-sm md:bottom-8 md:left-8">
+              <div className="text-xs uppercase tracking-[0.12em] text-neutral-500">
                 {hero.startingFromLabel || 'Starting from'}
               </div>
-              <div className="mt-1 text-3xl font-light tracking-tight text-black">
+              <div className="mt-1 text-3xl font-light text-neutral-950">
                 {hero.startingFromValue}
               </div>
+              <p className="mt-3 text-xs leading-relaxed text-neutral-500">
+                Build a routine with clinically considered formulas.
+              </p>
             </div>
           ) : null}
+
+          <div className="absolute right-4 top-4 hidden max-w-[230px] rounded-2xl border border-white/70 bg-white/80 p-4 text-sm text-neutral-700 shadow-[0_16px_50px_rgba(28,25,23,0.10)] backdrop-blur md:block">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-primary">
+              Routine intelligence
+            </p>
+            <p className="mt-2 leading-relaxed">
+              Shop by concern, step, and skin rhythm instead of guessing from a
+              shelf.
+            </p>
+          </div>
         </div>
       </div>
     </section>
   );
 }
-

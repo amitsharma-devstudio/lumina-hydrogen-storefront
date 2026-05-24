@@ -102,6 +102,51 @@ export function extractImageFromMetaobjectField(
   return field.reference?.image ?? field.reference ?? null;
 }
 
+export type HomePromoSlideData = {
+  id: string;
+  title: string;
+  subtitle?: string | null;
+  cta?: HeroLink;
+  image?: {
+    url: string;
+    altText?: string | null;
+    width?: number | null;
+    height?: number | null;
+  } | null;
+};
+
+export function buildHomePromoBannerData(args: {
+  id: string;
+  fields: MetaobjectField[];
+  imageKey?: string;
+}): HomePromoSlideData | null {
+  const {id, fields, imageKey = 'image'} = args;
+  const title = getMetaobjectText(fields, 'title') ?? getMetaobjectText(fields, 'headline');
+  if (!title?.trim()) return null;
+
+  const ctaLink = parseMetaobjectLink(
+    getMetaobjectText(fields, 'cta_url') ?? getMetaobjectText(fields, 'link'),
+  );
+  const image = extractImageFromMetaobjectField(getMetaobjectField(fields, imageKey));
+
+  return {
+    id,
+    title: title.trim(),
+    subtitle: getMetaobjectText(fields, 'subtitle') ?? getMetaobjectText(fields, 'subhead'),
+    cta: ctaLink?.url
+      ? {label: ctaLink.text ?? 'Shop now', url: ctaLink.url}
+      : null,
+    image: image?.url
+      ? {
+          url: image.url,
+          altText: image.altText,
+          width: image.width,
+          height: image.height,
+        }
+      : null,
+  };
+}
+
 export function buildHomeHeroData(args: {
   fields: MetaobjectField[];
   locale?: string;

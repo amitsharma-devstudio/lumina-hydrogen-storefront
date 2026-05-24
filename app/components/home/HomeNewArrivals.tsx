@@ -6,16 +6,22 @@ export function HomeNewArrivals({products}: {products: CollectionProductList}) {
   return (
     <section className="bg-white py-20" aria-labelledby="new-arrivals">
       <div className="mx-auto max-w-7xl px-6">
-        <header className="mb-16">
-          <div className="mb-2 text-xs uppercase tracking-[0.15em] text-neutral-500">
-            NEW ARRIVALS
+        <header className="mb-14 grid gap-6 md:grid-cols-[1fr_0.75fr] md:items-end">
+          <div>
+            <div className="mb-2 text-xs uppercase tracking-[0.15em] text-primary">
+              NEW ARRIVALS
+            </div>
+            <h2
+              id="new-arrivals"
+              className="max-w-2xl text-4xl font-light text-black md:text-5xl"
+            >
+              The latest additions to your shelf
+            </h2>
           </div>
-          <h2
-            id="new-arrivals"
-            className="text-4xl font-light tracking-tight text-black md:text-5xl"
-          >
-            Freshly Added
-          </h2>
+          <p className="max-w-md text-sm leading-relaxed text-neutral-600 md:justify-self-end">
+            New launches are selected for real routine roles: prep, treat, seal,
+            and reset without overcrowding your bathroom counter.
+          </p>
         </header>
 
         <ProductsContent
@@ -27,9 +33,9 @@ export function HomeNewArrivals({products}: {products: CollectionProductList}) {
           <Link
             to="/collections/new-arrivals"
             prefetch="intent"
-            className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm text-foreground transition-colors hover:border-primary"
+            className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
           >
-            View all products
+            Explore new arrivals
           </Link>
         </div>
       </div>

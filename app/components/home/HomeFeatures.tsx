@@ -1,7 +1,8 @@
 const FEATURES = [
   {
-    title: 'Clean Ingredients',
-    description: 'Formulated without harsh chemicals or harmful additives',
+    title: 'Active-led formulas',
+    description:
+      'Every product earns its shelf space with a clear routine role',
     icon: (
       <svg
         width="28"
@@ -17,8 +18,8 @@ const FEATURES = [
     ),
   },
   {
-    title: 'Dermatologist Tested',
-    description: 'All products are clinically tested and approved',
+    title: 'Barrier respect',
+    description: 'Designed to layer without leaving skin feeling stripped',
     icon: (
       <svg
         width="28"
@@ -34,8 +35,8 @@ const FEATURES = [
     ),
   },
   {
-    title: '30-Day Guarantee',
-    description: 'Not satisfied? Full refund within 30 days',
+    title: '30-day ritual promise',
+    description: 'Enough time to understand how the formula works for you',
     icon: (
       <svg
         width="28"
@@ -52,8 +53,8 @@ const FEATURES = [
     ),
   },
   {
-    title: 'Free Shipping',
-    description: 'Complimentary delivery on orders over $75',
+    title: 'Complimentary delivery',
+    description: 'Free shipping on considered routines over $75',
     icon: (
       <svg
         width="28"
@@ -73,18 +74,17 @@ const FEATURES = [
 
 export function HomeFeatures() {
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-16">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="grid grid-cols-1 gap-12 text-center sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
+        <div className="grid grid-cols-1 gap-8 border-y border-neutral-200 py-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
           {FEATURES.map((feature) => (
-            <div
-              key={feature.title}
-              className="flex flex-col items-center gap-4"
-            >
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-50 text-black">
+            <div key={feature.title} className="flex flex-col gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-primary">
                 {feature.icon}
               </div>
-              <h3 className="text-lg font-normal text-black">{feature.title}</h3>
+              <h3 className="text-lg font-normal text-black">
+                {feature.title}
+              </h3>
               <p className="text-sm leading-relaxed text-neutral-500">
                 {feature.description}
               </p>
@@ -95,4 +95,3 @@ export function HomeFeatures() {
     </section>
   );
 }
-

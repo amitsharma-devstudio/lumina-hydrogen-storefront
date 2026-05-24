@@ -4,6 +4,30 @@ import {useVariantUrl} from '~/lib/variants';
 import {ProductCardImageCarousel} from '~/components/home/ProductCardImageCarousel';
 import type {ProductCardProduct} from '~/components/product/productCard.types';
 
+const FALLBACK_BENEFITS = [
+  'Barrier support',
+  'Daily glow',
+  'Sensitive-skin minded',
+] as const;
+
+function getBenefitTags(product: ProductCardProduct) {
+  const productTags = 'tags' in product ? (product.tags ?? []) : [];
+  const cleanedTags = productTags
+    .filter((tag) => !tag.toLowerCase().includes('bestseller'))
+    .filter((tag) => !tag.toLowerCase().includes('new'))
+    .slice(0, 2);
+
+  if (cleanedTags.length) return cleanedTags;
+
+  const title = product.title.toLowerCase();
+  if (title.includes('serum')) return ['Targeted active', 'Layerable'];
+  if (title.includes('cleanser')) return ['Gentle cleanse', 'Barrier friendly'];
+  if (title.includes('moistur')) return ['Deep hydration', 'Soft finish'];
+  if (title.includes('mask')) return ['Reset ritual', 'Texture care'];
+
+  return FALLBACK_BENEFITS.slice(0, 2);
+}
+
 export function ProductCard({
   product,
   productUrl: productUrlOverride,
@@ -14,28 +38,49 @@ export function ProductCard({
 }) {
   const variantUrl = useVariantUrl(product.handle);
   const productUrl = productUrlOverride ?? variantUrl;
+  const benefitTags = getBenefitTags(product);
 
   return (
-    <article className="group/card flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.07)]">
+    <article className="group/card flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-0.5 hover:border-brand-100 hover:shadow-[0_14px_42px_rgba(28,25,23,0.08)]">
       <ProductCardImageCarousel product={product} productUrl={productUrl} />
 
       <div className="flex flex-1 flex-col px-3.5 pb-4 pt-3.5">
         <Link
           to={productUrl}
           prefetch="intent"
-          className="flex flex-1 flex-col justify-between gap-2.5"
+          className="flex flex-1 flex-col justify-between gap-3"
         >
-          <h3 className="line-clamp-2 text-[13px] font-medium leading-snug tracking-tight text-neutral-900 transition-colors group-hover/card:text-black sm:text-sm">
-            {product.title}
-          </h3>
-          <div className="flex items-baseline justify-between gap-2 border-t border-neutral-100 pt-2.5">
-            <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-              From
-            </span>
-            <Money
-              data={product.priceRange.minVariantPrice}
-              className="text-base font-light tabular-nums tracking-tight text-neutral-900"
-            />
+          <div>
+            <div className="mb-2 flex flex-wrap gap-1.5">
+              {benefitTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-brand-50 px-2 py-1 text-[9px] font-medium uppercase tracking-[0.12em] text-primary"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <h3 className="line-clamp-2 text-[13px] font-medium leading-snug text-neutral-900 transition-colors group-hover/card:text-black sm:text-sm">
+              {product.title}
+            </h3>
+          </div>
+          <div className="border-t border-neutral-100 pt-3">
+            <div className="mb-2 flex items-center gap-1 text-[11px] text-neutral-500">
+              <span className="text-primary" aria-hidden>
+                ★★★★★
+              </span>
+              <span>Clinically considered</span>
+            </div>
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+                From
+              </span>
+              <Money
+                data={product.priceRange.minVariantPrice}
+                className="text-base font-light tabular-nums text-neutral-900"
+              />
+            </div>
           </div>
         </Link>
       </div>

@@ -86,8 +86,15 @@ main.catalog-plp section {
 
 /* Search page: reset.css section padding */
 main.search-page section,
-main.collections-index section {
+main.collections-index section,
+main.home section {
   padding: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-promo-carousel article {
+    transition: none;
+  }
 }
 
 /* Search drawer — match Lumina header / home typography */

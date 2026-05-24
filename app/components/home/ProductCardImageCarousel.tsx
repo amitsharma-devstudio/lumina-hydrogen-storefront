@@ -63,7 +63,7 @@ export function ProductCardImageCarousel({
       <Link
         to={productUrl}
         prefetch="intent"
-        className="relative block aspect-[4/5] max-h-[200px] w-full overflow-hidden sm:max-h-[220px]"
+        className="relative block aspect-[4/5] max-h-[320px] w-full overflow-hidden sm:max-h-[340px]"
         aria-label={product.title}
       >
         {count > 0 ? (

@@ -19,7 +19,7 @@ export function CollectionCard({collection, loading}: CollectionCardProps) {
       <Link
         to={collectionUrl}
         prefetch="intent"
-        className="relative block aspect-[4/5] max-h-[200px] w-full overflow-hidden bg-white sm:max-h-[220px]"
+        className="relative block aspect-[4/5] max-h-[320px] w-full overflow-hidden bg-white sm:max-h-[340px]"
         aria-label={collection.title}
       >
         {image?.url ? (
@@ -48,16 +48,14 @@ export function CollectionCard({collection, loading}: CollectionCardProps) {
           prefetch="intent"
           className="flex flex-1 flex-col justify-between gap-2.5"
         >
-          <h3 className="line-clamp-2 min-h-[2.75rem] text-[13px] font-medium leading-snug tracking-tight text-neutral-900 transition-colors group-hover/card:text-black sm:text-sm">
+          <h3 className="line-clamp-2 min-h-[2.75rem] text-[13px] font-medium leading-snug text-neutral-900 transition-colors group-hover/card:text-black sm:text-sm">
             {collection.title}
           </h3>
           <div className="flex items-baseline justify-between gap-2 border-t border-neutral-100 pt-2.5">
             <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
               Explore
             </span>
-            <span className="text-base font-light tracking-tight text-neutral-900">
-              →
-            </span>
+            <span className="text-base font-light text-neutral-900">→</span>
           </div>
         </Link>
       </div>
