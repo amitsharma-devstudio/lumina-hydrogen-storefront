@@ -8,7 +8,7 @@ import {HomeNewsletter} from '~/components/home/HomeNewsletter';
 import {HomeCollections} from '~/components/home/HomeCollections';
 import {HomeBestsellers} from '~/components/home/HomeBestsellers';
 import {HomeNewArrivals} from '~/components/home/HomeNewArrivals';
-import {HomeRoutineStrip} from '~/components/home/HomeRoutineStrip';
+import {HomeRoutineTeaser} from '~/components/home/HomeRoutineTeaser';
 import {HomeSocialProof} from '~/components/home/HomeSocialProof';
 import type {CollectionCardCollection} from '~/lib/collectionCoverImage';
 import {loadHomepageData} from '~/lib/homepageLoader';
@@ -37,7 +37,7 @@ export default function Homepage() {
       <HomePromoCarousel slides={data.promoSlides} />
       <HomeShopBy />
       <HomeBestsellers products={data.bestsellers} />
-      <HomeRoutineStrip />
+      <HomeRoutineTeaser />
       <HomeCollections
         collections={data.curatedCollections as CollectionCardCollection[]}
       />

@@ -43,7 +43,13 @@ Create these in **Settings → Custom data → Metaobjects**.
 
 ---
 
-### 4. `lumina_regimen` (shared routine carousel) — **recommended at scale**
+### 4. Homepage routine builder (products → collections → metaobjects)
+
+See **`ROUTINE_BUILDER_ADMIN_STRATEGY.md`** for how to tag products, fill routine collections, and create minimal `lumina_routine_bundle` entries without maintaining duplicate product lists.
+
+---
+
+### 5. `lumina_regimen` (shared routine carousel) — **recommended at scale**
 
 One regimen entry powers the **“Complete the routine”** strip for many products.
 
