@@ -44,11 +44,9 @@ If **no** entries exist, the promo carousel is hidden.
 
 1. Hero (metaobject)  
 2. Promo carousel (metaobjects)  
-3. Shop by category pills  
-4. Bestsellers  
-5. Routine strip (3 steps)  
-6. Curated collections  
-7. New arrivals  
-8. Social proof  
-9. Features  
-10. Newsletter  
+3. Routine builder teaser  
+4. Curated collections  
+5. Bestsellers (featured products)  
+6. Social proof  
+7. Features  
+8. Newsletter  

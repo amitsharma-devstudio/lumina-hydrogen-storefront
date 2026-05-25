@@ -2,12 +2,10 @@ import {useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale)._index';
 import {HomeHero} from '~/components/home/HomeHero';
 import {HomePromoCarousel} from '~/components/home/HomePromoCarousel';
-import {HomeShopBy} from '~/components/home/HomeShopBy';
 import {HomeFeatures} from '~/components/home/HomeFeatures';
 import {HomeNewsletter} from '~/components/home/HomeNewsletter';
 import {HomeCollections} from '~/components/home/HomeCollections';
 import {HomeBestsellers} from '~/components/home/HomeBestsellers';
-import {HomeNewArrivals} from '~/components/home/HomeNewArrivals';
 import {HomeRoutineTeaser} from '~/components/home/HomeRoutineTeaser';
 import {HomeSocialProof} from '~/components/home/HomeSocialProof';
 import type {CollectionCardCollection} from '~/lib/collectionCoverImage';
@@ -35,13 +33,11 @@ export default function Homepage() {
     <main className="home">
       {data.hero ? <HomeHero hero={data.hero} /> : null}
       <HomePromoCarousel slides={data.promoSlides} />
-      <HomeShopBy />
-      <HomeBestsellers products={data.bestsellers} />
       <HomeRoutineTeaser />
       <HomeCollections
         collections={data.curatedCollections as CollectionCardCollection[]}
       />
-      <HomeNewArrivals products={data.newArrivals} />
+      <HomeBestsellers products={data.bestsellers} />
       <HomeSocialProof />
       <HomeFeatures />
       <HomeNewsletter />

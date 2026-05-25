@@ -4,7 +4,6 @@ import {FeaturedCollectionsQuery} from '~/graphql/queries/FeaturedCollectionsQue
 import {HomeHeroQuery} from '~/graphql/queries/HomeHeroQuery';
 import {HomePromoBannersQuery} from '~/graphql/queries/HomePromoBannersQuery';
 import {BestsellersProductsQuery} from '~/graphql/queries/BestsellersProductsQuery';
-import {NewArrivalsProductsQuery} from '~/graphql/queries/NewArrivalsProductsQuery';
 import {
   buildHomeHeroData,
   buildHomePromoBannerData,
@@ -95,13 +94,8 @@ async function loadCollectionProductsByHandle(
 }
 
 export async function loadHomepageData(storefront: Storefront) {
-  const [
-    featuredCollectionsResponse,
-    heroResponse,
-    promoResponse,
-    bestsellers,
-    newArrivals,
-  ] = await Promise.all([
+  const [featuredCollectionsResponse, heroResponse, promoResponse, bestsellers] =
+    await Promise.all([
     storefront.query(FeaturedCollectionsQuery, {
       variables: {first: 24},
     }),
@@ -118,11 +112,6 @@ export async function loadHomepageData(storefront: Storefront) {
       storefront,
       BestsellersProductsQuery,
       BESTSELLERS_HANDLE_CANDIDATES,
-    ),
-    loadCollectionProductsByHandle(
-      storefront,
-      NewArrivalsProductsQuery,
-      NEW_ARRIVALS_HANDLE_CANDIDATES,
     ),
   ]);
 
@@ -146,6 +135,5 @@ export async function loadHomepageData(storefront: Storefront) {
     hero: rawHero && !isHeroEmpty(rawHero) ? rawHero : null,
     promoSlides: cmsPromoSlides,
     bestsellers,
-    newArrivals,
   };
 }

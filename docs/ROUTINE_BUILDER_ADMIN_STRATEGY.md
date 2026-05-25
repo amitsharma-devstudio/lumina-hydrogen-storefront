@@ -107,7 +107,7 @@ You already have **four routine collections** (handles should match your storefr
 If a step is empty, the routine builder cannot offer meaningful choices for that step.
 
 **Shop collections (separate from routines)**  
-Collections like `cleanser`, `serums`, `moisturizers` are for **Shop by category** navigation. A product can be in both `cleanser` and `morning-glow-routine`.
+Collections like `cleanser`, `serums`, `moisturizers` are for **collection browse** on the homepage and catalog. A product can be in both `cleanser` and `morning-glow-routine`.
 
 ---
 
