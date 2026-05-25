@@ -1,4 +1,5 @@
 import {Link} from 'react-router';
+import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
 
 const SHOP_BY_LINKS = [
   {
@@ -23,7 +24,7 @@ const SHOP_BY_LINKS = [
     label: 'Bestsellers',
     eyebrow: 'Most loved',
     description: 'The formulas customers reorder first.',
-    to: '/collections/bestseller',
+    to: BESTSELLERS_COLLECTION_PATH,
   },
 ] as const;
 

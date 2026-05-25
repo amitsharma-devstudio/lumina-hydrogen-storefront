@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import {Link} from 'react-router';
 import {Image} from '@shopify/hydrogen';
-import type {HomePromoSlide} from '~/lib/homepageFallbacks';
-import {toClientPath} from '~/lib/homepage';
+import {toClientPath, type HomePromoSlide} from '~/lib/homepage';
 
 const AUTO_ADVANCE_MS = 6000;
 
@@ -60,13 +59,15 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
               aria-hidden={!isActive}
             >
               <div className="absolute inset-0">
-                <Image
-                  data={slide.image}
-                  alt={slide.image.altText ?? slide.title}
-                  className="h-full w-full object-cover object-center"
-                  sizes="100vw"
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                />
+                {slide.image?.url ? (
+                  <Image
+                    data={slide.image}
+                    alt={slide.image.altText ?? slide.title}
+                    className="h-full w-full object-cover object-center"
+                    sizes="100vw"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                  />
+                ) : null}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />
               </div>
 

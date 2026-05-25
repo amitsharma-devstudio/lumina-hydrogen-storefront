@@ -1,6 +1,6 @@
 # Homepage metaobjects (Lumina)
 
-The homepage loads **CMS content from Shopify metaobjects** with **premium hardcoded fallbacks** when entries are missing—safe for demos and dev stores.
+The homepage loads **hero and promo content from Shopify metaobjects**. CTAs use the URLs you set in Admin (`cta_url`, `primary_cta_url`, etc.); full Shopify URLs are converted to in-app paths automatically.
 
 ## `home_hero` (single entry)
 
@@ -17,7 +17,7 @@ The homepage loads **CMS content from Shopify metaobjects** with **premium hardc
 | `starting_from_value` | Money or text | e.g. `$32` |
 | `image` | File (image) | Hero photography |
 
-Publish **one** metaobject entry. If missing, the storefront uses the fallback hero in `app/lib/homepageFallbacks.ts`.
+Publish **one** metaobject entry. If missing, the hero section is hidden.
 
 ## `home_promo_banner` (multiple entries → carousel)
 
@@ -28,16 +28,10 @@ Load up to **8** entries; they rotate in the promo carousel.
 |-----------|------|--------|
 | `title` or `headline` | Single line | Slide headline |
 | `subtitle` or `subhead` | Single line | Optional |
-| `cta_url` or `link` | JSON / URL | `{ "url": "/collections/...", "text": "Shop now" }` |
+| `cta_url` or `link` | JSON / URL | `{ "url": "/collections/bestsellers", "text": "Shop bestsellers" }` or full store URL |
 | `image` | File (image) | Background (16:9 recommended) |
 
-If **no** entries exist, three fallback slides loop automatically using static assets:
-
-| Slide | File | URL path |
-|-------|------|----------|
-| 1 — New season | `public/images/home/promo-1.jpg` | `/images/home/promo-1.jpg` |
-| 2 — Free shipping | `public/images/home/promo-2.jpg` | `/images/home/promo-2.jpg` |
-| 3 — Bestsellers | `public/images/home/promo-3.jpg` | `/images/home/promo-3.jpg` |
+If **no** entries exist, the promo carousel is hidden.
 
 ## Admin checklist
 
@@ -48,8 +42,8 @@ If **no** entries exist, three fallback slides loop automatically using static a
 
 ## Homepage section order
 
-1. Hero (metaobject + fallback)  
-2. Promo carousel (loop)  
+1. Hero (metaobject)  
+2. Promo carousel (metaobjects)  
 3. Shop by category pills  
 4. Bestsellers  
 5. Routine strip (3 steps)  

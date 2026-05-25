@@ -102,7 +102,7 @@ export function extractImageFromMetaobjectField(
   return field.reference?.image ?? field.reference ?? null;
 }
 
-export type HomePromoSlideData = {
+export type HomePromoSlide = {
   id: string;
   title: string;
   subtitle?: string | null;
@@ -110,16 +110,21 @@ export type HomePromoSlideData = {
   image?: {
     url: string;
     altText?: string | null;
-    width?: number | null;
-    height?: number | null;
+    width?: number;
+    height?: number;
   } | null;
 };
+
+export function isHeroEmpty(hero: HomeHeroData): boolean {
+  if (!hero) return true;
+  return !hero.headline?.trim() && !hero.image?.url;
+}
 
 export function buildHomePromoBannerData(args: {
   id: string;
   fields: MetaobjectField[];
   imageKey?: string;
-}): HomePromoSlideData | null {
+}): HomePromoSlide | null {
   const {id, fields, imageKey = 'image'} = args;
   const title = getMetaobjectText(fields, 'title') ?? getMetaobjectText(fields, 'headline');
   if (!title?.trim()) return null;
@@ -129,10 +134,12 @@ export function buildHomePromoBannerData(args: {
   );
   const image = extractImageFromMetaobjectField(getMetaobjectField(fields, imageKey));
 
+  const subtitle =
+    getMetaobjectText(fields, 'subtitle') ?? getMetaobjectText(fields, 'subhead');
   return {
     id,
     title: title.trim(),
-    subtitle: getMetaobjectText(fields, 'subtitle') ?? getMetaobjectText(fields, 'subhead'),
+    subtitle,
     cta: ctaLink?.url
       ? {label: ctaLink.text ?? 'Shop now', url: ctaLink.url}
       : null,
@@ -172,6 +179,7 @@ export function buildHomeHeroData(args: {
   };
 }
 
+/** Turn Shopify Admin URLs into in-app paths (e.g. myshopify.com/collections/x → /collections/x) */
 export function toClientPath(href: string | null | undefined): string | null {
   if (!href) return null;
   try {

@@ -33,7 +33,7 @@ export default function Homepage() {
 
   return (
     <main className="home">
-      <HomeHero hero={data.hero} />
+      {data.hero ? <HomeHero hero={data.hero} /> : null}
       <HomePromoCarousel slides={data.promoSlides} />
       <HomeShopBy />
       <HomeBestsellers products={data.bestsellers} />

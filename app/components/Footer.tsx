@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { NavLink, Await } from "react-router";
 import type { FooterQuery, HeaderQuery } from "storefrontapi.generated";
+import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
 
 /**
  * Dummy fallback menu
@@ -33,7 +34,7 @@ const FALLBACK_FOOTER_MENU: NonNullable<FooterQuery["menu"]> = {
       ...FALLBACK_MENU_ITEM_BASE,
       id: "3",
       title: "Bestsellers",
-      url: "/collections/bestseller",
+      url: BESTSELLERS_COLLECTION_PATH,
       items: [],
     },
     {

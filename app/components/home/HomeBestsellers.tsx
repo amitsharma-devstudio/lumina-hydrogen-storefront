@@ -1,4 +1,5 @@
 import {Link} from 'react-router';
+import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
 import {ProductsContent} from '~/components/home/ProductsContent';
 import type {CollectionProductList} from '~/components/home/productsSection.types';
 
@@ -32,7 +33,7 @@ export function HomeBestsellers({products}: {products: CollectionProductList}) {
 
         <div className="mt-10">
           <Link
-            to="/collections/bestseller"
+            to={BESTSELLERS_COLLECTION_PATH}
             prefetch="intent"
             className="inline-flex items-center rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
           >

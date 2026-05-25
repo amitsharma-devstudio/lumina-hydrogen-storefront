@@ -17,7 +17,15 @@ export const STORE_COLLECTION_ORDER = [
 /** Catalog pseudo-collections — hide on the collections index */
 export const HIDDEN_COLLECTION_HANDLES = new Set(['all', 'frontpage']);
 
-export const BESTSELLERS_HANDLE_CANDIDATES = ['bestsellers', 'bestseller'] as const;
+export const BESTSELLERS_COLLECTION_HANDLE = 'bestsellers';
+
+export const BESTSELLERS_COLLECTION_PATH = `/collections/${BESTSELLERS_COLLECTION_HANDLE}`;
+
+export const BESTSELLERS_HANDLE_CANDIDATES = [
+  BESTSELLERS_COLLECTION_HANDLE,
+  'bestseller',
+] as const;
+
 export const NEW_ARRIVALS_HANDLE_CANDIDATES = [
   'new-arrivals',
   'new',

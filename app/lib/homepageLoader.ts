@@ -8,14 +8,10 @@ import {NewArrivalsProductsQuery} from '~/graphql/queries/NewArrivalsProductsQue
 import {
   buildHomeHeroData,
   buildHomePromoBannerData,
+  isHeroEmpty,
+  type HomePromoSlide,
   type MetaobjectField,
 } from '~/lib/homepage';
-import {
-  FALLBACK_HOME_PROMO_SLIDES,
-  resolveHomeHero,
-  resolveHomePromoSlides,
-  type HomePromoSlide,
-} from '~/lib/homepageFallbacks';
 import {getCollectionProductNodes} from '~/components/home/productsSection.types';
 import {
   BESTSELLERS_HANDLE_CANDIDATES,
@@ -57,16 +53,12 @@ function mapPromoMetaobjectsToSlides(
 ): HomePromoSlide[] {
   const slides: HomePromoSlide[] = [];
 
-  nodes.forEach((node, index) => {
+  nodes.forEach((node) => {
     const parsed = buildHomePromoBannerData({
       id: node.id,
       fields: (node.fields ?? []) as MetaobjectField[],
     });
     if (!parsed) return;
-
-    const fallbackImage =
-      FALLBACK_HOME_PROMO_SLIDES[index % FALLBACK_HOME_PROMO_SLIDES.length]
-        ?.image ?? FALLBACK_HOME_PROMO_SLIDES[0].image;
 
     slides.push({
       id: parsed.id,
@@ -80,7 +72,7 @@ function mapPromoMetaobjectsToSlides(
             width: parsed.image.width ?? undefined,
             height: parsed.image.height ?? undefined,
           }
-        : fallbackImage,
+        : null,
     });
   });
 
@@ -151,8 +143,8 @@ export async function loadHomepageData(storefront: Storefront) {
 
   return {
     curatedCollections: selectCuratedCollections(collectionNodes),
-    hero: resolveHomeHero(rawHero),
-    promoSlides: resolveHomePromoSlides(cmsPromoSlides),
+    hero: rawHero && !isHeroEmpty(rawHero) ? rawHero : null,
+    promoSlides: cmsPromoSlides,
     bestsellers,
     newArrivals,
   };

@@ -1,9 +1,10 @@
 import {Link} from 'react-router';
+import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
 
 const QUICK_LINKS = [
   {label: 'Shop all', to: '/collections/all'},
   {label: 'Collections', to: '/collections'},
-  {label: 'Bestsellers', to: '/collections/bestseller'},
+  {label: 'Bestsellers', to: BESTSELLERS_COLLECTION_PATH},
   {label: 'New arrivals', to: '/collections/new-arrivals'},
 ] as const;
 
