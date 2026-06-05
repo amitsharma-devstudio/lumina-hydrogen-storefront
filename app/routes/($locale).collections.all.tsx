@@ -33,7 +33,6 @@ export default function AllProductsCollection() {
       sort={sort}
       filters={filters}
       filterOptions={filterOptions}
-      showHeroImage={false}
     />
   );
 }

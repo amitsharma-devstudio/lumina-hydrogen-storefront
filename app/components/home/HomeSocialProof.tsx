@@ -1,3 +1,11 @@
+import {
+  HOME_SECTION_HEADER,
+  HOME_SECTION_EYEBROW,
+  HOME_SECTION_LEDE,
+  HOME_SECTION_SURFACE,
+  HOME_SECTION_TITLE,
+} from '~/components/home/homeSectionStyles';
+
 const STATS = [
   {value: '92%', label: 'reported softer-feeling skin'},
   {value: '4.9', label: 'average product rating'},
@@ -23,18 +31,16 @@ const STAR_KEYS = ['one', 'two', 'three', 'four', 'five'] as const;
 
 export function HomeSocialProof() {
   return (
-    <section className="bg-[#fbfaf8] py-20">
+    <section className={HOME_SECTION_SURFACE}>
       <div className="mx-auto max-w-7xl px-6">
-        <header className="mb-12 grid gap-6 md:grid-cols-[0.9fr_1.1fr] md:items-end">
+        <header className={HOME_SECTION_HEADER}>
           <div>
-            <p className="mb-2 text-xs uppercase tracking-[0.15em] text-primary">
-              Proof, not noise
-            </p>
-            <h2 className="text-3xl font-light text-black md:text-5xl">
+            <p className={HOME_SECTION_EYEBROW}>Proof, not noise</p>
+            <h2 className={HOME_SECTION_TITLE}>
               Results customers can see and feel
             </h2>
           </div>
-          <p className="max-w-xl text-sm leading-relaxed text-neutral-600 md:justify-self-end">
+          <p className={HOME_SECTION_LEDE}>
             Premium does not mean mysterious. Put clear outcomes, verified
             voices, and a generous routine promise in view before checkout.
           </p>

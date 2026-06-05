@@ -1,6 +1,7 @@
 import {Link} from 'react-router';
 import {Image} from '@shopify/hydrogen';
 import type {ReactNode} from 'react';
+import {HOME_SECTION_MUTED_FLUSH} from '~/components/home/homeSectionStyles';
 import {toClientPath, type HeroLink, type HomeHeroData} from '~/lib/homepage';
 
 function Cta({
@@ -42,7 +43,7 @@ function Cta({
 
 export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
   return (
-    <section className="relative overflow-hidden border-b border-brand-100 bg-[#fbfaf8]">
+    <section className={`relative overflow-hidden ${HOME_SECTION_MUTED_FLUSH}`}>
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-8 px-6 py-8 md:grid-cols-[0.9fr_1.1fr] md:gap-12 md:py-12 lg:min-h-[680px]">
         <div className="order-2 flex flex-col justify-center gap-8 py-4 md:order-1">
           <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.14em] text-neutral-500">

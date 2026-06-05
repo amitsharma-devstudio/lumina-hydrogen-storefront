@@ -1,6 +1,11 @@
 import {Link} from 'react-router';
 import {Image} from '@shopify/hydrogen';
 import {
+  PRODUCT_CARD_IMAGE_HEIGHT,
+  PRODUCT_CARD_IMAGE_SIZES,
+  PRODUCT_CARD_IMAGE_WIDTH,
+} from '~/components/home/productGridClasses';
+import {
   getCollectionCoverImage,
   type CollectionCardCollection,
 } from '~/lib/collectionCoverImage';
@@ -27,8 +32,11 @@ export function CollectionCard({collection, loading}: CollectionCardProps) {
             data={image}
             alt={image.altText || collection.title}
             loading={loading}
-            sizes="(min-width: 1280px) 20vw, (min-width: 768px) 25vw, 45vw"
-            className="h-full w-full object-contain p-4 transition-transform duration-500 ease-out group-hover/card:scale-[1.02] sm:p-5"
+            width={PRODUCT_CARD_IMAGE_WIDTH}
+            height={PRODUCT_CARD_IMAGE_HEIGHT}
+            aspectRatio="4/5"
+            sizes={PRODUCT_CARD_IMAGE_SIZES}
+            className="!h-auto !max-h-full !w-auto !max-w-full object-contain p-4 transition-transform duration-500 ease-out group-hover/card:scale-[1.02] sm:p-5"
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-2 bg-neutral-50 p-6 text-center">

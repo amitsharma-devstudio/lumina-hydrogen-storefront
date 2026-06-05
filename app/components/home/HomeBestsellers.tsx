@@ -1,25 +1,28 @@
 import {Link} from 'react-router';
-import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
+import {
+  HOME_BTN_SECONDARY,
+  HOME_SECTION_HEADER,
+  HOME_SECTION_EYEBROW,
+  HOME_SECTION_LEDE,
+  HOME_SECTION_MUTED,
+  HOME_SECTION_TITLE,
+} from '~/components/home/homeSectionStyles';
 import {ProductsContent} from '~/components/home/ProductsContent';
 import type {CollectionProductList} from '~/components/home/productsSection.types';
+import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
 
 export function HomeBestsellers({products}: {products: CollectionProductList}) {
   return (
-    <section className="bg-[#f6f3ef] py-20" aria-labelledby="bestsellers">
+    <section className={HOME_SECTION_MUTED} aria-labelledby="bestsellers">
       <div className="mx-auto max-w-7xl px-6">
-        <header className="mb-14 grid gap-6 md:grid-cols-[1fr_0.75fr] md:items-end">
+        <header className={HOME_SECTION_HEADER}>
           <div>
-            <div className="mb-2 text-xs uppercase tracking-[0.15em] text-primary">
-              BESTSELLERS
-            </div>
-            <h2
-              id="bestsellers"
-              className="max-w-2xl text-4xl font-light text-black md:text-5xl"
-            >
+            <p className={HOME_SECTION_EYEBROW}>Bestsellers</p>
+            <h2 id="bestsellers" className={HOME_SECTION_TITLE}>
               Proven formulas people come back for
             </h2>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-neutral-600 md:justify-self-end">
+          <p className={HOME_SECTION_LEDE}>
             Start with the products customers use until the last drop: barrier
             support, active-led treatments, and daily hydration that layer
             beautifully.
@@ -35,7 +38,7 @@ export function HomeBestsellers({products}: {products: CollectionProductList}) {
           <Link
             to={BESTSELLERS_COLLECTION_PATH}
             prefetch="intent"
-            className="inline-flex items-center rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
+            className={HOME_BTN_SECONDARY}
           >
             Shop all bestsellers
           </Link>

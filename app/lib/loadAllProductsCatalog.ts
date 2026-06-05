@@ -2,13 +2,12 @@ import {getPaginationVariables} from '@shopify/hydrogen';
 import type {Storefront} from '@shopify/hydrogen';
 import type {CollectionProductsPageData} from '~/components/catalog/CollectionProductsPage';
 import {CatalogProductsQuery} from '~/graphql/queries/CatalogProductsQuery';
-import {CatalogFilterFacetsQuery} from '~/graphql/queries/CollectionFilterFacetsQuery';
 import {CollectionProductsQuery} from '~/graphql/queries/CollectionProductsQuery';
 import {
-  buildFilterOptionsFromTags,
   buildShopifyProductsSearchQuery,
   parseCatalogFiltersFromRequest,
 } from '~/lib/catalogFilters';
+import {loadCatalogFilterOptions} from '~/lib/loadCollectionProducts';
 import {
   getCatalogSortFromRequest,
   getProductCatalogSortVariables,
@@ -32,12 +31,6 @@ type LoadAllProductsCatalogArgs = {
   request: Request;
   pageBy?: number;
 };
-
-async function loadCatalogFilterOptions(storefront: Storefront) {
-  const {products} = await storefront.query(CatalogFilterFacetsQuery);
-  const tags = products?.nodes?.flatMap((node) => node.tags ?? []) ?? [];
-  return buildFilterOptionsFromTags(tags);
-}
 
 /** Optional Shopify `all` collection — used for title/description only. */
 async function loadAllCollectionMeta(storefront: Storefront) {

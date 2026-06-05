@@ -1,5 +1,5 @@
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
-import {ProductCard} from '~/components/product/ProductCard';
+import {CatalogProductCard} from '~/components/catalog/CatalogProductCard';
 import {PRODUCT_GRID_CLASSNAME} from '~/components/home/productGridClasses';
 import type {ProductCardProduct} from '~/components/product/productCard.types';
 
@@ -15,9 +15,10 @@ type ProductConnection = {
 
 export function CatalogProductGrid({
   products,
-  autoLoadNext,
+  autoLoadNext = true,
 }: {
   products: ProductConnection;
+  /** Infinite scroll when more pages exist (default on). Pass `false` for button-only. */
   autoLoadNext?: boolean | {maxAutoLoads?: number};
 }) {
   const needsPagination =
@@ -27,7 +28,7 @@ export function CatalogProductGrid({
     return (
       <div className={PRODUCT_GRID_CLASSNAME}>
         {products.nodes.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <CatalogProductCard key={product.id} product={product} />
         ))}
       </div>
     );
@@ -39,7 +40,9 @@ export function CatalogProductGrid({
       resourcesClassName={PRODUCT_GRID_CLASSNAME}
       autoLoadNext={autoLoadNext}
     >
-      {({node: product}) => <ProductCard key={product.id} product={product} />}
+      {({node: product}) => (
+        <CatalogProductCard key={product.id} product={product} />
+      )}
     </PaginatedResourceSection>
   );
 }

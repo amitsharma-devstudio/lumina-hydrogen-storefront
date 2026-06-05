@@ -60,6 +60,10 @@
   --lumina-primary: var(--color-primary);
   --lumina-primary-hover: var(--color-primary-hover);
   --lumina-foreground: var(--color-foreground);
+  /* Homepage stripes: subtle warm tint, close to white */
+  --color-home-surface: var(--color-background);
+  --color-home-muted: color-mix(in srgb, var(--color-brand-50) 22%, white);
+  --color-home-border: color-mix(in srgb, var(--color-brand-100) 35%, white);
 }
 
 /* Cart page: override reset.css h1 margins */
@@ -84,11 +88,276 @@ main.catalog-plp section {
   display: none !important;
 }
 
+.catalog-pagination-scroll-footer {
+  position: relative;
+  margin-top: 2.5rem;
+  min-height: 2.5rem;
+}
+
+.catalog-pagination-sentinel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.catalog-pagination-loading {
+  margin: 0;
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-foreground-muted);
+}
+
+/* Themed custom dropdown (catalog sort, etc.) */
+.themed-dropdown-trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-inline: 1.25rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  font-size: var(--text-sm);
+  color: var(--color-foreground);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.themed-dropdown-trigger:hover {
+  border-color: var(--color-border-strong);
+}
+
+.themed-dropdown-menu {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 0.375rem);
+  right: 0;
+  left: 0;
+  margin: 0;
+  padding: 0.375rem;
+  list-style: none;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-brand-100);
+  background-color: var(--color-background);
+  box-shadow: 0 12px 40px rgb(28 25 23 / 0.12);
+}
+
+.themed-dropdown-option {
+  display: block;
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-size: var(--text-sm);
+  text-align: left;
+  color: var(--color-foreground-muted);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.themed-dropdown-option:hover {
+  background-color: var(--color-brand-50);
+  color: var(--color-foreground);
+}
+
+.themed-dropdown-option--selected {
+  background-color: var(--color-brand-50);
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+/* Catalog PLP — filter radios (sidebar / drawer) */
+main.catalog-plp .catalog-filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.5rem 0.25rem;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  line-height: 1.35;
+  color: var(--color-foreground-muted);
+  text-decoration: none !important;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+main.catalog-plp .catalog-filter-option:hover {
+  background-color: var(--color-brand-50);
+  color: var(--color-foreground);
+  text-decoration: none !important;
+}
+
+main.catalog-plp .catalog-filter-option--active {
+  color: var(--color-foreground);
+  font-weight: 500;
+}
+
+main.catalog-plp .catalog-filter-radio {
+  position: relative;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-border-strong);
+  background-color: var(--color-background);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+main.catalog-plp .catalog-filter-option--active .catalog-filter-radio {
+  border-color: var(--color-primary);
+  box-shadow: inset 0 0 0 3px var(--color-background);
+  background-color: var(--color-primary);
+}
+
+main.catalog-plp .catalog-filter-label {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Product card carousel — dots on image */
+.product-card-carousel-dots {
+  position: absolute;
+  right: 0;
+  bottom: 1.75rem;
+  left: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0 0.5rem;
+  pointer-events: none;
+}
+
+.product-card-carousel-dot {
+  pointer-events: auto;
+  height: 0.375rem;
+  border-radius: var(--radius-full);
+  border: none;
+  padding: 0;
+  background-color: rgb(255 255 255 / 0.55);
+  box-shadow: 0 1px 3px rgb(28 25 23 / 0.12);
+  transition:
+    width 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.product-card-carousel-dot:hover {
+  background-color: rgb(255 255 255 / 0.85);
+}
+
+.product-card-carousel-dot--active {
+  width: 1rem;
+  background-color: var(--color-primary);
+}
+
+.product-card-carousel-dot:not(.product-card-carousel-dot--active) {
+  width: 0.375rem;
+}
+
+/* PLP/home cards: keep Hydrogen images inside ~280px column */
+.product-card-carousel-media picture,
+.product-card-carousel-media img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto !important;
+  height: auto !important;
+  margin-inline: auto;
+}
+
 /* Search page: reset.css section padding */
 main.search-page section,
 main.collections-index section,
 main.home section {
   padding: 0;
+}
+
+/* Homepage sections: restore vertical rhythm (Tailwind py-* loses to rule above) */
+main.home > section.home-section {
+  padding-block: 5rem;
+}
+
+main.home > section.home-section--surface {
+  background-color: var(--color-home-surface);
+  border-bottom: 1px solid var(--color-home-border);
+}
+
+main.home > section.home-section--muted {
+  background-color: var(--color-home-muted);
+  border-bottom: 1px solid var(--color-home-border);
+}
+
+/* Full-bleed bands (promo carousel) — still counts in odd/even, no extra padding */
+main.home > section.home-section--flush {
+  padding-block: 0;
+}
+
+main.home a.home-btn-primary,
+main.home button.home-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  border: none;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground) !important;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.25;
+  text-decoration: none !important;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(184, 87, 42, 0.25);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+main.home a.home-btn-primary:hover,
+main.home button.home-btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  color: var(--color-primary-foreground) !important;
+  text-decoration: none !important;
+}
+
+main.home a.home-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-background);
+  color: var(--color-foreground) !important;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.25;
+  text-decoration: none !important;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+main.home a.home-btn-secondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary) !important;
+  text-decoration: none !important;
 }
 
 main.routine-builder section {

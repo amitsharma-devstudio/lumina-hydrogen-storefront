@@ -1,3 +1,5 @@
+import {HOME_SECTION_MUTED} from '~/components/home/homeSectionStyles';
+
 const FEATURES = [
   {
     title: 'Active-led formulas',
@@ -74,7 +76,7 @@ const FEATURES = [
 
 export function HomeFeatures() {
   return (
-    <section className="bg-white py-16">
+    <section className={HOME_SECTION_MUTED}>
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid grid-cols-1 gap-8 border-y border-neutral-200 py-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
           {FEATURES.map((feature) => (

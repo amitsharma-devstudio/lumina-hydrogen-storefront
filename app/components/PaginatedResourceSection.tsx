@@ -27,17 +27,21 @@ function PaginatedResourceSectionInner<NodesType>({
   renderItem: React.FunctionComponent<{node: NodesType; index: number}>;
   resourcesClassName?: string;
   autoLoadNext: boolean;
-  maxAutoLoads: number;
+  maxAutoLoads?: number;
   hasPreviousPage: boolean;
   hasNextPage: boolean;
 }) {
   const nextRef = React.useRef<HTMLAnchorElement | null>(null);
   const [autoLoads, setAutoLoads] = React.useState(0);
+  const capped =
+    typeof maxAutoLoads === 'number' && Number.isFinite(maxAutoLoads);
+  const autoLoadExhausted = capped && autoLoads >= (maxAutoLoads as number);
 
   React.useEffect(() => {
     if (!autoLoadNext) return;
-    if (autoLoads >= maxAutoLoads) return;
+    if (autoLoadExhausted) return;
     if (isLoading) return;
+    if (!hasNextPage) return;
 
     const el = nextRef.current;
     if (!el) return;
@@ -46,15 +50,22 @@ function PaginatedResourceSectionInner<NodesType>({
       (entries) => {
         const first = entries[0];
         if (!first?.isIntersecting) return;
-        setAutoLoads((n) => (n >= maxAutoLoads ? n : n + 1));
+        setAutoLoads((n) => (capped && n >= (maxAutoLoads as number) ? n : n + 1));
         el.click();
       },
-      {rootMargin: '600px 0px'},
+      {rootMargin: '480px 0px', threshold: 0},
     );
 
     io.observe(el);
     return () => io.disconnect();
-  }, [autoLoadNext, autoLoads, isLoading, maxAutoLoads]);
+  }, [
+    autoLoadNext,
+    autoLoadExhausted,
+    isLoading,
+    hasNextPage,
+    capped,
+    maxAutoLoads,
+  ]);
 
   const resourcesMarkup = nodes.map((node, index) => renderItem({node, index}));
 
@@ -81,13 +92,43 @@ function PaginatedResourceSectionInner<NodesType>({
       )}
 
       {hasNextPage ? (
-        <div className="mt-10 flex justify-center">
-          <NextLink ref={nextRef}>
-            <span className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-8 py-3 text-sm text-black transition-colors hover:border-neutral-400">
-              {isLoading ? 'Loading…' : 'Load more'}
-            </span>
-          </NextLink>
-        </div>
+        autoLoadNext ? (
+          <div className="catalog-pagination-scroll-footer">
+            {isLoading ? (
+              <p
+                className="catalog-pagination-loading"
+                role="status"
+                aria-live="polite"
+              >
+                Loading more products…
+              </p>
+            ) : autoLoadExhausted ? (
+              <div className="mt-8 flex justify-center">
+                <NextLink>
+                  <span className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-8 py-3 text-sm text-neutral-800 transition-colors hover:border-primary">
+                    Load more
+                  </span>
+                </NextLink>
+              </div>
+            ) : null}
+            <NextLink
+              ref={nextRef}
+              className="catalog-pagination-sentinel"
+              tabIndex={-1}
+              aria-hidden={!autoLoadExhausted}
+            >
+              <span className="sr-only">Load more products</span>
+            </NextLink>
+          </div>
+        ) : (
+          <div className="mt-10 flex justify-center">
+            <NextLink ref={nextRef}>
+              <span className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-8 py-3 text-sm text-black transition-colors hover:border-neutral-400">
+                {isLoading ? 'Loading…' : 'Load more'}
+              </span>
+            </NextLink>
+          </div>
+        )
       ) : null}
     </div>
   );
@@ -95,7 +136,7 @@ function PaginatedResourceSectionInner<NodesType>({
 
 /**
  * Paginated grid with Hydrogen cursor pagination.
- * Hides prev/next controls when not applicable (avoids empty link layout gaps).
+ * Pass `autoLoadNext` for infinite scroll (optional `maxAutoLoads` cap).
  */
 export function PaginatedResourceSection<NodesType>({
   connection,
@@ -111,9 +152,7 @@ export function PaginatedResourceSection<NodesType>({
   autoLoadNext?: boolean | {maxAutoLoads?: number};
 }) {
   const maxAutoLoads =
-    typeof autoLoadNext === 'object'
-      ? autoLoadNext.maxAutoLoads ?? 2
-      : 2;
+    typeof autoLoadNext === 'object' ? autoLoadNext.maxAutoLoads : undefined;
 
   const hasPreviousPage = connection?.pageInfo?.hasPreviousPage ?? false;
   const hasNextPage = connection?.pageInfo?.hasNextPage ?? false;

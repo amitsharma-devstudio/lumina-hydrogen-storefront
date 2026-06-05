@@ -4,6 +4,11 @@ import {useVariantUrl} from '~/lib/variants';
 import {ProductCardImageCarousel} from '~/components/home/ProductCardImageCarousel';
 import type {ProductCardProduct} from '~/components/product/productCard.types';
 
+/**
+ * Catalog / collection PLP product card (`/collections/all`, `/collections/{handle}`, search).
+ * Homepage grids use `HomeProductCard` instead.
+ */
+
 const FALLBACK_BENEFITS = [
   'Barrier support',
   'Daily glow',
@@ -42,7 +47,11 @@ export function ProductCard({
 
   return (
     <article className="group/card flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-0.5 hover:border-brand-100 hover:shadow-[0_14px_42px_rgba(28,25,23,0.08)]">
-      <ProductCardImageCarousel product={product} productUrl={productUrl} />
+      <ProductCardImageCarousel
+        product={product}
+        productUrl={productUrl}
+        variant="catalog"
+      />
 
       <div className="flex flex-1 flex-col px-3.5 pb-4 pt-3.5">
         <Link

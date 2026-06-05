@@ -78,6 +78,17 @@ export const selectFieldClass = [
   'disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:opacity-60',
 ].join(' ');
 
+/** Catalog PLP sort control (pairs with .catalog-select in theme.css) */
+export const catalogSelectClass = [
+  'catalog-select w-full min-w-0 appearance-none',
+  controlHeightClass,
+  'rounded-full border border-neutral-200 bg-white px-5 pr-12',
+  'text-sm text-foreground',
+  'transition-colors hover:border-neutral-400',
+  'focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary',
+  'disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:opacity-60',
+].join(' ');
+
 export const textareaFieldClass = [
   'w-full min-w-0',
   'min-h-[6rem] rounded-sm border border-neutral-300 bg-white px-3 py-2.5',

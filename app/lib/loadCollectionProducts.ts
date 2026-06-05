@@ -1,9 +1,7 @@
 import {getPaginationVariables} from '@shopify/hydrogen';
 import type {Storefront} from '@shopify/hydrogen';
 import {CollectionProductsQuery} from '~/graphql/queries/CollectionProductsQuery';
-import {
-  CollectionFilterFacetsQuery,
-} from '~/graphql/queries/CollectionFilterFacetsQuery';
+import {CatalogFilterFacetsQuery} from '~/graphql/queries/CollectionFilterFacetsQuery';
 import {
   buildFilterOptionsFromTags,
   buildShopifyProductFilters,
@@ -23,17 +21,12 @@ type LoadCollectionProductsArgs = {
   pageBy?: number;
 };
 
-async function loadCollectionFilterOptions(
+/** Same facet source as `/collections/all` so every PLP shares filter UI. */
+export async function loadCatalogFilterOptions(
   storefront: Storefront,
-  handle: string,
 ): Promise<CatalogFilterOptions> {
-  const {collection} = await storefront.query(CollectionFilterFacetsQuery, {
-    variables: {handle},
-  });
-
-  const tags =
-    collection?.products?.nodes?.flatMap((node) => node.tags ?? []) ?? [];
-
+  const {products} = await storefront.query(CatalogFilterFacetsQuery);
+  const tags = products?.nodes?.flatMap((node) => node.tags ?? []) ?? [];
   return buildFilterOptionsFromTags(tags);
 }
 
@@ -41,7 +34,7 @@ export async function loadCollectionProducts({
   storefront,
   request,
   handle,
-  pageBy = 8,
+  pageBy = 12,
 }: LoadCollectionProductsArgs) {
   const paginationVariables = getPaginationVariables(request, {pageBy});
   const sort = getCatalogSortFromRequest(request);
@@ -58,7 +51,7 @@ export async function loadCollectionProducts({
         filters: productFilters.length > 0 ? productFilters : undefined,
       },
     }),
-    loadCollectionFilterOptions(storefront, handle),
+    loadCatalogFilterOptions(storefront),
   ]);
 
   return {collection, sort, filters, filterOptions};

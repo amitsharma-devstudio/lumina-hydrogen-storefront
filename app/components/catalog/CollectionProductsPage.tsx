@@ -1,14 +1,12 @@
 import {useEffect, useState} from 'react';
-import {Form, Link, useLocation} from 'react-router';
-import {Analytics, Image} from '@shopify/hydrogen';
+import {Link, useLocation} from 'react-router';
+import {Analytics} from '@shopify/hydrogen';
 import {CatalogFilterDrawer} from '~/components/catalog/CatalogFilterDrawer';
 import {CatalogProductGrid} from '~/components/catalog/CatalogProductGrid';
 import {CatalogFilterBar} from '~/components/catalog/CatalogFilterBar';
+import {CatalogSortSelect} from '~/components/catalog/CatalogSortSelect';
 import {Breadcrumbs} from '~/components/ui/Breadcrumbs';
-import {
-  CATALOG_SORT_OPTIONS,
-  type CatalogSortKey,
-} from '~/lib/catalogSort';
+import type {CatalogSortKey} from '~/lib/catalogSort';
 import {
   catalogFiltersQueryString,
   countActiveCatalogFilters,
@@ -47,7 +45,6 @@ type CollectionProductsPageProps = {
   sort: CatalogSortKey;
   filters?: CatalogActiveFilters;
   filterOptions?: CatalogFilterOptions;
-  showHeroImage?: boolean;
 };
 
 export function CollectionProductsPage({
@@ -55,7 +52,6 @@ export function CollectionProductsPage({
   sort,
   filters = {},
   filterOptions = {},
-  showHeroImage = true,
 }: CollectionProductsPageProps) {
   const location = useLocation();
   const {pathname} = location;
@@ -67,108 +63,36 @@ export function CollectionProductsPage({
   const productCount = collection.products.nodes.length;
   const hasActiveFilters = Object.keys(filters).length > 0;
   const activeFilterCount = countActiveCatalogFilters(filters);
-  const isShopAll = collection.handle === 'all';
   const hasFilterOptions = Object.values(filterOptions).some(
     (opts) => (opts?.length ?? 0) > 0,
   );
 
-  const breadcrumbs = isShopAll
-    ? [
-        {label: 'Home', to: '/'},
-        {label: 'Collections', to: '/collections'},
-        {label: 'Shop all'},
-      ]
-    : [
-        {label: 'Home', to: '/'},
-        {label: 'Collections', to: '/collections'},
-        {label: collection.title},
-      ];
-
-  const sortControl = (
-    <Form method="get" className="w-full md:w-auto" preventScrollReset>
-      <label className="sr-only" htmlFor="sort">
-        Sort products
-      </label>
-      <div className="relative md:w-[260px]">
-        {Object.entries(filters).map(([key, value]) =>
-          value ? (
-            <input key={key} type="hidden" name={key} value={value} />
-          ) : null,
-        )}
-        <select
-          id="sort"
-          name="sort"
-          defaultValue={sort}
-          className="w-full appearance-none rounded-full border border-neutral-200 bg-white px-5 py-3 pr-12 text-sm text-black outline-none transition-colors hover:border-neutral-400 focus:border-neutral-400"
-          onChange={(e) => e.currentTarget.form?.requestSubmit()}
-        >
-          {CATALOG_SORT_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-        <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-neutral-500">
-          <svg
-            className="h-4 w-4"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fillRule="evenodd"
-              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </div>
-      </div>
-    </Form>
-  );
+  const breadcrumbs = [
+    {label: 'Home', to: '/'},
+    {label: 'Collections', to: '/collections'},
+    {label: collection.title},
+  ];
 
   return (
     <main className="catalog-plp bg-white">
       <div className="border-b border-neutral-100">
         <div className="mx-auto max-w-7xl px-6 py-6 md:py-8">
-          <div
-            className={
-              isShopAll
-                ? 'flex flex-col gap-6 md:flex-row md:items-center md:justify-between'
-                : 'flex flex-col gap-8 md:flex-row md:items-end md:justify-between'
-            }
-          >
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
             <div className="min-w-0">
               <Breadcrumbs items={breadcrumbs} />
-              {!isShopAll ? (
-                <>
-                  <h1 className="mt-4 text-4xl font-light tracking-tight text-black md:text-5xl">
-                    {collection.title}
-                  </h1>
-                  {collection.description ? (
-                    <p className="mt-4 max-w-2xl text-base leading-relaxed text-neutral-600 md:text-lg">
-                      {collection.description}
-                    </p>
-                  ) : null}
-                </>
+              <h1 className="mt-4 text-4xl font-light tracking-tight text-neutral-950 md:text-5xl">
+                {collection.title}
+              </h1>
+              {collection.description ? (
+                <p className="mt-4 max-w-2xl text-base leading-relaxed text-neutral-600 md:text-lg">
+                  {collection.description}
+                </p>
               ) : null}
             </div>
-            <div className="shrink-0 md:w-[260px]">{sortControl}</div>
+            <CatalogSortSelect sort={sort} filters={filters} />
           </div>
         </div>
       </div>
-
-      {showHeroImage && !isShopAll && collection.image?.url ? (
-        <div className="mx-auto max-w-7xl px-6 pt-10">
-          <div className="overflow-hidden rounded-2xl bg-neutral-50">
-            <Image
-              data={collection.image}
-              alt={collection.image.altText || collection.title}
-              className="h-[260px] w-full object-cover md:h-[340px]"
-              sizes="(min-width: 45em) 1200px, 100vw"
-            />
-          </div>
-        </div>
-      ) : null}
 
       {hasFilterOptions ? (
         <CatalogFilterDrawer
@@ -181,7 +105,7 @@ export function CollectionProductsPage({
       ) : null}
 
       <div className="mx-auto max-w-7xl px-6 pb-14 pt-6 lg:pt-8">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
           {hasFilterOptions ? (
             <aside className="hidden w-full shrink-0 lg:sticky lg:top-24 lg:block lg:w-52 xl:w-56">
               <CatalogFilterBar
@@ -196,7 +120,9 @@ export function CollectionProductsPage({
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               {productCount > 0 ? (
                 <p className="text-sm text-neutral-500">
-                  {productCount} {productCount === 1 ? 'product' : 'products'}
+                  {collection.products.pageInfo.hasNextPage
+                    ? `Showing ${productCount} products`
+                    : `${productCount} ${productCount === 1 ? 'product' : 'products'}`}
                 </p>
               ) : (
                 <span />
@@ -253,10 +179,7 @@ export function CollectionProductsPage({
                 ) : null}
               </div>
             ) : (
-              <CatalogProductGrid
-                products={collection.products}
-                autoLoadNext={{maxAutoLoads: 2}}
-              />
+              <CatalogProductGrid products={collection.products} />
             )}
           </div>
         </div>

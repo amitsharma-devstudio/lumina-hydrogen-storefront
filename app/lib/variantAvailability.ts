@@ -24,3 +24,20 @@ export function findFirstPurchasableVariant<
   if (!variants?.length) return null;
   return variants.find((variant) => isVariantPurchasable(variant)) ?? null;
 }
+
+/** Whether a picker chip can be selected for the current option combination. */
+export function isOptionValuePurchasable({
+  exists,
+  available,
+  firstSelectableVariant,
+}: {
+  exists?: boolean | null;
+  available?: boolean | null;
+  firstSelectableVariant?: VariantAvailabilityFields | null;
+}): boolean {
+  return (
+    Boolean(exists) &&
+    Boolean(available) &&
+    isVariantPurchasable(firstSelectableVariant)
+  );
+}

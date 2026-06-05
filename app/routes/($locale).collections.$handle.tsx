@@ -10,26 +10,26 @@ export const meta: Route.MetaFunction = ({data}) => {
 
 export async function loader(args: Route.LoaderArgs) {
   const {handle} = args.params;
-
   if (!handle) {
     throw redirect('/collections');
   }
 
-  const {collection, sort} = await loadCollectionProducts({
+  const result = await loadCollectionProducts({
     storefront: args.context.storefront,
     request: args.request,
     handle,
+    pageBy: 12,
   });
 
-  if (!collection) {
+  if (!result.collection) {
     throw new Response(`Collection ${handle} not found`, {
       status: 404,
     });
   }
 
-  redirectIfHandleIsLocalized(args.request, {handle, data: collection});
+  redirectIfHandleIsLocalized(args.request, {handle, data: result.collection});
 
-  return {collection, sort};
+  return result;
 }
 
 export default function Collection() {

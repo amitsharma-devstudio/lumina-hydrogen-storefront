@@ -1,6 +1,6 @@
 import {useNavigate} from 'react-router';
 import {Money, type MappedProductOptions} from '@shopify/hydrogen';
-import {isVariantPurchasable} from '~/lib/variantAvailability';
+import {isOptionValuePurchasable} from '~/lib/variantAvailability';
 import {chipHoverClass, chipSelectedClass} from '~/lib/theme';
 
 export function VariantPicker({
@@ -34,10 +34,11 @@ export function VariantPicker({
                   firstSelectableVariant,
                 } = value;
 
-                const isPurchasable =
-                  isVariantPurchasable(firstSelectableVariant) ||
-                  (available && exists);
-                const isDisabled = !exists;
+                const isDisabled = !isOptionValuePurchasable({
+                  exists,
+                  available,
+                  firstSelectableVariant,
+                });
 
                 return (
                   <button
@@ -45,12 +46,11 @@ export function VariantPicker({
                     type="button"
                     disabled={isDisabled}
                     onClick={() => {
-                      if (!selected && variantUriQuery) {
-                        void navigate(`?${variantUriQuery}`, {
-                          replace: true,
-                          preventScrollReset: true,
-                        });
-                      }
+                      if (isDisabled || selected || !variantUriQuery) return;
+                      void navigate(`?${variantUriQuery}`, {
+                        replace: true,
+                        preventScrollReset: true,
+                      });
                     }}
                     className={`
                       relative flex items-center justify-center rounded-sm border px-4 py-3 text-sm transition-all duration-200
@@ -59,13 +59,14 @@ export function VariantPicker({
                           ? chipSelectedClass
                           : `border-gray-200 bg-white text-foreground ${chipHoverClass}`
                       }
-                      ${!isPurchasable ? 'opacity-40' : ''}
-                      ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}
+                      ${isDisabled ? 'cursor-not-allowed opacity-50 text-gray-400' : 'cursor-pointer'}
                     `}
                     aria-pressed={selected}
                     aria-disabled={isDisabled}
                   >
-                    <span className="flex items-center gap-2 whitespace-nowrap">
+                    <span
+                      className={`flex items-center gap-2 whitespace-nowrap ${isDisabled ? 'line-through decoration-gray-400' : ''}`}
+                    >
                       <span className="font-medium">{name}</span>
                       {isSizeOption && firstSelectableVariant?.price ? (
                         <>
@@ -81,8 +82,8 @@ export function VariantPicker({
                       ) : null}
                     </span>
 
-                    {!isPurchasable && exists ? (
-                      <span className="sr-only"> (unavailable)</span>
+                    {isDisabled ? (
+                      <span className="sr-only"> (not available)</span>
                     ) : null}
                   </button>
                 );

@@ -33,22 +33,22 @@ export function CatalogFilterBar({
 
   return (
     <div role="region" aria-label="Product filters" className="text-left">
-      <div
-        className={`mb-4 flex items-center justify-between gap-3 border-b border-neutral-200 pb-3 ${
-          isDrawer ? '' : 'lg:block'
-        }`}
-      >
+      <div className="mb-4 flex min-h-6 flex-wrap items-center gap-x-2 gap-y-1 border-b border-neutral-200 pb-3">
         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-500">
           Filter
         </p>
-        {activeCount > 0 ? (
-          <Link
-            to={`${pathname}${catalogFiltersQueryString({}, sort)}`}
-            className="shrink-0 text-xs text-neutral-600 underline-offset-2 hover:text-primary hover:underline"
-          >
-            Clear ({activeCount})
-          </Link>
-        ) : null}
+        <Link
+          to={`${pathname}${catalogFiltersQueryString({}, sort)}`}
+          className={`text-xs text-neutral-600 underline-offset-2 hover:text-primary hover:underline ${
+            activeCount > 0
+              ? ''
+              : 'pointer-events-none invisible'
+          }`}
+          tabIndex={activeCount > 0 ? 0 : -1}
+          aria-hidden={activeCount === 0}
+        >
+          Clear all{activeCount > 0 ? ` (${activeCount})` : ''}
+        </Link>
       </div>
 
       <div className="flex flex-col gap-6">
@@ -86,17 +86,18 @@ function FilterGroup({
   pathname: string;
   layout: 'sidebar' | 'drawer';
 }) {
-  const isDrawer = layout === 'drawer';
   if (options.length === 0) return null;
 
   return (
-    <div>
-      <p className="mb-2.5 text-xs font-medium text-neutral-800">{label}</p>
+    <fieldset className="m-0 min-w-0 border-0 p-0">
+      <legend className="mb-2.5 text-xs font-medium text-neutral-800">
+        {label}
+      </legend>
       <ul
         className={
-          isDrawer
-            ? 'flex flex-col gap-2'
-            : 'flex flex-wrap gap-2 lg:flex-col lg:items-stretch'
+          layout === 'drawer'
+            ? 'flex flex-col gap-1'
+            : 'flex flex-col gap-1 lg:gap-1.5'
         }
       >
         {options.map((option) => {
@@ -109,23 +110,20 @@ function FilterGroup({
           const href = `${pathname}${catalogFiltersQueryString(next, sort)}`;
 
           return (
-            <li key={option.tag} className={isDrawer ? '' : 'lg:w-full'}>
+            <li key={option.tag}>
               <Link
                 to={href}
                 prefetch="intent"
-                className={`inline-flex w-full justify-start rounded-full border px-4 py-2.5 text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'border-primary bg-primary text-primary-foreground'
-                    : 'border-neutral-200 bg-white text-neutral-700 hover:border-primary hover:text-primary'
-                }`}
-                aria-pressed={isActive}
+                className={`catalog-filter-option ${isActive ? 'catalog-filter-option--active' : ''}`}
+                aria-current={isActive ? 'true' : undefined}
               >
-                {option.label}
+                <span className="catalog-filter-radio" aria-hidden />
+                <span className="catalog-filter-label">{option.label}</span>
               </Link>
             </li>
           );
         })}
       </ul>
-    </div>
+    </fieldset>
   );
 }

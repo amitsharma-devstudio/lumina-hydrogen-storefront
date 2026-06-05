@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import {Link} from 'react-router';
 import {Image} from '@shopify/hydrogen';
+import {HOME_SECTION_SURFACE_FLUSH} from '~/components/home/homeSectionStyles';
 import {toClientPath, type HomePromoSlide} from '~/lib/homepage';
 
 const AUTO_ADVANCE_MS = 6000;
@@ -36,13 +37,13 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
 
   return (
     <section
-      className="home-promo-carousel relative w-full overflow-hidden bg-neutral-900"
+      className={`home-promo-carousel relative w-full overflow-hidden ${HOME_SECTION_SURFACE_FLUSH}`}
       aria-roledescription="carousel"
       aria-label="Promotions"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="relative min-h-[240px] w-full sm:min-h-[300px] md:min-h-[360px]">
+      <div className="relative min-h-[240px] w-full bg-neutral-900 sm:min-h-[300px] md:min-h-[360px]">
         {slides.map((slide, index) => {
           const isActive = index === activeIndex;
           const ctaPath = toClientPath(slide.cta?.url ?? null);

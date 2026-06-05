@@ -1,4 +1,11 @@
 import {CollectionCard} from '~/components/collection/CollectionCard';
+import {
+  HOME_SECTION_HEADER,
+  HOME_SECTION_EYEBROW,
+  HOME_SECTION_LEDE,
+  HOME_SECTION_SURFACE,
+  HOME_SECTION_TITLE,
+} from '~/components/home/homeSectionStyles';
 import {PRODUCT_GRID_CLASSNAME} from '~/components/home/productGridClasses';
 import type {CollectionCardCollection} from '~/lib/collectionCoverImage';
 
@@ -10,18 +17,16 @@ export function HomeCollections({
   if (!collections.length) return null;
 
   return (
-    <section className="bg-white py-20">
+    <section className={HOME_SECTION_SURFACE}>
       <div className="mx-auto max-w-7xl px-6">
-        <header className="mb-14 grid gap-6 md:grid-cols-[1fr_0.75fr] md:items-end">
+        <header className={HOME_SECTION_HEADER}>
           <div>
-            <div className="mb-2 text-xs uppercase tracking-[0.15em] text-primary">
-              COLLECTIONS
-            </div>
-            <h2 className="max-w-2xl text-4xl font-light text-black md:text-5xl">
+            <p className={HOME_SECTION_EYEBROW}>Collections</p>
+            <h2 className={HOME_SECTION_TITLE}>
               Shop by what your skin is asking for
             </h2>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-neutral-600 md:justify-self-end">
+          <p className={HOME_SECTION_LEDE}>
             Move quickly from concern to routine with edited collections built
             around hydration, clarity, renewal, and barrier care.
           </p>
