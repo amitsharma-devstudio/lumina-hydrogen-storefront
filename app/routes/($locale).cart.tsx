@@ -129,15 +129,17 @@ export default function Cart() {
         </header>
 
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3 lg:gap-10">
-          <div className="space-y-5 lg:col-span-2">
+          <div className="min-w-0 space-y-5 lg:col-span-2">
             {lines.map((line) => (
               <CartPageLineItem key={line.id} line={line} />
             ))}
           </div>
 
-          <div className="w-full lg:col-span-1">
-            <CartOrderSummary cart={cart} stableCart={originalCart} />
-          </div>
+          <aside className="w-full lg:col-span-1 lg:self-stretch">
+            <div className="lg:sticky lg:top-8 lg:max-h-[calc(100dvh-2rem)] lg:overflow-y-auto">
+              <CartOrderSummary cart={cart} stableCart={originalCart} />
+            </div>
+          </aside>
         </div>
       </div>
     </main>
