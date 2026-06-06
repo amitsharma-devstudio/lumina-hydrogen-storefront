@@ -83,36 +83,6 @@ main.catalog-plp section {
   padding: 0;
 }
 
-/* Catalog PLP: Hydrogen pagination links must not reserve space when hidden */
-.catalog-pagination a[href=''] {
-  display: none !important;
-}
-
-.catalog-pagination-scroll-footer {
-  position: relative;
-  margin-top: 2.5rem;
-  min-height: 2.5rem;
-}
-
-.catalog-pagination-sentinel {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  display: block;
-  width: 100%;
-  height: 1px;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.catalog-pagination-loading {
-  margin: 0;
-  text-align: center;
-  font-size: var(--text-sm);
-  color: var(--color-foreground-muted);
-}
-
 /* Themed custom dropdown (catalog sort, etc.) */
 .themed-dropdown-trigger {
   display: flex;

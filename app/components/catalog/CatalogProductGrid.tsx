@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {CatalogProductCard} from '~/components/catalog/CatalogProductCard';
 import {PRODUCT_GRID_CLASSNAME} from '~/components/home/productGridClasses';
@@ -15,14 +16,19 @@ type ProductConnection = {
 
 export function CatalogProductGrid({
   products,
-  autoLoadNext = true,
+  onLoadedCount,
 }: {
   products: ProductConnection;
-  /** Infinite scroll when more pages exist (default on). Pass `false` for button-only. */
-  autoLoadNext?: boolean | {maxAutoLoads?: number};
+  /** Receives the number of products currently rendered (grows as pages load). */
+  onLoadedCount?: (count: number) => void;
 }) {
   const needsPagination =
     products.pageInfo.hasPreviousPage || products.pageInfo.hasNextPage;
+
+  // The paginated branch reports its rendered count via PaginatedResourceSection.
+  useEffect(() => {
+    if (!needsPagination) onLoadedCount?.(products.nodes.length);
+  }, [needsPagination, products.nodes.length, onLoadedCount]);
 
   if (!needsPagination) {
     return (
@@ -38,7 +44,7 @@ export function CatalogProductGrid({
     <PaginatedResourceSection<ProductCardProduct>
       connection={products}
       resourcesClassName={PRODUCT_GRID_CLASSNAME}
-      autoLoadNext={autoLoadNext}
+      onLoadedCount={onLoadedCount}
     >
       {({node: product}) => (
         <CatalogProductCard key={product.id} product={product} />

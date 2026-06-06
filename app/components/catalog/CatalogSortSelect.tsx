@@ -26,7 +26,7 @@ export function CatalogSortSelect({
       options={CATALOG_SORT_OPTIONS}
       className={className}
       onChange={(next) => {
-        navigate(
+        void navigate(
           `${pathname}${catalogFiltersQueryString(filters, next as CatalogSortKey)}`,
           {preventScrollReset: true},
         );

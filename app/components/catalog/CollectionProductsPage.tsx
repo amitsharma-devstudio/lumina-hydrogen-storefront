@@ -60,13 +60,16 @@ export function CollectionProductsPage({
   useEffect(() => {
     setFiltersOpen(false);
   }, [pathname, location.search]);
-  const productCount = collection.products.nodes.length;
+
+  // Live count of rendered products; grows as more pages load via pagination.
+  const [productCount, setProductCount] = useState(
+    collection.products.nodes.length,
+  );
   const hasActiveFilters = Object.keys(filters).length > 0;
   const activeFilterCount = countActiveCatalogFilters(filters);
   const hasFilterOptions = Object.values(filterOptions).some(
     (opts) => (opts?.length ?? 0) > 0,
   );
-
   const breadcrumbs = [
     {label: 'Home', to: '/'},
     {label: 'Collections', to: '/collections'},
@@ -179,7 +182,10 @@ export function CollectionProductsPage({
                 ) : null}
               </div>
             ) : (
-              <CatalogProductGrid products={collection.products} />
+              <CatalogProductGrid
+                products={collection.products}
+                onLoadedCount={setProductCount}
+              />
             )}
           </div>
         </div>

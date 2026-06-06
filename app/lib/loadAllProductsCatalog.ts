@@ -48,7 +48,7 @@ async function loadAllCollectionMeta(storefront: Storefront) {
 export async function loadAllProductsCatalog({
   storefront,
   request,
-  pageBy = 12,
+  pageBy = 6,
 }: LoadAllProductsCatalogArgs) {
   const paginationVariables = getPaginationVariables(request, {pageBy});
   const sort = getCatalogSortFromRequest(request);
