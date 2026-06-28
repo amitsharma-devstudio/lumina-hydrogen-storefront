@@ -7,6 +7,7 @@ export const ProductCardFragment = `#graphql
     handle
     title
     tags
+    availableForSale
     featuredImage {
       id
       altText

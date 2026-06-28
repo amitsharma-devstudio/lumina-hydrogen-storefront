@@ -78,13 +78,17 @@ export function ProductCardImageCarousel({
       >
         {count > 0 ? (
           <div
-            className="flex h-full w-full transition-transform duration-300 ease-out"
-            style={{transform: `translate3d(-${activeIndex * 100}%, 0, 0)`}}
+            className="flex h-full transition-transform duration-300 ease-out"
+            style={{
+              width: `${count * 100}%`,
+              transform: `translate3d(-${(activeIndex * 100) / count}%, 0, 0)`,
+            }}
           >
             {images.map((image, index) => (
               <div
                 key={image.id ?? image.url ?? index}
-                className="product-card-carousel-media flex h-full min-w-full flex-shrink-0 items-center justify-center p-4 sm:p-5"
+                className="product-card-carousel-media flex h-full flex-shrink-0 items-center justify-center p-4 sm:p-5"
+                style={{width: `${100 / count}%`}}
               >
                 <Image
                   data={image}

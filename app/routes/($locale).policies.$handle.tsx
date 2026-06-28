@@ -1,6 +1,7 @@
 import {Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).policies.$handle';
 import {type Shop} from '@shopify/hydrogen/storefront-api-types';
+import {ComingSoonPage, titleFromHandle} from '~/components/ComingSoonPage';
 
 type SelectedPolicies = keyof Pick<
   Shop,
@@ -8,7 +9,9 @@ type SelectedPolicies = keyof Pick<
 >;
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.policy.title ?? ''}`}];
+  return [
+    {title: `Hydrogen | ${data?.policy?.title ?? data?.placeholderTitle ?? ''}`},
+  ];
 };
 
 export async function loader({params, context}: Route.LoaderArgs) {
@@ -34,15 +37,26 @@ export async function loader({params, context}: Route.LoaderArgs) {
 
   const policy = data.shop?.[policyName];
 
+  // Unpublished store policies (common on demo stores) render a friendly
+  // "coming soon" placeholder instead of a hard 404.
   if (!policy) {
-    throw new Response('Could not find the policy', {status: 404});
+    return {policy: null, placeholderTitle: titleFromHandle(params.handle)};
   }
 
-  return {policy};
+  return {policy, placeholderTitle: null};
 }
 
 export default function Policy() {
-  const {policy} = useLoaderData<typeof loader>();
+  const {policy, placeholderTitle} = useLoaderData<typeof loader>();
+
+  if (!policy) {
+    return (
+      <ComingSoonPage
+        title={placeholderTitle ?? 'This policy'}
+        description="This policy is being finalized. If you need details right now, please reach out to our team and we'll be glad to help."
+      />
+    );
+  }
 
   return (
     <div className="policy">

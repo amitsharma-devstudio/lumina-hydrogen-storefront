@@ -1,9 +1,10 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).pages.$handle';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {ComingSoonPage, titleFromHandle} from '~/components/ComingSoonPage';
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.page.title ?? ''}`}];
+  return [{title: `Hydrogen | ${data?.page?.title ?? data?.placeholderTitle ?? ''}`}];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -34,14 +35,17 @@ async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
     // Add other queries here, so that they are loaded in parallel
   ]);
 
+  // Unpublished/demo pages (e.g. footer links like /pages/careers) fall back to a
+  // friendly "coming soon" placeholder instead of a hard 404.
   if (!page) {
-    throw new Response('Not Found', {status: 404});
+    return {page: null, placeholderTitle: titleFromHandle(params.handle)};
   }
 
   redirectIfHandleIsLocalized(request, {handle: params.handle, data: page});
 
   return {
     page,
+    placeholderTitle: null,
   };
 }
 
@@ -55,7 +59,11 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 }
 
 export default function Page() {
-  const {page} = useLoaderData<typeof loader>();
+  const {page, placeholderTitle} = useLoaderData<typeof loader>();
+
+  if (!page) {
+    return <ComingSoonPage title={placeholderTitle ?? 'This page'} />;
+  }
 
   return (
     <div className="page">

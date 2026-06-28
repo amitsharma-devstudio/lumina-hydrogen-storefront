@@ -4,6 +4,8 @@ export type ProductCardProduct = {
   handle: string;
   title: string;
   tags?: string[];
+  /** True when at least one variant is in stock. Drives the "Sold out" PLP state. */
+  availableForSale?: boolean;
   featuredImage?: {
     id?: string;
     url?: string | null;

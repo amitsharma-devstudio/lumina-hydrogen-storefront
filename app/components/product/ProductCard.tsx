@@ -44,14 +44,22 @@ export function ProductCard({
   const variantUrl = useVariantUrl(product.handle);
   const productUrl = productUrlOverride ?? variantUrl;
   const benefitTags = getBenefitTags(product);
+  const soldOut = product.availableForSale === false;
 
   return (
-    <article className="group/card flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-0.5 hover:border-brand-100 hover:shadow-[0_14px_42px_rgba(28,25,23,0.08)]">
-      <ProductCardImageCarousel
-        product={product}
-        productUrl={productUrl}
-        variant="catalog"
-      />
+    <article className="group/card relative flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-0.5 hover:border-brand-100 hover:shadow-[0_14px_42px_rgba(28,25,23,0.08)]">
+      {soldOut ? (
+        <span className="absolute left-3 top-3 z-20 rounded-full bg-neutral-900/90 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-white shadow-sm">
+          Out of stock
+        </span>
+      ) : null}
+      <div className={soldOut ? 'opacity-55 grayscale' : undefined}>
+        <ProductCardImageCarousel
+          product={product}
+          productUrl={productUrl}
+          variant="catalog"
+        />
+      </div>
 
       <div className="flex flex-1 flex-col px-3.5 pb-4 pt-3.5">
         <Link
