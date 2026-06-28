@@ -1,35 +1,22 @@
 import {Link, useLocation} from 'react-router';
 import {
-  CATALOG_FILTER_GROUPS,
-  catalogFiltersQueryString,
-  countActiveCatalogFilters,
-  toggleCatalogFilter,
-  type CatalogActiveFilters,
-  type CatalogFilterOptions,
-  type CatalogFilterParam,
-} from '~/lib/catalogFilters';
-import type {CatalogSortKey} from '~/lib/catalogSort';
+  buildClearedSearch,
+  buildToggledSearch,
+  countAppliedFilters,
+  type FacetGroup,
+} from '~/lib/catalogFacets';
 
 export function CatalogFilterBar({
-  activeFilters,
-  filterOptions,
-  sort,
+  facets,
   layout = 'sidebar',
 }: {
-  activeFilters: CatalogActiveFilters;
-  filterOptions: CatalogFilterOptions;
-  sort: CatalogSortKey;
+  facets: FacetGroup[];
   layout?: 'sidebar' | 'drawer';
 }) {
-  const {pathname} = useLocation();
-  const activeCount = countActiveCatalogFilters(activeFilters);
-  const hasAnyOptions = CATALOG_FILTER_GROUPS.some(
-    ({param}) => (filterOptions[param]?.length ?? 0) > 0,
-  );
+  const {pathname, search} = useLocation();
+  const activeCount = countAppliedFilters(search);
 
-  if (!hasAnyOptions) return null;
-
-  const isDrawer = layout === 'drawer';
+  if (facets.length === 0) return null;
 
   return (
     <div role="region" aria-label="Product filters" className="text-left">
@@ -38,11 +25,9 @@ export function CatalogFilterBar({
           Filter
         </p>
         <Link
-          to={`${pathname}${catalogFiltersQueryString({}, sort)}`}
+          to={`${pathname}${buildClearedSearch(search)}`}
           className={`text-xs text-neutral-600 underline-offset-2 hover:text-primary hover:underline ${
-            activeCount > 0
-              ? ''
-              : 'pointer-events-none invisible'
+            activeCount > 0 ? '' : 'pointer-events-none invisible'
           }`}
           tabIndex={activeCount > 0 ? 0 : -1}
           aria-hidden={activeCount === 0}
@@ -52,15 +37,12 @@ export function CatalogFilterBar({
       </div>
 
       <div className="flex flex-col gap-6">
-        {CATALOG_FILTER_GROUPS.map(({param, label}) => (
+        {facets.map((group) => (
           <FilterGroup
-            key={param}
-            param={param}
-            label={label}
-            options={filterOptions[param] ?? []}
-            activeFilters={activeFilters}
-            sort={sort}
+            key={group.id}
+            group={group}
             pathname={pathname}
+            search={search}
             layout={layout}
           />
         ))}
@@ -70,28 +52,22 @@ export function CatalogFilterBar({
 }
 
 function FilterGroup({
-  param,
-  label,
-  options,
-  activeFilters,
-  sort,
+  group,
   pathname,
+  search,
   layout,
 }: {
-  param: CatalogFilterParam;
-  label: string;
-  options: NonNullable<CatalogFilterOptions[CatalogFilterParam]>;
-  activeFilters: CatalogActiveFilters;
-  sort: CatalogSortKey;
+  group: FacetGroup;
   pathname: string;
+  search: string;
   layout: 'sidebar' | 'drawer';
 }) {
-  if (options.length === 0) return null;
+  if (group.values.length === 0) return null;
 
   return (
     <fieldset className="m-0 min-w-0 border-0 p-0">
       <legend className="mb-2.5 text-xs font-medium text-neutral-800">
-        {label}
+        {group.label}
       </legend>
       <ul
         className={
@@ -100,25 +76,24 @@ function FilterGroup({
             : 'flex flex-col gap-1 lg:gap-1.5'
         }
       >
-        {options.map((option) => {
-          const isActive = activeFilters[param] === option.value;
-          const next = toggleCatalogFilter(
-            activeFilters,
-            param,
-            option.value,
-          );
-          const href = `${pathname}${catalogFiltersQueryString(next, sort)}`;
+        {group.values.map((value) => {
+          const href = `${pathname}${buildToggledSearch(search, value.input)}`;
 
           return (
-            <li key={option.tag}>
+            <li key={value.id}>
               <Link
                 to={href}
                 prefetch="intent"
-                className={`catalog-filter-option ${isActive ? 'catalog-filter-option--active' : ''}`}
-                aria-current={isActive ? 'true' : undefined}
+                replace
+                preventScrollReset
+                className={`catalog-filter-option ${value.selected ? 'catalog-filter-option--active' : ''}`}
+                aria-current={value.selected ? 'true' : undefined}
               >
                 <span className="catalog-filter-radio" aria-hidden />
-                <span className="catalog-filter-label">{option.label}</span>
+                <span className="catalog-filter-label">{value.label}</span>
+                {value.count != null ? (
+                  <span className="catalog-filter-count">{value.count}</span>
+                ) : null}
               </Link>
             </li>
           );

@@ -1,29 +1,22 @@
 import {useEffect, useId} from 'react';
+import {useLocation} from 'react-router';
 import {CatalogFilterBar} from '~/components/catalog/CatalogFilterBar';
-import {
-  countActiveCatalogFilters,
-  type CatalogActiveFilters,
-  type CatalogFilterOptions,
-} from '~/lib/catalogFilters';
-import type {CatalogSortKey} from '~/lib/catalogSort';
+import {countAppliedFilters, type FacetGroup} from '~/lib/catalogFacets';
 
 type CatalogFilterDrawerProps = {
   open: boolean;
   onClose: () => void;
-  activeFilters: CatalogActiveFilters;
-  filterOptions: CatalogFilterOptions;
-  sort: CatalogSortKey;
+  facets: FacetGroup[];
 };
 
 export function CatalogFilterDrawer({
   open,
   onClose,
-  activeFilters,
-  filterOptions,
-  sort,
+  facets,
 }: CatalogFilterDrawerProps) {
   const titleId = useId();
-  const activeCount = countActiveCatalogFilters(activeFilters);
+  const {search} = useLocation();
+  const activeCount = countAppliedFilters(search);
 
   useEffect(() => {
     if (!open) return;
@@ -96,12 +89,7 @@ export function CatalogFilterDrawer({
           </button>
         </header>
         <div className="flex-1 overflow-y-auto px-5 py-6">
-          <CatalogFilterBar
-            activeFilters={activeFilters}
-            filterOptions={filterOptions}
-            sort={sort}
-            layout="drawer"
-          />
+          <CatalogFilterBar facets={facets} layout="drawer" />
         </div>
       </div>
     </div>

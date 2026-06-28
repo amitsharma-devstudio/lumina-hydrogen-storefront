@@ -4,11 +4,6 @@ import type {CollectionProductsPageData} from '~/components/catalog/CollectionPr
 import {CatalogProductsQuery} from '~/graphql/queries/CatalogProductsQuery';
 import {CollectionProductsQuery} from '~/graphql/queries/CollectionProductsQuery';
 import {
-  buildShopifyProductsSearchQuery,
-  parseCatalogFiltersFromRequest,
-} from '~/lib/catalogFilters';
-import {loadCatalogFilterOptions} from '~/lib/loadCollectionProducts';
-import {
   getCatalogSortFromRequest,
   getProductCatalogSortVariables,
 } from '~/lib/catalogSort';
@@ -42,34 +37,34 @@ async function loadAllCollectionMeta(storefront: Storefront) {
 
 /**
  * Full-store catalog at `/collections/all`.
- * Always loads via the `products` connection so every published product appears
- * (the Shopify `all` collection is often empty on custom/dev stores).
+ *
+ * Loads via the root `products` connection so every published product appears
+ * (this store has no virtual `all` collection). That connection has no
+ * `filters` argument and native faceting is collection-scoped, so this page is
+ * intentionally unfiltered — sort + pagination only. Faceted filtering lives on
+ * the named collection PLPs.
  */
 export async function loadAllProductsCatalog({
   storefront,
   request,
-  pageBy = 6,
+  pageBy = 12,
 }: LoadAllProductsCatalogArgs) {
   const paginationVariables = getPaginationVariables(request, {pageBy});
   const sort = getCatalogSortFromRequest(request);
   const sortVars = getProductCatalogSortVariables(sort);
-  const filters = parseCatalogFiltersFromRequest(request);
-  const searchQuery = buildShopifyProductsSearchQuery(filters);
 
-  const [{products}, filterOptions, allCollectionMeta] = await Promise.all([
+  const [{products}, allCollectionMeta] = await Promise.all([
     storefront.query(CatalogProductsQuery, {
       variables: {
         ...paginationVariables,
         ...sortVars,
-        query: searchQuery,
       },
     }),
-    loadCatalogFilterOptions(storefront),
     loadAllCollectionMeta(storefront),
   ]);
 
   if (!products) {
-    return {collection: null, sort, filters, filterOptions};
+    return {collection: null, sort, facets: []};
   }
 
   return {
@@ -83,7 +78,6 @@ export async function loadAllProductsCatalog({
       products,
     },
     sort,
-    filters,
-    filterOptions,
+    facets: [],
   };
 }

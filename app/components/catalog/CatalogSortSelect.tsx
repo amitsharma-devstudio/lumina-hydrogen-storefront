@@ -1,23 +1,17 @@
 import {useNavigate, useLocation} from 'react-router';
 import {ThemedDropdown} from '~/components/ui/ThemedDropdown';
-import {catalogFiltersQueryString} from '~/lib/catalogFilters';
-import {
-  CATALOG_SORT_OPTIONS,
-  type CatalogSortKey,
-} from '~/lib/catalogSort';
-import type {CatalogActiveFilters} from '~/lib/catalogFilters';
+import {buildSortedSearch} from '~/lib/catalogFacets';
+import {CATALOG_SORT_OPTIONS, type CatalogSortKey} from '~/lib/catalogSort';
 
 export function CatalogSortSelect({
   sort,
-  filters,
   className = 'w-full md:w-[260px]',
 }: {
   sort: CatalogSortKey;
-  filters: CatalogActiveFilters;
   className?: string;
 }) {
   const navigate = useNavigate();
-  const {pathname} = useLocation();
+  const {pathname, search} = useLocation();
 
   return (
     <ThemedDropdown
@@ -26,10 +20,9 @@ export function CatalogSortSelect({
       options={CATALOG_SORT_OPTIONS}
       className={className}
       onChange={(next) => {
-        void navigate(
-          `${pathname}${catalogFiltersQueryString(filters, next as CatalogSortKey)}`,
-          {preventScrollReset: true},
-        );
+        void navigate(`${pathname}${buildSortedSearch(search, next)}`, {
+          preventScrollReset: true,
+        });
       }}
     />
   );

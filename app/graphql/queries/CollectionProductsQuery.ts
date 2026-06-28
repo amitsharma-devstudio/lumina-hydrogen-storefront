@@ -37,6 +37,17 @@ export const CollectionProductsQuery = `#graphql
         nodes {
           ...ProductCard
         }
+        filters {
+          id
+          label
+          type
+          values {
+            id
+            label
+            count
+            input
+          }
+        }
         pageInfo {
           hasPreviousPage
           hasNextPage

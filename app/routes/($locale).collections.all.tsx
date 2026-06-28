@@ -24,15 +24,9 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export default function AllProductsCollection() {
-  const {collection, sort, filters, filterOptions} =
-    useLoaderData<typeof loader>();
+  const {collection, sort, facets} = useLoaderData<typeof loader>();
 
   return (
-    <CollectionProductsPage
-      collection={collection}
-      sort={sort}
-      filters={filters}
-      filterOptions={filterOptions}
-    />
+    <CollectionProductsPage collection={collection} sort={sort} facets={facets} />
   );
 }

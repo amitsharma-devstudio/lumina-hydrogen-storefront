@@ -199,6 +199,13 @@ main.catalog-plp .catalog-filter-label {
   min-width: 0;
 }
 
+main.catalog-plp .catalog-filter-count {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-foreground-muted);
+}
+
 /* Product card carousel — dots on image */
 .product-card-carousel-dots {
   position: absolute;

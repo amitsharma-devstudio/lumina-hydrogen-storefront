@@ -8,11 +8,10 @@ import {CatalogSortSelect} from '~/components/catalog/CatalogSortSelect';
 import {Breadcrumbs} from '~/components/ui/Breadcrumbs';
 import type {CatalogSortKey} from '~/lib/catalogSort';
 import {
-  catalogFiltersQueryString,
-  countActiveCatalogFilters,
-  type CatalogActiveFilters,
-  type CatalogFilterOptions,
-} from '~/lib/catalogFilters';
+  buildClearedSearch,
+  countAppliedFilters,
+  type FacetGroup,
+} from '~/lib/catalogFacets';
 import type {ProductCardProduct} from '~/components/product/productCard.types';
 
 type CollectionProductsConnection = {
@@ -43,15 +42,13 @@ export type CollectionProductsPageData = {
 type CollectionProductsPageProps = {
   collection: CollectionProductsPageData;
   sort: CatalogSortKey;
-  filters?: CatalogActiveFilters;
-  filterOptions?: CatalogFilterOptions;
+  facets?: FacetGroup[];
 };
 
 export function CollectionProductsPage({
   collection,
   sort,
-  filters = {},
-  filterOptions = {},
+  facets = [],
 }: CollectionProductsPageProps) {
   const location = useLocation();
   const {pathname} = location;
@@ -65,11 +62,9 @@ export function CollectionProductsPage({
   const [productCount, setProductCount] = useState(
     collection.products.nodes.length,
   );
-  const hasActiveFilters = Object.keys(filters).length > 0;
-  const activeFilterCount = countActiveCatalogFilters(filters);
-  const hasFilterOptions = Object.values(filterOptions).some(
-    (opts) => (opts?.length ?? 0) > 0,
-  );
+  const activeFilterCount = countAppliedFilters(location.search);
+  const hasActiveFilters = activeFilterCount > 0;
+  const hasFilterOptions = facets.length > 0;
   const breadcrumbs = [
     {label: 'Home', to: '/'},
     {label: 'Collections', to: '/collections'},
@@ -92,7 +87,7 @@ export function CollectionProductsPage({
                 </p>
               ) : null}
             </div>
-            <CatalogSortSelect sort={sort} filters={filters} />
+            <CatalogSortSelect sort={sort} />
           </div>
         </div>
       </div>
@@ -101,9 +96,7 @@ export function CollectionProductsPage({
         <CatalogFilterDrawer
           open={filtersOpen}
           onClose={() => setFiltersOpen(false)}
-          activeFilters={filters}
-          filterOptions={filterOptions}
-          sort={sort}
+          facets={facets}
         />
       ) : null}
 
@@ -111,11 +104,7 @@ export function CollectionProductsPage({
         <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
           {hasFilterOptions ? (
             <aside className="hidden w-full shrink-0 lg:sticky lg:top-24 lg:block lg:w-52 xl:w-56">
-              <CatalogFilterBar
-                activeFilters={filters}
-                filterOptions={filterOptions}
-                sort={sort}
-              />
+              <CatalogFilterBar facets={facets} />
             </aside>
           ) : null}
 
@@ -174,7 +163,7 @@ export function CollectionProductsPage({
                 </p>
                 {hasActiveFilters ? (
                   <Link
-                    to={`${pathname}${catalogFiltersQueryString({}, sort)}`}
+                    to={`${pathname}${buildClearedSearch(location.search)}`}
                     className="mt-6 inline-flex rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm text-neutral-800 transition-colors hover:border-primary"
                   >
                     Clear filters

@@ -36,32 +36,49 @@ Short reference for **this Lumina Hydrogen storefront** (`/collections/all` and 
 
 Filters use `<Link to={href}>` — no `onClick` + client fetch.
 
-| URL param | Parsed by | Used for |
-|-----------|-----------|----------|
-| `?skin=normal` etc. | `parseCatalogFiltersFromRequest` | Active filters |
-| `?sort=PRICE_ASC` | `getCatalogSortFromRequest` | Sort key |
-| Built by | `catalogFiltersQueryString()` + `toggleCatalogFilter()` | Next link href |
+The storefront does **not** hardcode which attributes are filterable — Shopify's
+**Search & Discovery** app does. Each applied filter value carries Shopify's own
+opaque `ProductFilter` JSON `input`, which we store verbatim in the URL. The
+same pipeline works whether a facet is backed by a metafield, tag, option,
+vendor, or price.
 
-**Loader flow** (`loadAllProductsCatalog`):
+| URL param | Parsed/built by | Used for |
+|-----------|-----------------|----------|
+| `?filter={"productMetafield":{"namespace":"custom","key":"lumina_skin_type","value":"Oily"}}` (repeatable) | `parseAppliedFilters` | Applied `ProductFilter[]` + selected set |
+| `?sort=PRICE_ASC` | `getCatalogSortFromRequest` / `buildSortedSearch` | Sort key |
+| Toggle / clear a value | `buildToggledSearch()` / `buildClearedSearch()` | Next link href (preserves sort) |
+
+All of the above live in `app/lib/catalogFacets.ts` (the adapter boundary).
+
+**Loader flow** (`loadCollectionProducts`):
 
 ```text
 request.url
   → getPaginationVariables(request, { pageBy: 12 })
-  → getCatalogSortFromRequest(request) → getProductCatalogSortVariables(sort)
-  → parseCatalogFiltersFromRequest(request) → buildShopifyProductsSearchQuery(filters)
-  → CatalogProductsQuery({ ...pagination, ...sort, query })
+  → getCatalogSortFromRequest(request) → getCatalogSortVariables(sort)
+  → parseAppliedFilters(searchParams) → ProductFilter[]
+  → CollectionProductsQuery({ ...pagination, ...sort, filters })
+  → normalizeFacets(collection.products.filters)   // native, with counts
 ```
+
+Facets are backed by **metafields** configured in the Search & Discovery app
+(`custom.lumina_skin_type`, `custom.lumina_concern`,
+`custom.lumina_active_ingredient`, `custom.lumina_badge`).
 
 ---
 
 ## GraphQL: `/collections/all` vs named collections
 
-| Route | Query | How filters apply |
-|-------|--------|-------------------|
-| `/collections/all` | `CatalogProductsQuery` → root `products` | `query: "tag:skin:normal AND ..."` (search syntax) |
-| `/collections/:handle` | `CollectionProductsQuery` | `collection.products(filters: [{ tag }])` |
+| Route | Query | Filters | Facet source |
+|-------|--------|---------|--------------|
+| `/collections/:handle` | `CollectionProductsQuery` | `collection.products(filters: [ProductFilter])` | Native `products.filters` (with counts) |
+| `/collections/all` | `CatalogProductsQuery` → root `products` | **None** — sort + pagination only | — |
 
-Filter **options** (sidebar labels): `loadCatalogFilterOptions()` — tags from store-wide facet query, not from current filter result.
+`/collections/all` is intentionally unfiltered: the root `products` connection
+has no `filters` argument and native faceting is collection-scoped, and this
+store has no virtual `all` collection. Faceted filtering lives on the named
+collection PLPs. To add filters there later, point `/collections/all` at a real
+(automated) collection and reuse `loadCollectionProducts`.
 
 ---
 
@@ -112,6 +129,7 @@ Loader → GraphQL → pageInfo (hasNextPage, endCursor, …)
 3. **Filters are links, not client GraphQL.**
 4. **`getPaginationVariables` maps `cursor` + `direction` in the URL to GraphQL `first`/`after`.**
 5. **`Pagination` turns `pageInfo` into those URL params on the next click.**
+6. **Facets come from Shopify (Search & Discovery) backed by metafields, normalized once; the merchant — not the storefront — decides what's filterable. The storefront just renders `products.filters`.**
 
 ---
 
@@ -122,7 +140,7 @@ Loader → GraphQL → pageInfo (hasNextPage, endCursor, …)
 | All-products loader | `app/routes/($locale).collections.all.tsx` |
 | Loader logic | `app/lib/loadAllProductsCatalog.ts` |
 | Collection PLP loader | `app/lib/loadCollectionProducts.ts` |
-| Filters URL helpers | `app/lib/catalogFilters.ts` |
+| Facet adapter (normalize + URL ↔ ProductFilter) | `app/lib/catalogFacets.ts` |
 | Filter UI | `app/components/catalog/CatalogFilterBar.tsx` |
 | Pagination UI | `app/components/PaginatedResourceSection.tsx` |
 | GraphQL (all) | `app/graphql/queries/CatalogProductsQuery.ts` |

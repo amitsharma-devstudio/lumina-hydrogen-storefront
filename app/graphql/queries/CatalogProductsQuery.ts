@@ -11,7 +11,6 @@ export const CatalogProductsQuery = `#graphql
     $last: Int
     $startCursor: String
     $endCursor: String
-    $query: String
   ) @inContext(country: $country, language: $language) {
     products(
       first: $first
@@ -20,7 +19,6 @@ export const CatalogProductsQuery = `#graphql
       after: $endCursor
       sortKey: $sortKey
       reverse: $reverse
-      query: $query
     ) {
       nodes {
         ...ProductCard
