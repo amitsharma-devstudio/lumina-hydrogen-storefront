@@ -1,6 +1,11 @@
 import {useEffect, useMemo, useState} from 'react';
-import {Image, Money} from '@shopify/hydrogen';
-import {Link, useNavigate} from 'react-router';
+import {
+  CartForm,
+  Image,
+  Money,
+  type OptimisticCartLineInput,
+} from '@shopify/hydrogen';
+import {Link, useNavigate, type FetcherWithComponents} from 'react-router';
 import type {RoutineBundle, RoutineProductOption} from '~/lib/routineBundles.types';
 import {
   ROUTINE_BUILDER_STEP_KEYS,
@@ -27,6 +32,39 @@ function findOption(
   const stepType = stepKeyToType(stepKey);
   const step = routine.steps.find((s) => s.step === stepType);
   return step?.options.find((o) => o.productHandle === handle) ?? null;
+}
+
+/**
+ * Adds every selected routine product to the cart in one submission and
+ * redirects the shopper to the cart page (the `/cart` action honors
+ * `redirectTo`), so "Shop routine" lands them on their filled cart.
+ */
+function ShopRoutineButton({
+  lines,
+  label,
+}: {
+  lines: OptimisticCartLineInput[];
+  label: string;
+}) {
+  return (
+    <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines}}>
+      {(fetcher: FetcherWithComponents<unknown>) => {
+        const busy = fetcher.state !== 'idle';
+        return (
+          <>
+            <input type="hidden" name="redirectTo" value="/cart" />
+            <button
+              type="submit"
+              disabled={busy}
+              className="routine-builder__btn-primary routine-builder__dock-cta"
+            >
+              {busy ? 'Adding to cart…' : label}
+            </button>
+          </>
+        );
+      }}
+    </CartForm>
+  );
 }
 
 function StepControls({
@@ -139,6 +177,15 @@ export function RoutineBuilderWizard({
         };
       }),
     [routine, selections],
+  );
+
+  const routineLines = useMemo<OptimisticCartLineInput[]>(
+    () =>
+      selectionSummary
+        .map(({option}) => option?.variantId)
+        .filter((id): id is string => Boolean(id))
+        .map((merchandiseId) => ({merchandiseId, quantity: 1})),
+    [selectionSummary],
   );
 
   function goToStep(stepKey: RoutineBuilderStepKey) {
@@ -312,13 +359,17 @@ export function RoutineBuilderWizard({
                 ) : null,
               )}
             </ul>
-            <Link
-              to={routine.collectionPath}
-              prefetch="intent"
-              className="routine-builder__btn-primary routine-builder__dock-cta"
-            >
-              {routine.ctaLabel}
-            </Link>
+            {routineLines.length > 0 ? (
+              <ShopRoutineButton lines={routineLines} label={routine.ctaLabel} />
+            ) : (
+              <Link
+                to={routine.collectionPath}
+                prefetch="intent"
+                className="routine-builder__btn-primary routine-builder__dock-cta"
+              >
+                {routine.ctaLabel}
+              </Link>
+            )}
           </div>
         </div>
       ) : null}

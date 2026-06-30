@@ -11,6 +11,9 @@ export type RoutineProductOption = {
   imageUrl?: string | null;
   imageAlt?: string | null;
   price?: RoutineProductPrice | null;
+  /** First variant's merchandise id — used to add the routine to the cart. */
+  variantId?: string | null;
+  availableForSale?: boolean;
 };
 
 export type RoutineBundleStep = {

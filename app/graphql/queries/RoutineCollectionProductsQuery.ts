@@ -20,6 +20,12 @@ export const RoutineCollectionProductsQuery = `#graphql
           ) {
             value
           }
+          firstVariant: variants(first: 1) {
+            nodes {
+              id
+              availableForSale
+            }
+          }
         }
       }
     }

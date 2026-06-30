@@ -12,6 +12,8 @@ export type RoutineCollectionProduct = {
   imageUrl?: string | null;
   imageAlt?: string | null;
   price?: {amount: string; currencyCode: string} | null;
+  variantId?: string | null;
+  availableForSale?: boolean;
 };
 
 function normalizeStepToken(raw: string): RoutineStepType | null {
@@ -57,6 +59,8 @@ export function buildRoutineStepsFromCollectionProducts(
       imageUrl: product.imageUrl,
       imageAlt: product.imageAlt,
       price: product.price,
+      variantId: product.variantId,
+      availableForSale: product.availableForSale,
     });
   }
 
@@ -68,45 +72,55 @@ export function buildRoutineStepsFromCollectionProducts(
   })).filter((step) => step.options.length > 0);
 }
 
-export function parseCollectionProductNodes(
-  nodes: Array<{
-    handle?: string | null;
-    title?: string | null;
-    routineStepType?: {value?: string | null} | null;
-    featuredImage?: {
-      url?: string | null;
-      altText?: string | null;
-    } | null;
-    images?: {nodes?: Array<{url?: string | null; altText?: string | null}>} | null;
-    priceRange?: {
-      minVariantPrice?: {amount?: string; currencyCode?: string} | null;
-    } | null;
-  }>,
-): RoutineCollectionProduct[] {
-  return nodes
-    .filter((node): node is {handle: string; title?: string | null} =>
-      Boolean(node.handle),
-    )
-    .map((node) => {
-      const image =
-        node.featuredImage?.url ?? node.images?.nodes?.[0]?.url ?? null;
-      const imageAlt =
-        node.featuredImage?.altText ??
-        node.images?.nodes?.[0]?.altText ??
-        node.title ??
-        null;
-      const minPrice = node.priceRange?.minVariantPrice;
+type RoutineCollectionProductNode = {
+  handle?: string | null;
+  title?: string | null;
+  routineStepType?: {value?: string | null} | null;
+  featuredImage?: {
+    url?: string | null;
+    altText?: string | null;
+  } | null;
+  images?: {nodes?: Array<{url?: string | null; altText?: string | null}>} | null;
+  priceRange?: {
+    minVariantPrice?: {amount?: string; currencyCode?: string} | null;
+  } | null;
+  firstVariant?: {
+    nodes?: Array<{id?: string | null; availableForSale?: boolean | null}>;
+  } | null;
+};
 
-      return {
-        handle: node.handle,
-        title: node.title ?? node.handle,
-        routineStepType: node.routineStepType?.value ?? null,
-        imageUrl: image,
-        imageAlt,
-        price:
-          minPrice?.amount && minPrice?.currencyCode
-            ? {amount: minPrice.amount, currencyCode: minPrice.currencyCode}
-            : null,
-      };
+export function parseCollectionProductNodes(
+  nodes: RoutineCollectionProductNode[],
+): RoutineCollectionProduct[] {
+  const products: RoutineCollectionProduct[] = [];
+
+  for (const node of nodes) {
+    if (!node.handle) continue;
+
+    const image =
+      node.featuredImage?.url ?? node.images?.nodes?.[0]?.url ?? null;
+    const imageAlt =
+      node.featuredImage?.altText ??
+      node.images?.nodes?.[0]?.altText ??
+      node.title ??
+      null;
+    const minPrice = node.priceRange?.minVariantPrice;
+    const firstVariant = node.firstVariant?.nodes?.[0];
+
+    products.push({
+      handle: node.handle,
+      title: node.title ?? node.handle,
+      routineStepType: node.routineStepType?.value ?? null,
+      imageUrl: image,
+      imageAlt,
+      price:
+        minPrice?.amount && minPrice?.currencyCode
+          ? {amount: minPrice.amount, currencyCode: minPrice.currencyCode}
+          : null,
+      variantId: firstVariant?.id ?? null,
+      availableForSale: firstVariant?.availableForSale ?? undefined,
     });
+  }
+
+  return products;
 }
