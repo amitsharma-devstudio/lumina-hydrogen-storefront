@@ -20,13 +20,13 @@ export function CatalogFilterBar({
 
   return (
     <div role="region" aria-label="Product filters" className="text-left">
-      <div className="mb-4 flex min-h-6 flex-wrap items-center gap-x-2 gap-y-1 border-b border-neutral-200 pb-3">
-        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-500">
+      <div className="mb-5 flex min-h-6 flex-wrap items-center gap-x-2 gap-y-1 border-b border-[var(--color-home-border)] pb-3">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-500">
           Filter
         </p>
         <Link
           to={`${pathname}${buildClearedSearch(search)}`}
-          className={`text-xs text-neutral-600 underline-offset-2 hover:text-primary hover:underline ${
+          className={`text-xs font-medium text-neutral-600 underline-offset-2 hover:text-primary hover:underline ${
             activeCount > 0 ? '' : 'pointer-events-none invisible'
           }`}
           tabIndex={activeCount > 0 ? 0 : -1}
@@ -66,7 +66,7 @@ function FilterGroup({
 
   return (
     <fieldset className="m-0 min-w-0 border-0 p-0">
-      <legend className="mb-2.5 text-xs font-medium text-neutral-800">
+      <legend className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-neutral-800">
         {group.label}
       </legend>
       <ul

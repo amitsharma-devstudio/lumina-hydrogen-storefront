@@ -85,22 +85,23 @@ export function Header({
   cart,
   publicStoreDomain,
 }: HeaderProps) {
-  const { open } = useAside();  // ✅ correct hook usage
+  const { open } = useAside();
   const { shop, menu } = header;
 
   return (
-    <header className="bg-white border-b border-neutral-100">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-        {/* Logo */}
+    <header className="sticky top-0 z-30 border-b border-[var(--color-home-border)] bg-white/92 backdrop-blur-xl">
+      <nav className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-6">
         <NavLink
           to="/"
           prefetch="intent"
-          className="text-sm font-semibold tracking-[0.22em] text-black"
+          className="group inline-flex flex-col leading-none text-black no-underline"
         >
-          LUMINA
+          <span className="text-[0.72rem] font-semibold uppercase tracking-[0.28em]">
+            Lumina
+          </span>
+          <span className="mt-1 h-px w-full origin-left scale-x-75 bg-primary transition-transform group-hover:scale-x-100" />
         </NavLink>
 
-        {/* Nav Links */}
         <ul className="hidden items-center gap-10 md:flex">
           {(menu || FALLBACK_HEADER_MENU).items.slice(0, 3).map((item) => {
             if (!item.url) return null;
@@ -116,42 +117,40 @@ export function Header({
               <li key={item.id}>
                 <NavLink
                   to={url}
-                  className="text-sm text-neutral-600 transition-colors hover:text-black"
+                  className={({isActive}) =>
+                    `text-[0.8rem] font-medium uppercase tracking-[0.12em] transition-colors ${
+                      isActive
+                        ? 'text-black'
+                        : 'text-neutral-500 hover:text-black'
+                    }`
+                  }
                 >
                   {item.title}
                 </NavLink>
               </li>
             );
-          })}
+        })}
         </ul>
 
-        {/* Icons */}
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => open("search")}
             aria-label="Search"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-black"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-neutral-700 transition-colors hover:border-neutral-200 hover:bg-neutral-50 hover:text-black"
           >
             <Icon name="search" />
           </button>
 
-          {/* Cart */}
-          {/* <button className="icon-btn relative" onClick={() => open("cart")}>
-            🛒
-            <span className="cart-count absolute -top-2 -right-2 rounded-full bg-primary px-2 text-xs text-primary-foreground">
-              <CartCount cart={cart} />
-            </span>
-          </button> */}
           <NavLink
             to="/cart"
             prefetch="intent"
             aria-label="Open shopping cart"
-            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-black"
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-neutral-700 transition-colors hover:border-neutral-200 hover:bg-neutral-50 hover:text-black"
           >
             <Icon name="cart" />
             <span
-              className="cart-count absolute -top-1.5 -right-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-none text-primary-foreground"
+              className="cart-count absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-none text-primary-foreground ring-2 ring-white"
               aria-live="polite"
               aria-atomic="true"
             >
@@ -160,10 +159,9 @@ export function Header({
           </NavLink>
 
 
-          {/* Mobile menu */}
           <button
             type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-black md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-neutral-700 transition-colors hover:border-neutral-200 hover:bg-neutral-50 hover:text-black md:hidden"
             onClick={() => open("mobile")}
             aria-label="Open menu"
           >

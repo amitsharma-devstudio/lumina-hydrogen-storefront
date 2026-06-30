@@ -72,13 +72,13 @@ export function CollectionProductsPage({
   ];
 
   return (
-    <main className="catalog-plp bg-white">
-      <div className="border-b border-neutral-100">
+    <main className="catalog-plp bg-[var(--color-background)]">
+      <div className="border-b border-[var(--color-home-border)] bg-[var(--color-home-muted)]">
         <div className="mx-auto max-w-7xl px-6 py-6 md:py-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-8">
             <div className="min-w-0">
               <Breadcrumbs items={breadcrumbs} />
-              <h1 className="mt-4 text-4xl font-light tracking-tight text-neutral-950 md:text-5xl">
+              <h1 className="mt-4 text-4xl font-light text-neutral-950 md:text-5xl">
                 {collection.title}
               </h1>
               {collection.description ? (
@@ -101,7 +101,7 @@ export function CollectionProductsPage({
       ) : null}
 
       <div className="mx-auto max-w-7xl px-6 pb-14 pt-6 lg:pt-8">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
           {hasFilterOptions ? (
             <aside className="hidden w-full shrink-0 lg:sticky lg:top-24 lg:block lg:w-52 xl:w-56">
               <CatalogFilterBar facets={facets} />
@@ -122,7 +122,7 @@ export function CollectionProductsPage({
               {hasFilterOptions ? (
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:border-primary lg:hidden"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-white px-4 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:border-primary hover:bg-primary-muted lg:hidden"
                   onClick={() => setFiltersOpen(true)}
                   aria-expanded={filtersOpen}
                 >
@@ -150,7 +150,7 @@ export function CollectionProductsPage({
             </div>
 
             {productCount === 0 ? (
-              <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-6 py-16 text-center">
+              <div className="rounded-xl border border-[var(--color-home-border)] bg-[var(--color-home-muted)] px-6 py-16 text-center">
                 <p className="text-lg font-light text-neutral-900">
                   {hasActiveFilters
                     ? 'No products match these filters'
@@ -164,7 +164,7 @@ export function CollectionProductsPage({
                 {hasActiveFilters ? (
                   <Link
                     to={`${pathname}${buildClearedSearch(location.search)}`}
-                    className="mt-6 inline-flex rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm text-neutral-800 transition-colors hover:border-primary"
+                    className="mt-6 inline-flex min-h-12 items-center rounded-full border border-border bg-white px-6 py-3 text-sm font-medium text-neutral-800 transition-colors hover:border-primary hover:bg-primary-muted"
                   >
                     Clear filters
                   </Link>

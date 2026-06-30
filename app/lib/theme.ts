@@ -4,47 +4,47 @@
  */
 
 export const focusRingClass =
-  'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2';
+  'focus:outline-none focus:ring-2 focus:ring-primary/35 focus:ring-offset-2';
 
 /** Shared control height for inputs, selects, and inline buttons */
-export const controlHeightClass = 'h-11 min-h-11';
+export const controlHeightClass = 'h-12 min-h-12';
 
 /** Primary CTA — buttons */
 export const btnPrimaryClass = [
-  'inline-flex items-center justify-center',
+  'lumina-btn-primary inline-flex items-center justify-center',
   controlHeightClass,
-  'bg-primary px-6 text-sm font-medium text-primary-foreground',
-  'transition-colors hover:bg-primary-hover',
+  'rounded-full px-7 text-sm font-medium',
+  'shadow-[0_10px_24px_rgba(111,69,48,0.16)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(111,69,48,0.2)]',
   focusRingClass,
   'disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:opacity-100',
 ].join(' ');
 
 /** PDP / compact uppercase CTA */
 export const btnPrimaryCompactClass = [
-  'inline-flex items-center justify-center',
-  'h-12 min-h-12 flex-1 rounded-sm',
-  'bg-primary px-6 text-[11px] font-medium uppercase tracking-[0.2em] text-primary-foreground',
-  'transition-colors hover:bg-primary-hover',
+  'lumina-btn-primary inline-flex items-center justify-center',
+  'h-12 min-h-12 flex-1 rounded-full',
+  'px-6 text-[11px] font-medium uppercase tracking-[0.18em]',
+  'shadow-[0_10px_24px_rgba(111,69,48,0.14)] transition-all duration-200 hover:-translate-y-0.5',
   focusRingClass,
   'disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:opacity-100',
 ].join(' ');
 
 /** Secondary outline */
 export const btnSecondaryClass = [
-  'inline-flex items-center justify-center',
+  'lumina-btn-secondary inline-flex items-center justify-center',
   controlHeightClass,
-  'border border-primary bg-background px-6 text-sm font-medium text-foreground',
-  'transition-colors hover:bg-primary-muted',
+  'rounded-full px-7 text-sm font-medium',
+  'transition-all duration-200 hover:-translate-y-0.5',
   focusRingClass,
 ].join(' ');
 
 /** Apply / outline accent (forms) */
 export const btnApplyClass = [
-  'inline-flex shrink-0 items-center justify-center',
+  'lumina-btn-secondary inline-flex shrink-0 items-center justify-center',
   controlHeightClass,
-  'rounded-sm border border-primary bg-white px-5',
-  'text-[11px] font-medium uppercase tracking-[0.14em] text-primary',
-  'transition-colors hover:bg-primary-muted',
+  'rounded-full px-5',
+  'text-[11px] font-medium uppercase tracking-[0.14em]',
+  'transition-all duration-200',
   focusRingClass,
   'disabled:cursor-not-allowed disabled:opacity-50',
 ].join(' ');
@@ -63,18 +63,18 @@ export const btnPrimaryLinkClass = [
 export const inputFieldClass = [
   'w-full min-w-0',
   controlHeightClass,
-  'rounded-sm border border-neutral-300 bg-white px-3',
+  'rounded-full border border-border bg-white px-5',
   'text-sm text-foreground placeholder:text-neutral-400',
-  'focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary',
+  'shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15',
   'disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:opacity-60',
 ].join(' ');
 
 export const selectFieldClass = [
   'w-full min-w-0 appearance-none',
   controlHeightClass,
-  'rounded-sm border border-neutral-300 bg-white px-3 pr-9',
+  'rounded-full border border-border bg-white px-5 pr-10',
   'text-sm text-foreground',
-  'focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary',
+  'transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15',
   'disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:opacity-60',
 ].join(' ');
 
@@ -82,23 +82,23 @@ export const selectFieldClass = [
 export const catalogSelectClass = [
   'catalog-select w-full min-w-0 appearance-none',
   controlHeightClass,
-  'rounded-full border border-neutral-200 bg-white px-5 pr-12',
+  'rounded-full border border-border bg-white px-5 pr-12',
   'text-sm text-foreground',
-  'transition-colors hover:border-neutral-400',
-  'focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary',
+  'transition-colors hover:border-border-strong',
+  'focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15',
   'disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:opacity-60',
 ].join(' ');
 
 export const textareaFieldClass = [
   'w-full min-w-0',
-  'min-h-[6rem] rounded-sm border border-neutral-300 bg-white px-3 py-2.5',
+  'min-h-[6rem] rounded-xl border border-border bg-white px-5 py-3.5',
   'text-sm text-foreground placeholder:text-neutral-400',
-  'focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary',
+  'transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15',
   'disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:opacity-60',
 ].join(' ');
 
 export const formLabelClass =
-  'mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-500';
+  'mb-2 block text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-500';
 
 export const inputGroupClass = 'flex items-stretch gap-2';
 

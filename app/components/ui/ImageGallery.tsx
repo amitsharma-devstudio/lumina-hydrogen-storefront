@@ -3,10 +3,10 @@ import {Image} from '@shopify/hydrogen';
 type GalleryImage = {url?: string; altText?: string} & Record<string, unknown>;
 
 const thumbButtonClass = (isSelected: boolean) =>
-  `relative shrink-0 overflow-hidden rounded-md border-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+  `relative shrink-0 overflow-hidden rounded-lg border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 ${
     isSelected
-      ? 'border-primary'
-      : 'border-transparent hover:border-neutral-400'
+      ? 'border-primary shadow-[0_8px_18px_rgba(111,69,48,0.12)]'
+      : 'border-[var(--color-home-border)] hover:border-primary'
   }`;
 
 function Thumbnail({
@@ -52,7 +52,7 @@ export function ImageGallery({
   if (!images.length) {
     return (
       <div
-        className="flex aspect-[4/5] max-h-[min(360px,50vh)] w-full items-center justify-center rounded-xl bg-white text-sm text-neutral-500"
+        className="flex aspect-[4/5] max-h-[min(360px,50vh)] w-full items-center justify-center rounded-xl bg-[var(--color-home-muted)] text-sm text-neutral-500"
         aria-hidden="true"
       >
         No images
@@ -85,7 +85,7 @@ export function ImageGallery({
 
         {/* Main image */}
         <div className="min-w-0 flex-1">
-          <div className="relative overflow-hidden rounded-xl bg-white">
+          <div className="relative overflow-hidden rounded-xl border border-[var(--color-home-border)] bg-[var(--color-home-muted)] shadow-[0_18px_46px_rgba(24,21,18,0.07)]">
             <div className="flex aspect-[4/5] max-h-[min(360px,50vh)] w-full items-center justify-center lg:max-h-[min(420px,55vh)]">
               <Image
                 data={selectedImage}

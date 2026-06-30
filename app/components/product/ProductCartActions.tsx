@@ -106,10 +106,10 @@ function PremiumQuantityBox({
     ) : null);
 
   return (
-    <div className="flex h-12 shrink-0 items-stretch overflow-hidden rounded-sm border border-neutral-300 bg-white">
+    <div className="flex h-12 shrink-0 items-stretch overflow-hidden rounded-full border border-border bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
       {decControl}
       <span
-        className="flex min-w-[2.75rem] items-center justify-center border-x border-neutral-200 text-sm font-medium tabular-nums text-black"
+        className="flex min-w-[2.75rem] items-center justify-center border-x border-[var(--color-home-border)] text-sm font-medium tabular-nums text-black"
         aria-live="polite"
       >
         {quantity}

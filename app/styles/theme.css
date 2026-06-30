@@ -3,13 +3,13 @@
  * Change colors, type, and radius here to retheme the storefront.
  */
 @theme {
-  /* —— Brand: rich premium orange —— */
-  --color-brand-50: #fdf6f2;
-  --color-brand-100: #f9e8de;
-  --color-brand-200: #f0d0bc;
-  --color-brand-500: #b8572a;
-  --color-brand-600: #9a4722;
-  --color-brand-700: #7d3a1c;
+  /* Brand: burnished clay with soft clinical neutrals */
+  --color-brand-50: #fbf5f1;
+  --color-brand-100: #f3e2d7;
+  --color-brand-200: #dfbfae;
+  --color-brand-500: #a95833;
+  --color-brand-600: #884528;
+  --color-brand-700: #6f371f;
 
   /* Semantic aliases (use in components: bg-primary, text-foreground, etc.) */
   --color-primary: var(--color-brand-500);
@@ -18,12 +18,12 @@
   --color-primary-foreground: #ffffff;
   --color-primary-muted: var(--color-brand-50);
 
-  --color-foreground: #1c1917;
-  --color-foreground-muted: #57534e;
+  --color-foreground: #181512;
+  --color-foreground-muted: #625b54;
   --color-background: #ffffff;
-  --color-background-muted: #fafaf9;
-  --color-border: #e7e5e4;
-  --color-border-strong: #d6d3d1;
+  --color-background-muted: #faf8f5;
+  --color-border: #e6dfd8;
+  --color-border-strong: #cfc4ba;
 
   /* Typography */
   --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
@@ -62,8 +62,97 @@
   --lumina-foreground: var(--color-foreground);
   /* Homepage stripes: subtle warm tint, close to white */
   --color-home-surface: var(--color-background);
-  --color-home-muted: color-mix(in srgb, var(--color-brand-50) 22%, white);
-  --color-home-border: color-mix(in srgb, var(--color-brand-100) 35%, white);
+  --color-home-muted: color-mix(in srgb, var(--color-brand-50) 34%, white);
+  --color-home-border: color-mix(in srgb, var(--color-brand-100) 48%, white);
+  color: var(--color-foreground);
+  background: var(--color-background);
+  font-feature-settings:
+    'kern' 1,
+    'liga' 1;
+  text-rendering: geometricPrecision;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    linear-gradient(180deg, rgb(251 245 241 / 0.42), transparent 26rem),
+    var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  text-underline-offset: 0.22em;
+}
+
+.lumina-btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
+}
+
+.lumina-btn-primary:hover {
+  background-color: var(--color-primary-hover) !important;
+  border-color: var(--color-primary-hover) !important;
+  color: var(--color-primary-foreground) !important;
+}
+
+.lumina-btn-primary:disabled {
+  background-color: #d6d3d1 !important;
+  border-color: #d6d3d1 !important;
+  color: #ffffff !important;
+}
+
+.lumina-btn-secondary {
+  background-color: var(--color-background) !important;
+  border: 1px solid var(--color-border-strong) !important;
+  color: var(--color-foreground) !important;
+}
+
+.lumina-btn-secondary:hover {
+  background-color: var(--color-primary-muted) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+
+.lumina-footer {
+  background-color: var(--color-foreground) !important;
+  color: #ffffff !important;
+}
+
+.lumina-footer__brand {
+  color: #ffffff !important;
+}
+
+.lumina-footer__copy {
+  color: rgb(255 255 255 / 0.66) !important;
+}
+
+.lumina-footer__pill {
+  border: 1px solid rgb(255 255 255 / 0.14) !important;
+  color: rgb(255 255 255 / 0.74) !important;
+}
+
+.lumina-footer__heading {
+  color: rgb(255 255 255 / 0.82) !important;
+}
+
+.lumina-footer__bottom {
+  border-color: rgb(255 255 255 / 0.1) !important;
+  color: rgb(255 255 255 / 0.54) !important;
+}
+
+.lumina-footer__link {
+  color: rgb(255 255 255 / 0.62) !important;
+  text-decoration: none !important;
+}
+
+.lumina-footer__link:hover {
+  color: #ffffff !important;
 }
 
 /* Cart page: override reset.css h1 margins */
@@ -96,13 +185,15 @@ main.catalog-plp section {
   background-color: var(--color-background);
   font-size: var(--text-sm);
   color: var(--color-foreground);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.85);
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease;
 }
 
 .themed-dropdown-trigger:hover {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-brand-50) 36%, white);
 }
 
 .themed-dropdown-menu {
@@ -112,18 +203,18 @@ main.catalog-plp section {
   right: 0;
   left: 0;
   margin: 0;
-  padding: 0.375rem;
+  padding: 0.45rem;
   list-style: none;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-brand-100);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-home-border);
   background-color: var(--color-background);
-  box-shadow: 0 12px 40px rgb(28 25 23 / 0.12);
+  box-shadow: 0 18px 48px rgb(24 21 18 / 0.12);
 }
 
 .themed-dropdown-option {
   display: block;
   width: 100%;
-  padding: 0.625rem 0.875rem;
+  padding: 0.7rem 0.9rem;
   border: none;
   border-radius: var(--radius-md);
   background: transparent;
@@ -137,12 +228,12 @@ main.catalog-plp section {
 }
 
 .themed-dropdown-option:hover {
-  background-color: var(--color-brand-50);
+  background-color: color-mix(in srgb, var(--color-brand-50) 55%, white);
   color: var(--color-foreground);
 }
 
 .themed-dropdown-option--selected {
-  background-color: var(--color-brand-50);
+  background-color: color-mix(in srgb, var(--color-brand-50) 72%, white);
   color: var(--color-primary);
   font-weight: 500;
 }
@@ -151,10 +242,10 @@ main.catalog-plp section {
 main.catalog-plp .catalog-filter-option {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.7rem;
   width: 100%;
-  padding: 0.5rem 0.25rem;
-  border-radius: var(--radius-md);
+  padding: 0.6rem 0.5rem;
+  border-radius: var(--radius-lg);
   font-size: var(--text-sm);
   line-height: 1.35;
   color: var(--color-foreground-muted);
@@ -165,12 +256,13 @@ main.catalog-plp .catalog-filter-option {
 }
 
 main.catalog-plp .catalog-filter-option:hover {
-  background-color: var(--color-brand-50);
+  background-color: color-mix(in srgb, var(--color-brand-50) 52%, white);
   color: var(--color-foreground);
   text-decoration: none !important;
 }
 
 main.catalog-plp .catalog-filter-option--active {
+  background-color: color-mix(in srgb, var(--color-brand-50) 64%, white);
   color: var(--color-foreground);
   font-weight: 500;
 }
@@ -266,7 +358,7 @@ main.home section {
 
 /* Homepage sections: restore vertical rhythm (Tailwind py-* loses to rule above) */
 main.home > section.home-section {
-  padding-block: 5rem;
+  padding-block: clamp(4rem, 7vw, 6.75rem);
 }
 
 main.home > section.home-section--surface {
@@ -290,7 +382,8 @@ main.home button.home-btn-primary {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.875rem 2rem;
+  min-height: 3rem;
+  padding: 0.875rem 2.1rem;
   border: none;
   border-radius: var(--radius-full);
   background-color: var(--color-primary);
@@ -300,8 +393,10 @@ main.home button.home-btn-primary {
   line-height: 1.25;
   text-decoration: none !important;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(184, 87, 42, 0.25);
+  box-shadow: 0 10px 26px rgba(111, 69, 48, 0.16);
   transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
     background-color 0.15s ease,
     color 0.15s ease;
 }
@@ -311,15 +406,18 @@ main.home button.home-btn-primary:hover {
   background-color: var(--color-primary-hover);
   color: var(--color-primary-foreground) !important;
   text-decoration: none !important;
+  box-shadow: 0 14px 34px rgba(111, 69, 48, 0.2);
+  transform: translateY(-1px);
 }
 
 main.home a.home-btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.65rem;
   border-radius: var(--radius-full);
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--color-border);
   background-color: var(--color-background);
   color: var(--color-foreground) !important;
   font-size: var(--text-sm);
@@ -327,14 +425,18 @@ main.home a.home-btn-secondary {
   line-height: 1.25;
   text-decoration: none !important;
   transition:
+    transform 0.18s ease,
     border-color 0.15s ease,
+    background-color 0.15s ease,
     color 0.15s ease;
 }
 
 main.home a.home-btn-secondary:hover {
   border-color: var(--color-primary);
+  background-color: var(--color-primary-muted);
   color: var(--color-primary) !important;
   text-decoration: none !important;
+  transform: translateY(-1px);
 }
 
 main.routine-builder section {

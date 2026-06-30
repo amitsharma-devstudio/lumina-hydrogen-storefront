@@ -45,7 +45,7 @@ export function CatalogFilterDrawer({
     >
       <button
         type="button"
-        className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-black/45 backdrop-blur-[2px] transition-opacity duration-300 ${
           open ? 'opacity-100' : 'opacity-0'
         }`}
         aria-label="Close filters"
@@ -56,14 +56,14 @@ export function CatalogFilterDrawer({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className={`absolute inset-y-0 right-0 flex w-full max-w-[min(100vw,20rem)] flex-col bg-white shadow-[-8px_0_30px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out ${
+        className={`absolute inset-y-0 right-0 flex w-full max-w-[min(100vw,21rem)] flex-col bg-white shadow-[-18px_0_50px_rgba(24,21,18,0.16)] transition-transform duration-300 ease-out ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <header className="flex shrink-0 items-center justify-between border-b border-neutral-100 px-5 py-4">
+        <header className="flex shrink-0 items-center justify-between border-b border-[var(--color-home-border)] px-5 py-4">
           <h2
             id={titleId}
-            className="text-sm font-medium tracking-tight text-neutral-900"
+            className="text-[0.8rem] font-semibold uppercase tracking-[0.16em] text-neutral-900"
           >
             Filters
             {activeCount > 0 ? (
@@ -72,7 +72,7 @@ export function CatalogFilterDrawer({
           </h2>
           <button
             type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-neutral-600 transition-colors hover:border-border hover:bg-neutral-50 hover:text-neutral-900"
             aria-label="Close filters"
             onClick={onClose}
           >

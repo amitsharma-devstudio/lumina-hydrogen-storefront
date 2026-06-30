@@ -122,21 +122,30 @@ export function Footer({
           const menu: NonNullable<FooterQuery["menu"]> = FALLBACK_FOOTER_MENU;
 
           return (
-            <footer className="border-t border-gray-200 bg-gray-50 py-16">
+            <footer className="lumina-footer border-t border-[var(--color-home-border)] py-16">
               <div className="mx-auto max-w-7xl px-6">
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-12">
-
-                  {/* Brand */}
+                <div className="mb-12 grid grid-cols-1 gap-12 md:grid-cols-5">
                   <div className="md:col-span-2">
-                    <div className="text-2xl font-light tracking-widest mb-4">
-                      LUXE SKIN
+                    <div className="lumina-footer__brand mb-4 text-xl font-light uppercase tracking-[0.28em]">
+                      Lumina
                     </div>
-                    <p className="text-sm text-gray-500">
-                      Premium science-backed skincare for radiant, healthy skin.
+                    <p className="lumina-footer__copy max-w-sm text-sm leading-7">
+                      Barrier-first skincare shaped by clinical actives, quiet
+                      rituals, and formulas made to earn a permanent place on
+                      the shelf.
                     </p>
+                    <div className="mt-7 flex flex-wrap gap-2">
+                      {['Clinical', 'Clean', 'Ritual'].map((label) => (
+                        <span
+                          key={label}
+                          className="lumina-footer__pill rounded-full px-3 py-1 text-[10px] uppercase tracking-[0.18em]"
+                        >
+                          {label}
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
-                  {/* Dynamic Sections */}
                   <FooterSection
                     title="SHOP"
                     items={menu.items.slice(0, 4)}
@@ -157,14 +166,13 @@ export function Footer({
                   />
                 </div>
 
-                {/* Bottom Bar */}
-                <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-                  <div>© {new Date().getFullYear()} LUXE SKIN. All rights reserved.</div>
+                <div className="lumina-footer__bottom flex flex-col items-center justify-between gap-4 border-t pt-8 text-sm md:flex-row">
+                  <div>© {new Date().getFullYear()} Lumina. All rights reserved.</div>
 
                   <div className="flex gap-6">
-                    <a href="#" className="hover:text-black">IG</a>
-                    <a href="#" className="hover:text-black">TW</a>
-                    <a href="#" className="hover:text-black">FB</a>
+                    <a href="https://www.instagram.com" className="lumina-footer__link transition-colors">IG</a>
+                    <a href="https://www.tiktok.com" className="lumina-footer__link transition-colors">TT</a>
+                    <a href="https://www.youtube.com" className="lumina-footer__link transition-colors">YT</a>
                   </div>
                 </div>
               </div>
@@ -189,11 +197,11 @@ function FooterSection({
 }) {
   return (
     <div>
-      <h4 className="text-xs tracking-widest font-medium mb-4">
+      <h4 className="lumina-footer__heading mb-4 text-[10px] font-medium uppercase tracking-[0.2em]">
         {title}
       </h4>
 
-      <ul className="flex flex-col gap-3 text-sm text-gray-500">
+      <ul className="flex flex-col gap-3 text-sm">
         {items.map((item: NonNullable<FooterQuery["menu"]>["items"][number]) => {
           if (!item.url) return null;
 
@@ -209,11 +217,18 @@ function FooterSection({
           return (
             <li key={item.id}>
               {isExternal ? (
-                <a href={url} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="lumina-footer__link transition-colors"
+                >
                   {item.title}
                 </a>
               ) : (
-                <NavLink to={url}>{item.title}</NavLink>
+                <NavLink to={url} className="lumina-footer__link transition-colors">
+                  {item.title}
+                </NavLink>
               )}
             </li>
 
