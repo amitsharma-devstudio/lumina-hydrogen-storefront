@@ -23,6 +23,12 @@ import type {
   OrderItemFragment,
 } from 'customer-accountapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {
+  AccountEmptyState,
+  AccountSection,
+} from '~/components/account/AccountShell';
+import {Button} from '~/components/ui/Button';
+import {inputFieldClass} from '~/lib/theme';
 
 type OrdersLoaderData = {
   customer: CustomerOrdersFragment;
@@ -30,11 +36,12 @@ type OrdersLoaderData = {
 };
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Orders'}];
+  return [{title: 'Orders | Lumina'}];
 };
 
 export async function loader({request, context}: Route.LoaderArgs) {
   const {customerAccount} = context;
+  await customerAccount.handleAuthStatus();
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 20,
   });
@@ -63,9 +70,14 @@ export default function Orders() {
   const {orders} = customer;
 
   return (
-    <div className="orders">
-      <OrderSearchForm currentFilters={filters} />
-      <OrdersTable orders={orders} filters={filters} />
+    <div className="space-y-6">
+      <AccountSection
+        title="Order history"
+        description="View past purchases, track fulfillment, and open order details."
+      >
+        <OrderSearchForm currentFilters={filters} />
+        <OrdersTable orders={orders} filters={filters} />
+      </AccountSection>
     </div>
   );
 }
@@ -80,11 +92,13 @@ function OrdersTable({
   const hasFilters = !!(filters.name || filters.confirmationNumber);
 
   return (
-    <div className="acccount-orders" aria-live="polite">
+    <div aria-live="polite">
       {orders?.nodes.length ? (
-        <PaginatedResourceSection connection={orders}>
-          {({node: order}) => <OrderItem key={order.id} order={order} />}
-        </PaginatedResourceSection>
+        <div className="space-y-4">
+          <PaginatedResourceSection connection={orders}>
+            {({node: order}) => <OrderItem key={order.id} order={order} />}
+          </PaginatedResourceSection>
+        </div>
       ) : (
         <EmptyOrders hasFilters={hasFilters} />
       )}
@@ -93,26 +107,20 @@ function OrdersTable({
 }
 
 function EmptyOrders({hasFilters = false}: {hasFilters?: boolean}) {
+  if (hasFilters) {
+    return (
+      <AccountEmptyState
+        message="No orders match your search."
+        action={{label: 'Clear filters', to: '/account/orders'}}
+      />
+    );
+  }
+
   return (
-    <div>
-      {hasFilters ? (
-        <>
-          <p>No orders found matching your search.</p>
-          <br />
-          <p>
-            <Link to="/account/orders">Clear filters →</Link>
-          </p>
-        </>
-      ) : (
-        <>
-          <p>You haven&apos;t placed any orders yet.</p>
-          <br />
-          <p>
-            <Link to="/collections">Start Shopping →</Link>
-          </p>
-        </>
-      )}
-    </div>
+    <AccountEmptyState
+      message="You haven't placed any orders yet."
+      action={{label: 'Start shopping', to: '/collections/all'}}
+    />
   );
 }
 
@@ -152,20 +160,22 @@ function OrderSearchForm({
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className="order-search-form"
+      className="mb-6 rounded-xl border border-neutral-100 bg-neutral-50/50 p-4"
       aria-label="Search orders"
     >
-      <fieldset className="order-search-fieldset">
-        <legend className="order-search-legend">Filter Orders</legend>
+      <fieldset className="space-y-4">
+        <legend className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-500">
+          Filter orders
+        </legend>
 
-        <div className="order-search-inputs">
+        <div className="grid gap-3 sm:grid-cols-2">
           <input
             type="search"
             name={ORDER_FILTER_FIELDS.NAME}
             placeholder="Order #"
             aria-label="Order number"
             defaultValue={currentFilters.name || ''}
-            className="order-search-input"
+            className={inputFieldClass}
           />
           <input
             type="search"
@@ -173,26 +183,28 @@ function OrderSearchForm({
             placeholder="Confirmation #"
             aria-label="Confirmation number"
             defaultValue={currentFilters.confirmationNumber || ''}
-            className="order-search-input"
+            className={inputFieldClass}
           />
         </div>
 
-        <div className="order-search-buttons">
-          <button type="submit" disabled={isSearching}>
-            {isSearching ? 'Searching' : 'Search'}
-          </button>
-          {hasFilters && (
-            <button
+        <div className="flex flex-wrap gap-2">
+          <Button type="submit" disabled={isSearching} className="!h-10 !min-h-10 px-5 text-xs">
+            {isSearching ? 'Searching…' : 'Search'}
+          </Button>
+          {hasFilters ? (
+            <Button
               type="button"
+              variant="secondary"
               disabled={isSearching}
+              className="!h-10 !min-h-10 px-5 text-xs"
               onClick={() => {
                 setSearchParams(new URLSearchParams());
                 formRef.current?.reset();
               }}
             >
               Clear
-            </button>
-          )}
+            </Button>
+          ) : null}
         </div>
       </fieldset>
     </form>
@@ -201,22 +213,65 @@ function OrderSearchForm({
 
 function OrderItem({order}: {order: OrderItemFragment}) {
   const fulfillmentStatus = flattenConnection(order.fulfillments)[0]?.status;
+  const orderUrl = `/account/orders/${btoa(order.id)}`;
+
   return (
-    <>
-      <fieldset>
-        <Link to={`/account/orders/${btoa(order.id)}`}>
-          <strong>#{order.number}</strong>
-        </Link>
-        <p>{new Date(order.processedAt).toDateString()}</p>
-        {order.confirmationNumber && (
-          <p>Confirmation: {order.confirmationNumber}</p>
-        )}
-        <p>{order.financialStatus}</p>
-        {fulfillmentStatus && <p>{fulfillmentStatus}</p>}
-        <Money data={order.totalPrice} />
-        <Link to={`/account/orders/${btoa(order.id)}`}>View Order →</Link>
-      </fieldset>
-      <br />
-    </>
+    <article className="rounded-xl border border-neutral-200/90 bg-white p-4 transition hover:border-brand-100 hover:shadow-sm sm:p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <Link
+            to={orderUrl}
+            prefetch="intent"
+            className="text-base font-medium text-neutral-900 hover:text-primary"
+          >
+            Order #{order.number}
+          </Link>
+          <p className="mt-1 text-sm text-neutral-500">
+            {new Date(order.processedAt).toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </p>
+        </div>
+        <Money
+          data={order.totalPrice}
+          className="text-base font-medium tabular-nums text-neutral-900"
+        />
+      </div>
+
+      <dl className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
+        {order.confirmationNumber ? (
+          <div>
+            <dt className="text-neutral-500">Confirmation</dt>
+            <dd className="font-medium text-neutral-800">
+              {order.confirmationNumber}
+            </dd>
+          </div>
+        ) : null}
+        <div>
+          <dt className="text-neutral-500">Payment</dt>
+          <dd className="font-medium capitalize text-neutral-800">
+            {order.financialStatus?.toLowerCase().replace(/_/g, ' ')}
+          </dd>
+        </div>
+        {fulfillmentStatus ? (
+          <div>
+            <dt className="text-neutral-500">Fulfillment</dt>
+            <dd className="font-medium capitalize text-neutral-800">
+              {fulfillmentStatus.toLowerCase().replace(/_/g, ' ')}
+            </dd>
+          </div>
+        ) : null}
+      </dl>
+
+      <Link
+        to={orderUrl}
+        prefetch="intent"
+        className="mt-4 inline-block text-sm font-medium text-primary underline-offset-2 hover:underline"
+      >
+        View order details →
+      </Link>
+    </article>
   );
 }

@@ -31,11 +31,11 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [x] Empty-cart state + continue-shopping path
 
 ### 2.2 Customer accounts (routes scaffolded: `account.*`)
-- [~] Customer Account API OAuth login/logout/authorize — verify live
-- [ ] Orders list + order detail render real data
-- [ ] Profile + addresses (add/edit/delete/default)
-- [ ] Re-theme account pages to Lumina design (currently skeleton-plain)
-- [ ] Header account entry point (login vs "my account" when `isLoggedIn`)
+- [~] Customer Account API OAuth login/logout/authorize — UI wired; live OAuth deferred to `lumina.karwa.io` deploy (Headless callback URLs; no Hydrogen sales channel on current plan)
+- [x] Orders list + order detail render real data (themed; live data after OAuth on deploy)
+- [x] Profile + addresses (add/edit/delete/default) (themed; live mutations after OAuth on deploy)
+- [x] Re-theme account pages to Lumina design
+- [x] Header account entry point (login vs "my account" when `isLoggedIn`)
 
 ### 2.3 Predictive/instant search (backend done in `search.tsx`)
 - [x] Regular + predictive search queries/fetchers

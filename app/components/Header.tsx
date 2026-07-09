@@ -7,6 +7,7 @@ import {
 } from "@shopify/hydrogen";
 import type { HeaderQuery, CartApiQueryFragment } from "storefrontapi.generated";
 import { useAside } from "~/components/Aside";
+import {AccountHeaderLink} from '~/components/account/AccountHeaderLink';
 
 function Icon({
   name,
@@ -141,6 +142,8 @@ export function Header({
           >
             <Icon name="search" />
           </button>
+
+          <AccountHeaderLink isLoggedIn={isLoggedIn} />
 
           <NavLink
             to="/cart"

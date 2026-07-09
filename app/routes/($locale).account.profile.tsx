@@ -9,6 +9,9 @@ import {
   useOutletContext,
 } from 'react-router';
 import type {Route} from './+types/($locale).account.profile';
+import {AccountSection} from '~/components/account/AccountShell';
+import {Button} from '~/components/ui/Button';
+import {inputFieldClass} from '~/lib/theme';
 
 export type ActionResponse = {
   error: string | null;
@@ -16,7 +19,7 @@ export type ActionResponse = {
 };
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Profile'}];
+  return [{title: 'Profile | Lumina'}];
 };
 
 export async function loader({context}: Route.LoaderArgs) {
@@ -86,48 +89,56 @@ export default function AccountProfile() {
   const customer = action?.customer ?? account?.customer;
 
   return (
-    <div className="account-profile">
-      <h2>My profile</h2>
-      <br />
-      <Form method="PUT">
-        <legend>Personal information</legend>
-        <fieldset>
-          <label htmlFor="firstName">First name</label>
-          <input
-            id="firstName"
-            name="firstName"
-            type="text"
-            autoComplete="given-name"
-            placeholder="First name"
-            aria-label="First name"
-            defaultValue={customer.firstName ?? ''}
-            minLength={2}
-          />
-          <label htmlFor="lastName">Last name</label>
-          <input
-            id="lastName"
-            name="lastName"
-            type="text"
-            autoComplete="family-name"
-            placeholder="Last name"
-            aria-label="Last name"
-            defaultValue={customer.lastName ?? ''}
-            minLength={2}
-          />
-        </fieldset>
+    <AccountSection
+      title="Profile"
+      description="Update the name associated with your Lumina account."
+    >
+      <Form method="PUT" className="space-y-5">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="firstName" className="mb-2 block text-sm text-neutral-600">
+              First name
+            </label>
+            <input
+              id="firstName"
+              name="firstName"
+              type="text"
+              autoComplete="given-name"
+              placeholder="First name"
+              aria-label="First name"
+              defaultValue={customer.firstName ?? ''}
+              minLength={2}
+              className={inputFieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="lastName" className="mb-2 block text-sm text-neutral-600">
+              Last name
+            </label>
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              autoComplete="family-name"
+              placeholder="Last name"
+              aria-label="Last name"
+              defaultValue={customer.lastName ?? ''}
+              minLength={2}
+              className={inputFieldClass}
+            />
+          </div>
+        </div>
+
         {action?.error ? (
-          <p>
-            <mark>
-              <small>{action.error}</small>
-            </mark>
+          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+            {action.error}
           </p>
-        ) : (
-          <br />
-        )}
-        <button type="submit" disabled={state !== 'idle'}>
-          {state !== 'idle' ? 'Updating' : 'Update'}
-        </button>
+        ) : null}
+
+        <Button type="submit" disabled={state !== 'idle'} className="!h-10 !min-h-10 px-6 text-xs">
+          {state !== 'idle' ? 'Updating…' : 'Save changes'}
+        </Button>
       </Form>
-    </div>
+    </AccountSection>
   );
 }
