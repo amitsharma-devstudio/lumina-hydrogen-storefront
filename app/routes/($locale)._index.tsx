@@ -28,7 +28,6 @@ export async function loader({context}: Route.LoaderArgs) {
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
-
   return (
     <main className="home">
       {data.hero ? <HomeHero hero={data.hero} /> : null}

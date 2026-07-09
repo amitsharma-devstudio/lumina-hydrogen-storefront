@@ -1,7 +1,7 @@
-import {useCallback, useEffect, useState} from 'react';
 import {Link} from 'react-router';
 import {Image} from '@shopify/hydrogen';
 import {HOME_SECTION_SURFACE_FLUSH} from '~/components/home/homeSectionStyles';
+import {useCarousel} from '~/components/ui/useCarousel';
 import {toClientPath, type HomePromoSlide} from '~/lib/homepage';
 
 const AUTO_ADVANCE_MS = 6000;
@@ -10,28 +10,10 @@ const promoCtaClass =
   'inline-flex items-center justify-center rounded-full border-2 border-white/40 bg-white px-8 py-3.5 text-sm font-medium text-primary no-underline shadow-md transition-colors hover:border-white hover:bg-brand-50 hover:text-primary-hover';
 
 export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
   const count = slides.length;
-  const canLoop = count > 1;
-
-  const goTo = useCallback(
-    (index: number) => {
-      if (!count) return;
-      setActiveIndex((index + count) % count);
-    },
-    [count],
-  );
-
-  useEffect(() => {
-    if (!canLoop || paused) return;
-
-    const timer = window.setInterval(() => {
-      setActiveIndex((i) => (i + 1) % count);
-    }, AUTO_ADVANCE_MS);
-
-    return () => window.clearInterval(timer);
-  }, [canLoop, count, paused]);
+  const {activeIndex, goTo, next, prev, setPaused, canLoop} = useCarousel(count, {
+    intervalMs: AUTO_ADVANCE_MS,
+  });
 
   if (!count) return null;
 
@@ -129,7 +111,7 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
             type="button"
             className="absolute top-1/2 left-4 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/30 text-lg text-white backdrop-blur-sm transition-colors hover:bg-black/45 md:flex"
             aria-label="Previous slide"
-            onClick={() => goTo(activeIndex - 1)}
+            onClick={prev}
           >
             ‹
           </button>
@@ -137,7 +119,7 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
             type="button"
             className="absolute top-1/2 right-4 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/30 text-lg text-white backdrop-blur-sm transition-colors hover:bg-black/45 md:flex"
             aria-label="Next slide"
-            onClick={() => goTo(activeIndex + 1)}
+            onClick={next}
           >
             ›
           </button>

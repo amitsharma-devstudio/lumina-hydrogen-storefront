@@ -25,6 +25,40 @@ export const HomeHeroQuery = `#graphql
               }
             }
           }
+          references(first: 5) {
+            nodes {
+              __typename
+              ... on Metaobject {
+                id
+                type
+                fields {
+                  key
+                  value
+                  reference {
+                    __typename
+                    ... on Product {
+                      id
+                      handle
+                      title
+                      featuredImage {
+                        id
+                        url
+                        altText
+                        width
+                        height
+                      }
+                      priceRange {
+                        minVariantPrice {
+                          amount
+                          currencyCode
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

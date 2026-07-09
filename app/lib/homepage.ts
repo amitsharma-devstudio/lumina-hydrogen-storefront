@@ -2,9 +2,24 @@ export type MetaobjectField = {
   key: string;
   value?: string | null;
   reference?: any;
+  references?: any;
 };
 
 export type HeroLink = {label?: string | null; url?: string | null} | null;
+
+export type HeroProduct = {
+  id: string;
+  handle: string;
+  title: string;
+  url: string;
+  image: {
+    url: string;
+    altText?: string | null;
+    width?: number | null;
+    height?: number | null;
+  } | null;
+  priceText: string | null;
+};
 
 export type HomeHeroData = {
   headline?: string | null;
@@ -14,6 +29,7 @@ export type HomeHeroData = {
   startingFromLabel?: string | null;
   startingFromValue?: string | null;
   image?: any | null;
+  products?: HeroProduct[];
 } | null;
 
 export function getMetaobjectField(
@@ -154,6 +170,69 @@ export function buildHomePromoBannerData(args: {
   };
 }
 
+function formatMoneyAmount(
+  amount?: string | null,
+  currencyCode?: string | null,
+  locale?: string,
+): string | null {
+  if (!amount || !currencyCode) return null;
+  const numeric = Number(amount);
+  if (!Number.isFinite(numeric)) return null;
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currencyCode,
+      maximumFractionDigits: 0,
+    }).format(numeric);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Flattens the `hero_products` field (a list of `product_hero` metaobjects, each
+ * wrapping a single Product reference) into carousel-ready slides. Products
+ * without a resolvable image are dropped since the hero slide is image-first.
+ */
+export function buildHeroProducts(
+  fields: MetaobjectField[],
+  locale?: string,
+): HeroProduct[] {
+  const nodes: any[] =
+    getMetaobjectField(fields, 'hero_products')?.references?.nodes ?? [];
+
+  const products: HeroProduct[] = [];
+
+  for (const node of nodes) {
+    const productField = (node?.fields ?? []).find(
+      (f: any) => f?.key === 'product',
+    );
+    const product = productField?.reference;
+    if (!product?.handle) continue;
+
+    const image = product.featuredImage;
+    const price = product.priceRange?.minVariantPrice;
+
+    products.push({
+      id: product.id,
+      handle: product.handle,
+      title: product.title ?? product.handle,
+      url: `/products/${product.handle}`,
+      image: image?.url
+        ? {
+            url: image.url,
+            altText: image.altText,
+            width: image.width,
+            height: image.height,
+          }
+        : null,
+      priceText: formatMoneyAmount(price?.amount, price?.currencyCode, locale),
+    });
+  }
+
+  return products.filter((product) => product.image);
+}
+
 export function buildHomeHeroData(args: {
   fields: MetaobjectField[];
   locale?: string;
@@ -176,6 +255,7 @@ export function buildHomeHeroData(args: {
     startingFromLabel: getMetaobjectText(fields, 'starting_from_label'),
     startingFromValue,
     image: extractImageFromMetaobjectField(getMetaobjectField(fields, imageKey)),
+    products: buildHeroProducts(fields, locale),
   };
 }
 
