@@ -1,3 +1,5 @@
+import type {CurrencyCode} from '@shopify/hydrogen/storefront-api-types';
+
 /** Metaobject node shape from Storefront API (fields array). */
 export type MetaobjectNode = {
   id?: string;
@@ -55,7 +57,7 @@ export type RoutineProductCard = {
     height?: number | null;
   } | null;
   priceRange?: {
-    minVariantPrice: {amount: string; currencyCode: string};
+    minVariantPrice: {amount: string; currencyCode: CurrencyCode};
   };
 };
 
@@ -99,19 +101,21 @@ export function parseIngredientList(
   metafield: {references?: {nodes?: MetaobjectNode[]}} | null | undefined,
 ): IngredientDisplay[] {
   const nodes = metafield?.references?.nodes ?? [];
-  return nodes
-    .map((node) => {
-      const map = getMetaobjectFieldMap(node);
-      const label = map.label ?? map.name;
-      if (!label || !node.id) return null;
-      return {
-        id: node.id,
-        label,
-        inci: map.inci,
-        target: map.target,
-      };
-    })
-    .filter((x): x is IngredientDisplay => Boolean(x));
+  const result: IngredientDisplay[] = [];
+
+  for (const node of nodes) {
+    const map = getMetaobjectFieldMap(node);
+    const label = map.label ?? map.name;
+    if (!label || !node.id) continue;
+    result.push({
+      id: node.id,
+      label,
+      inci: map.inci,
+      target: map.target,
+    });
+  }
+
+  return result;
 }
 
 export function parseRoutineStep(
@@ -148,26 +152,28 @@ type RoutineProductNode = {
 function mapRoutineProductNodes(
   nodes: RoutineProductNode[],
 ): RoutineProductCard[] {
-  return nodes
-    .map((p, index) => {
-      if (!p?.id || !p.handle || !p.title) return null;
-      const skinMap = getMetaobjectFieldMap(p.skinCare?.reference ?? undefined);
-      const stepNum = p.step?.value
-        ? String(p.step.value).padStart(2, '0')
-        : String(index + 1).padStart(2, '0');
-      const category =
-        skinMap.category ?? skinMap.label?.split(' ')[0] ?? 'Step';
-      return {
-        id: p.id,
-        handle: p.handle,
-        title: p.title,
-        step: stepNum,
-        category: category.slice(0, 12),
-        featuredImage: p.featuredImage ?? null,
-        priceRange: p.priceRange,
-      };
-    })
-    .filter((x): x is RoutineProductCard => Boolean(x));
+  const result: RoutineProductCard[] = [];
+
+  for (const [index, p] of nodes.entries()) {
+    if (!p?.id || !p.handle || !p.title) continue;
+    const skinMap = getMetaobjectFieldMap(p.skinCare?.reference ?? undefined);
+    const stepNum = p.step?.value
+      ? String(p.step.value).padStart(2, '0')
+      : String(index + 1).padStart(2, '0');
+    const category =
+      skinMap.category ?? skinMap.label?.split(' ')[0] ?? 'Step';
+    result.push({
+      id: p.id,
+      handle: p.handle,
+      title: p.title,
+      step: stepNum,
+      category: category.slice(0, 12),
+      featuredImage: p.featuredImage ?? null,
+      priceRange: p.priceRange,
+    });
+  }
+
+  return result;
 }
 
 /** Per-product override list (legacy / one-off routines). */

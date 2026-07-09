@@ -1,3 +1,8 @@
+import type {
+  ProductCollectionSortKeys,
+  ProductSortKeys,
+} from '@shopify/hydrogen/storefront-api-types';
+
 export type CatalogSortKey =
   | 'FEATURED'
   | 'BEST_SELLING'
@@ -31,7 +36,7 @@ export function getCatalogSortFromRequest(
 
 /** Sort vars for `collection.products` (ProductCollectionSortKeys). */
 export function getCatalogSortVariables(sort: CatalogSortKey): {
-  sortKey?: string;
+  sortKey?: ProductCollectionSortKeys;
   reverse?: boolean;
 } {
   switch (sort) {
@@ -50,7 +55,7 @@ export function getCatalogSortVariables(sort: CatalogSortKey): {
 
 /** Sort vars for root `products` query (ProductSortKeys). */
 export function getProductCatalogSortVariables(sort: CatalogSortKey): {
-  sortKey: string;
+  sortKey: ProductSortKeys;
   reverse: boolean;
 } {
   switch (sort) {

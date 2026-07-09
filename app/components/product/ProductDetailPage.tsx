@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {Money, type MappedProductOptions} from '@shopify/hydrogen';
+import type {CurrencyCode} from '@shopify/hydrogen/storefront-api-types';
 import {ImageGallery} from '~/components/ui/ImageGallery';
 import {VariantPicker} from '~/components/VariantPicker';
 import {Accordion} from '~/components/ui/Accordion';
@@ -32,7 +33,7 @@ type ProductDetailPageProps = {
       availableForSale: boolean;
       quantityAvailable?: number | null;
       selectedOptions?: Array<{name: string; value: string}>;
-      price?: {amount: string; currencyCode: string};
+      price?: {amount: string; currencyCode: CurrencyCode};
     } | null;
     [key: string]: unknown;
   };

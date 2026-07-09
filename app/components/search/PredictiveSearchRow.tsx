@@ -1,5 +1,6 @@
 import {Link} from 'react-router';
 import {Image, Money} from '@shopify/hydrogen';
+import type {CurrencyCode} from '@shopify/hydrogen/storefront-api-types';
 
 type PredictiveImage = {
   url?: string;
@@ -18,7 +19,7 @@ export function PredictiveSearchRow({
   to: string;
   title: string;
   image?: PredictiveImage | null;
-  price?: {amount: string; currencyCode: string} | null;
+  price?: {amount: string; currencyCode: CurrencyCode} | null;
   onNavigate: () => void;
 }) {
   return (

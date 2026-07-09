@@ -29,7 +29,7 @@ export function CollectionCard({collection, loading}: CollectionCardProps) {
       >
         {image?.url ? (
           <Image
-            data={image}
+            data={image as Parameters<typeof Image>[0]['data']}
             alt={image.altText || collection.title}
             loading={loading}
             width={PRODUCT_CARD_IMAGE_WIDTH}

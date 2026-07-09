@@ -1,3 +1,5 @@
+import type {CurrencyCode} from '@shopify/hydrogen/storefront-api-types';
+
 /** Minimal product shape for PLP cards and image carousel. */
 export type ProductCardProduct = {
   id: string;
@@ -7,7 +9,7 @@ export type ProductCardProduct = {
   /** True when at least one variant is in stock. Drives the "Sold out" PLP state. */
   availableForSale?: boolean;
   featuredImage?: {
-    id?: string;
+    id?: string | null;
     url?: string | null;
     altText?: string | null;
     width?: number | null;
@@ -15,7 +17,7 @@ export type ProductCardProduct = {
   } | null;
   images?: {
     nodes?: Array<{
-      id?: string;
+      id?: string | null;
       url?: string | null;
       altText?: string | null;
       width?: number | null;
@@ -25,7 +27,7 @@ export type ProductCardProduct = {
   priceRange: {
     minVariantPrice: {
       amount: string;
-      currencyCode: string;
+      currencyCode: CurrencyCode;
     };
   };
 };

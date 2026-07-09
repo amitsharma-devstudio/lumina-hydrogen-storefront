@@ -1,3 +1,4 @@
+import type {CurrencyCode} from '@shopify/hydrogen/storefront-api-types';
 import type {ProductCardProduct} from '~/components/product/productCard.types';
 
 /** Search API product node (variant + tracking fields). */
@@ -29,7 +30,7 @@ export function mapSearchProductToCard(
     priceRange: {
       minVariantPrice: {
         amount: variant?.price?.amount ?? '0',
-        currencyCode: variant?.price?.currencyCode ?? 'USD',
+        currencyCode: (variant?.price?.currencyCode ?? 'USD') as CurrencyCode,
       },
     },
   };

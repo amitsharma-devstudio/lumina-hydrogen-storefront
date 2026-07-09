@@ -328,7 +328,7 @@ export function ProductCartActions({
       <Await resolve={rootData?.cart}>
         {(cart) => (
           <ProductCartActionsInner
-            cart={cart}
+            cart={cart ?? null}
             productHandle={productHandle}
             selectedVariant={selectedVariant}
             canAddToCart={canAddToCart}

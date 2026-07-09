@@ -137,7 +137,7 @@ export default function Cart() {
 
           <aside className="w-full lg:col-span-1 lg:self-stretch">
             <div className="lg:sticky lg:top-8 lg:max-h-[calc(100dvh-2rem)] lg:overflow-y-auto">
-              <CartOrderSummary cart={cart} stableCart={originalCart} />
+              <CartOrderSummary cart={cart} stableCart={originalCart ?? undefined} />
             </div>
           </aside>
         </div>

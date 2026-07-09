@@ -1,5 +1,5 @@
 export type CollectionCardImage = {
-  id?: string;
+  id?: string | null;
   url?: string | null;
   altText?: string | null;
   width?: number | null;

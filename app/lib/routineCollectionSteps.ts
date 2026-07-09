@@ -1,9 +1,11 @@
 import type {
   RoutineBundleStep,
   RoutineProductOption,
+  RoutineProductPrice,
   RoutineStepType,
 } from '~/lib/routineBundles.types';
 import {ROUTINE_STEP_TYPES} from '~/lib/routineBundles.types';
+import type {CurrencyCode} from '@shopify/hydrogen/storefront-api-types';
 
 export type RoutineCollectionProduct = {
   handle: string;
@@ -11,7 +13,7 @@ export type RoutineCollectionProduct = {
   routineStepType?: string | null;
   imageUrl?: string | null;
   imageAlt?: string | null;
-  price?: {amount: string; currencyCode: string} | null;
+  price?: RoutineProductPrice | null;
   variantId?: string | null;
   availableForSale?: boolean;
 };
@@ -115,7 +117,10 @@ export function parseCollectionProductNodes(
       imageAlt,
       price:
         minPrice?.amount && minPrice?.currencyCode
-          ? {amount: minPrice.amount, currencyCode: minPrice.currencyCode}
+          ? {
+              amount: minPrice.amount,
+              currencyCode: minPrice.currencyCode as CurrencyCode,
+            }
           : null,
       variantId: firstVariant?.id ?? null,
       availableForSale: firstVariant?.availableForSale ?? undefined,

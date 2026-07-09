@@ -3,7 +3,7 @@ import {SearchIcon} from '~/components/search/SearchIcon';
 import {btnPrimaryClass} from '~/lib/theme';
 
 type SearchFieldProps = {
-  inputRef?: RefObject<HTMLInputElement | null>;
+  inputRef?: RefObject<HTMLInputElement>;
   name?: string;
   defaultValue?: string;
   placeholder?: string;

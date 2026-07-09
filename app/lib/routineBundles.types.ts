@@ -1,8 +1,10 @@
+import type {CurrencyCode} from '@shopify/hydrogen/storefront-api-types';
+
 export type RoutineStepType = 'Cleanse' | 'Treat' | 'Moisturize';
 
 export type RoutineProductPrice = {
   amount: string;
-  currencyCode: string;
+  currencyCode: CurrencyCode;
 };
 
 export type RoutineProductOption = {

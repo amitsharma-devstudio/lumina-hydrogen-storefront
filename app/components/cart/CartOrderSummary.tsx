@@ -30,7 +30,7 @@ function mergeCartFields(optimistic: CartData, stable: CartData): CartData {
     discountCodes: optimistic.discountCodes ?? stable.discountCodes,
     appliedGiftCards: optimistic.appliedGiftCards ?? stable.appliedGiftCards,
     cost: optimistic.cost ?? stable.cost,
-  };
+  } as CartData;
 }
 
 export function CartOrderSummary({

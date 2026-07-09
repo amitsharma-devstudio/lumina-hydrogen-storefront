@@ -53,5 +53,5 @@ export async function loadRoutineBundles(
     }),
   );
 
-  return bundles.filter((b): b is RoutineBundle => Boolean(b));
+  return bundles.filter((b): b is NonNullable<typeof b> => Boolean(b));
 }

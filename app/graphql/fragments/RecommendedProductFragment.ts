@@ -3,6 +3,7 @@ export const RecommendedProductFragment = `#graphql
     id
     title
     handle
+    tags
     priceRange {
       minVariantPrice {
         amount

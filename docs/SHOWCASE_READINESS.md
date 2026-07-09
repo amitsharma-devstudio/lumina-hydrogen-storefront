@@ -11,14 +11,15 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 
 ## Prerequisites (do first — unblocks everything)
 
-- [ ] Fix `npm run codegen` (`concurrency=0` crash) so GraphQL types regenerate
-- [ ] `npm run typecheck` to **zero** errors
-  - [ ] `app/lib/skincare.ts`
-  - [ ] `app/lib/loadRoutineBundles.ts`
-  - [ ] `app/routes/($locale).cart.tsx`
-  - [ ] `app/routes/($locale).collections._index.tsx`
-  - [ ] `app/components/search/SearchField.tsx`
-- [ ] `.gitignore` entries for `.DS_Store` and `tsconfig.tsbuildinfo`
+- [x] Fix `npm run codegen` (`concurrency=0` crash) so GraphQL types regenerate
+- [x] `npm run typecheck` to **zero** errors
+  - [x] `app/lib/skincare.ts`
+  - [x] `app/lib/loadRoutineBundles.ts`
+  - [x] `app/routes/($locale).cart.tsx`
+  - [x] `app/routes/($locale).collections._index.tsx`
+  - [x] `app/components/search/SearchField.tsx`
+- [x] `.gitignore` entries for `.DS_Store` and `tsconfig.tsbuildinfo`
+- [x] Include `app/graphql/**` in codegen document glob (was excluded since scaffold)
 
 ---
 
