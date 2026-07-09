@@ -4,7 +4,7 @@ import {CollectionCard} from '~/components/collection/CollectionCard';
 import {Breadcrumbs} from '~/components/ui/Breadcrumbs';
 import {PRODUCT_GRID_CLASSNAME} from '~/components/home/productGridClasses';
 import type {CollectionCardCollection} from '~/lib/collectionCoverImage';
-import {FeaturedCollectionFragment as FeaturedCollectionFragmentDoc} from '~/graphql/fragments/FeaturedCollectionFragment';
+import {FeaturedCollectionsQuery} from '~/graphql/queries/FeaturedCollectionsQuery';
 import {
   filterMerchandisingCollections,
   sortStoreCollections,
@@ -16,7 +16,7 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export async function loader({context}: Route.LoaderArgs) {
-  const {collections} = await context.storefront.query(COLLECTIONS_QUERY, {
+  const {collections} = await context.storefront.query(FeaturedCollectionsQuery, {
     variables: {first: 50},
   });
 
@@ -73,18 +73,3 @@ export default function Collections() {
     </main>
   );
 }
-
-const COLLECTIONS_QUERY = `#graphql
-  query StoreCollectionsIndex(
-    $country: CountryCode
-    $language: LanguageCode
-    $first: Int!
-  ) @inContext(country: $country, language: $language) {
-    collections(first: $first, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...FeaturedCollection
-      }
-    }
-  }
-  ${FeaturedCollectionFragmentDoc}
-` as const;
