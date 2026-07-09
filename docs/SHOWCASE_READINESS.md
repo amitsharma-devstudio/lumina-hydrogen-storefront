@@ -26,9 +26,9 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 ## Step 2 — Complete the commerce funnel
 
 ### 2.1 Checkout handoff
-- [ ] Verify cart → Shopify Checkout redirect (`checkoutUrl`) works end-to-end
-- [ ] Confirm `PUBLIC_CHECKOUT_DOMAIN` set; checkout inherits buyer identity/locale
-- [ ] Empty-cart state + continue-shopping path
+- [x] Verify cart → Shopify Checkout redirect (`checkoutUrl`) works end-to-end
+- [x] Confirm `PUBLIC_CHECKOUT_DOMAIN` set; checkout inherits buyer identity/locale
+- [x] Empty-cart state + continue-shopping path
 
 ### 2.2 Customer accounts (routes scaffolded: `account.*`)
 - [~] Customer Account API OAuth login/logout/authorize — verify live

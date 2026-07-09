@@ -4,6 +4,7 @@ import {CartForm, Money, type OptimisticCart} from '@shopify/hydrogen';
 import {useEffect, useRef} from 'react';
 import {useFetcher} from 'react-router';
 import type {FetcherWithComponents} from 'react-router';
+import {PrimaryLink} from '~/components/ui/Button';
 
 type CartSummaryProps = {
   cart: OptimisticCart<CartApiQueryFragment | null>;
@@ -38,11 +39,16 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
   if (!checkoutUrl) return null;
 
   return (
-    <div>
-      <a href={checkoutUrl} target="_self">
-        <p>Continue to Checkout &rarr;</p>
-      </a>
-      <br />
+    <div className="mt-4 border-t border-neutral-200 pt-4">
+      <PrimaryLink
+        href={checkoutUrl}
+        className="py-3 text-sm font-medium uppercase tracking-[0.12em]"
+      >
+        Continue to Checkout
+      </PrimaryLink>
+      <p className="mt-3 text-center text-[10px] leading-relaxed text-neutral-400">
+        Shipping calculated at checkout
+      </p>
     </div>
   );
 }

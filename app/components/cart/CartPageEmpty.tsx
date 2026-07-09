@@ -15,13 +15,22 @@ export function CartPageEmpty() {
           Your bag is empty. Explore our collections to find your next routine
           essential.
         </p>
-        <Link
-          to="/collections"
-          prefetch="intent"
-          className={`${btnPrimaryLinkClass} mt-6 inline-flex rounded-xl px-8 text-sm font-medium uppercase tracking-[0.12em]`}
-        >
-          Continue shopping
-        </Link>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            to="/collections/all"
+            prefetch="intent"
+            className={`${btnPrimaryLinkClass} inline-flex rounded-xl px-8 text-sm font-medium uppercase tracking-[0.12em]`}
+          >
+            Shop all products
+          </Link>
+          <Link
+            to="/collections"
+            prefetch="intent"
+            className="inline-flex rounded-xl border border-neutral-200 px-8 py-3 text-sm font-medium uppercase tracking-[0.12em] text-neutral-700 transition hover:border-neutral-300 hover:text-neutral-900"
+          >
+            Browse collections
+          </Link>
+        </div>
       </div>
     </main>
   );

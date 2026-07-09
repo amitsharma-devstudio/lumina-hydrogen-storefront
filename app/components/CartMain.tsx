@@ -3,6 +3,7 @@ import {Link} from 'react-router';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {CartLineItem} from '~/components/CartLineItem';
+import {btnPrimaryLinkClass} from '~/lib/theme';
 import {CartSummary} from './CartSummary';
 
 export type CartLayout = 'page' | 'aside';
@@ -52,17 +53,30 @@ function CartEmpty({
   layout?: CartMainProps['layout'];
 }) {
   const {close} = useAside();
+
   return (
-    <div hidden={hidden}>
-      <br />
-      <p>
-        Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
-        started!
+    <div hidden={hidden} className="px-1 py-2">
+      <p className="text-sm text-neutral-500">
+        Your bag is empty. Explore the catalog to build your next routine.
       </p>
-      <br />
-      <Link to="/collections" onClick={close} prefetch="viewport">
-        Continue shopping →
-      </Link>
+      <div className="mt-4 flex flex-col gap-2.5">
+        <Link
+          to="/collections/all"
+          onClick={close}
+          prefetch="intent"
+          className={`${btnPrimaryLinkClass} inline-flex justify-center rounded-xl px-5 py-3 text-sm font-medium uppercase tracking-[0.12em]`}
+        >
+          Shop all products
+        </Link>
+        <Link
+          to="/cart"
+          onClick={close}
+          prefetch="intent"
+          className="text-center text-sm text-neutral-600 underline-offset-2 hover:text-neutral-900 hover:underline"
+        >
+          View full cart
+        </Link>
+      </div>
     </div>
   );
 }

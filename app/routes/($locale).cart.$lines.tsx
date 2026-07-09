@@ -20,7 +20,7 @@ import type {Route} from './+types/($locale).cart.$lines';
  * ```
  */
 export async function loader({request, context, params}: Route.LoaderArgs) {
-  const {cart} = context;
+  const {cart, storefront} = context;
   const {lines} = params;
   if (!lines) return redirect('/cart');
   const linesMap = lines.split(',').map((line) => {
@@ -44,6 +44,9 @@ export async function loader({request, context, params}: Route.LoaderArgs) {
   const result = await cart.create({
     lines: linesMap,
     discountCodes: discountArray,
+    buyerIdentity: {
+      countryCode: storefront.i18n.country,
+    },
   });
 
   const cartResult = result.cart;

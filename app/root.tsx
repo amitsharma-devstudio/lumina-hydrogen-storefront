@@ -17,6 +17,7 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import {loadCart} from '~/lib/loadCart';
 
 export type RootLoader = typeof loader;
 
@@ -120,7 +121,7 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context}: Route.LoaderArgs) {
-  const {storefront, customerAccount, cart} = context;
+  const {storefront, customerAccount} = context;
 
   // defer the footer query (below the fold)
   const footer = storefront
@@ -136,7 +137,7 @@ function loadDeferredData({context}: Route.LoaderArgs) {
       return null;
     });
   return {
-    cart: cart.get(),
+    cart: loadCart(context),
     isLoggedIn: customerAccount.isLoggedIn(),
     footer,
   };

@@ -5,6 +5,7 @@ import {CartForm, useOptimisticCart} from '@shopify/hydrogen';
 import {CartPageEmpty} from '~/components/cart/CartPageEmpty';
 import {CartPageLineItem} from '~/components/cart/CartPageLineItem';
 import {CartOrderSummary} from '~/components/cart/CartOrderSummary';
+import {loadCart} from '~/lib/loadCart';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Your Cart | Lumina'}];
@@ -99,8 +100,7 @@ export async function action({request, context}: Route.ActionArgs) {
 }
 
 export async function loader({context}: Route.LoaderArgs) {
-  const {cart} = context;
-  return await cart.get();
+  return loadCart(context);
 }
 
 export default function Cart() {
