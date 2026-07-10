@@ -943,12 +943,59 @@ main.routine-builder section {
   }
 }
 
-/* Search drawer — match Lumina header / home typography */
-.overlay aside.search-drawer header {
-  border-bottom-color: var(--color-border);
+/* Search modal — centered overlay (cart aside stays right-docked) */
+.overlay.overlay--search {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: max(4.5rem, 8vh) 1rem 2rem;
+  background: rgba(15, 15, 15, 0.35);
+  backdrop-filter: blur(2px);
 }
 
-.overlay aside.search-drawer header h3 {
+.overlay.overlay--search .close-outside {
+  width: 100%;
+  height: 100%;
+}
+
+.overlay aside.search-modal {
+  position: relative;
+  right: auto;
+  top: auto;
+  left: auto;
+  width: min(36rem, 100%);
+  height: auto;
+  max-height: min(80vh, 40rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: #fff;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.18),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
+  opacity: 0;
+  transform: translateY(0.75rem) scale(0.98);
+  transition:
+    transform 200ms ease,
+    opacity 200ms ease;
+  z-index: 2;
+}
+
+.overlay.expanded aside.search-modal {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.overlay aside.search-modal header {
+  border-bottom-color: var(--color-border);
+  flex-shrink: 0;
+  height: auto;
+  min-height: 3.25rem;
+  padding: 0.85rem 1.25rem;
+}
+
+.overlay aside.search-modal header h3 {
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -956,35 +1003,37 @@ main.routine-builder section {
   text-transform: uppercase;
 }
 
-.overlay aside.search-drawer main {
+.overlay aside.search-modal main {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  height: calc(100vh - var(--header-height));
   margin: 0;
+  min-height: 0;
   overflow: hidden;
   padding: 0;
 }
 
-.search-drawer-panel {
+.search-modal-panel {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  height: 100%;
+  min-height: 0;
 }
 
-.search-drawer-form {
+.search-modal-form {
   background: var(--color-background);
   border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;
-  padding: 1rem 1.25rem;
-  position: sticky;
-  top: 0;
-  z-index: 1;
+  padding: 1rem 1.25rem 1.15rem;
 }
 
-.search-drawer-results {
+.search-modal-results {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 1rem 1.25rem 1.5rem;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Search field: reset.css adds border/margin to all inputs */
@@ -1008,13 +1057,13 @@ main.routine-builder section {
   box-shadow: none;
 }
 
-.search-drawer-view-all {
+.search-modal-view-all {
   color: #fff !important;
   text-decoration: none;
 }
 
-.search-drawer-view-all:hover,
-.search-drawer-view-all:visited,
-.search-drawer-view-all:active {
+.search-modal-view-all:hover,
+.search-modal-view-all:visited,
+.search-modal-view-all:active {
   color: #fff !important;
 }

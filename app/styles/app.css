@@ -34,6 +34,10 @@ img {
   }
 }
 
+html:has(.overlay.overlay--search.expanded) {
+  overflow: hidden;
+}
+
 /* Cart/search drawer only — do not style bare <aside> (e.g. cart page summary) */
 .overlay aside {
   background: var(--color-light);
@@ -104,7 +108,8 @@ img {
   transition: opacity 400ms ease-in-out;
   transition: opacity 400ms;
   visibility: hidden;
-  z-index: 10;
+  /* Above sticky header (z-30) and in-page hero cards (z-20) */
+  z-index: 50;
 }
 
 .overlay .close-outside {

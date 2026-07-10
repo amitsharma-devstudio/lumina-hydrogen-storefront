@@ -267,13 +267,15 @@ function usePredictiveSearch(): UsePredictiveSearchReturn {
 
   if (fetcher?.state === 'loading') {
     term.current = String(fetcher.formData?.get('q') || '');
+  } else if (fetcher?.data?.term != null) {
+    term.current = fetcher.data.term;
   }
 
   // capture the search input element as a ref
   useEffect(() => {
     if (!inputRef.current) {
       inputRef.current = document.querySelector(
-        '.search-drawer [data-search-input]',
+        '[data-search-input]',
       );
     }
   }, []);

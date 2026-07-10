@@ -9,7 +9,7 @@ import type {PredictiveSearchReturn} from '~/lib/search';
 import {useAside} from './Aside';
 
 type SearchFormPredictiveChildren = (args: {
-  fetchResults: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  fetchResults: (value: string) => void;
   goToSearch: () => void;
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   fetcher: Fetcher<PredictiveSearchReturn>;
@@ -22,8 +22,8 @@ type SearchFormPredictiveProps = Omit<FormProps, 'children'> & {
 export const SEARCH_ENDPOINT = '/search';
 
 /**
- *  Search form component that sends search requests to the `/search` route
- **/
+ * Search form that sends predictive requests to the `/search` route.
+ */
 export function SearchFormPredictive({
   children,
   className = 'predictive-search-form',
@@ -34,26 +34,19 @@ export function SearchFormPredictive({
   const navigate = useNavigate();
   const aside = useAside();
 
-  /** Reset the input value and blur the input */
-  function resetInput(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (inputRef?.current?.value) {
-      inputRef.current.blur();
-    }
-  }
-
   /** Navigate to the search page with the current input value */
   function goToSearch() {
-    const term = inputRef?.current?.value;
-    void navigate(SEARCH_ENDPOINT + (term ? `?q=${term}` : ''));
+    const term = inputRef?.current?.value?.trim();
+    void navigate(
+      SEARCH_ENDPOINT + (term ? `?q=${encodeURIComponent(term)}` : ''),
+    );
     aside.close();
   }
 
-  /** Fetch search results based on the input value */
-  function fetchResults(event: React.ChangeEvent<HTMLInputElement>) {
+  /** Fetch predictive suggestions for the given query */
+  function fetchResults(value: string) {
     void fetcher.submit(
-      {q: event.target.value || '', limit: 5, predictive: true},
+      {q: value || '', limit: 5, predictive: true},
       {method: 'GET', action: SEARCH_ENDPOINT},
     );
   }
@@ -67,7 +60,10 @@ export function SearchFormPredictive({
       {...props}
       autoComplete="off"
       className={className}
-      onSubmit={resetInput}
+      onSubmit={(event) => {
+        event.preventDefault();
+        goToSearch();
+      }}
     >
       {children({inputRef, fetcher, fetchResults, goToSearch})}
     </fetcher.Form>

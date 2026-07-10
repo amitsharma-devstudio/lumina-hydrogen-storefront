@@ -32,7 +32,7 @@ export function Aside({
   children?: React.ReactNode;
   type: AsideType;
   heading: React.ReactNode;
-  /** Extra class on the drawer panel (e.g. search-drawer). */
+  /** Extra class on the panel (e.g. search-modal). */
   asideClassName?: string;
 }) {
   const {type: activeType, close} = useAside();
@@ -55,10 +55,14 @@ export function Aside({
     return () => abortController.abort();
   }, [close, expanded]);
 
+  const isSearchModal = asideClassName?.includes('search-modal');
+
   return (
     <div
       aria-modal
-      className={`overlay ${expanded ? 'expanded' : ''}`}
+      className={`overlay ${expanded ? 'expanded' : ''}${
+        isSearchModal ? ' overlay--search' : ''
+      }`}
       role="dialog"
     >
       <button className="close-outside" onClick={close} />

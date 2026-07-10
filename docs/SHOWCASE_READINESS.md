@@ -39,9 +39,9 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 
 ### 2.3 Predictive/instant search (backend done in `search.tsx`)
 - [x] Regular + predictive search queries/fetchers
-- [ ] Wire header search aside to predictive endpoint (instant dropdown)
-- [ ] Fix `SearchField.tsx` ref type error
-- [ ] Keyboard nav (↑/↓/enter), recent searches, clean "no results" state
+- [x] Wire header search to predictive endpoint (inline header field + suggestion panel)
+- [x] Fix `SearchField.tsx` ref type error
+- [~] Keyboard nav (↑/↓/enter), recent searches — Escape/close + empty states done; arrow-key nav deferred
 - [ ] `/search` results page polished with catalog card style
 
 ### 2.4 Finish the homepage (sections commented out in `_index.tsx`)

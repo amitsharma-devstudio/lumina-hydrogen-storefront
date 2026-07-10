@@ -1,19 +1,25 @@
-import type {ChangeEventHandler, FocusEventHandler, RefObject} from 'react';
+import type {
+  ChangeEventHandler,
+  FocusEventHandler,
+  Ref,
+} from 'react';
 import {SearchIcon} from '~/components/search/SearchIcon';
 import {btnPrimaryClass} from '~/lib/theme';
 
 type SearchFieldProps = {
-  inputRef?: RefObject<HTMLInputElement>;
+  inputRef?: Ref<HTMLInputElement>;
   name?: string;
   defaultValue?: string;
   placeholder?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   onFocus?: FocusEventHandler<HTMLInputElement>;
-  /** Page hero vs header drawer */
-  variant?: 'page' | 'drawer';
+  /** Full /search page, predictive modal, or compact header bar */
+  variant?: 'page' | 'modal' | 'header';
   submitLabel?: string;
-  /** Drawer: navigate to full search (button type="button") */
+  /** Navigate to full search (button type="button") */
   onViewAllClick?: () => void;
+  ariaControls?: string;
+  ariaExpanded?: boolean;
 };
 
 const searchSubmitClass = [
@@ -33,29 +39,36 @@ export function SearchField({
   variant = 'page',
   submitLabel = 'Search',
   onViewAllClick,
+  ariaControls,
+  ariaExpanded,
 }: SearchFieldProps) {
   const isPage = variant === 'page';
+  const isHeader = variant === 'header';
 
   const inputClassName = isPage
     ? 'search-field-input min-w-0 flex-1 py-4 pl-2 pr-2 text-base md:text-lg'
-    : 'search-field-input min-w-0 flex-1 py-3 pl-1 pr-2 text-sm';
+    : isHeader
+      ? 'search-field-input min-w-0 flex-1 py-2 pl-1 pr-2 text-sm'
+      : 'search-field-input min-w-0 flex-1 py-3.5 pl-1 pr-2 text-base';
 
   const wrapperClassName = isPage
     ? 'search-field flex items-center gap-2 rounded-2xl bg-white px-4 shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-shadow focus-within:shadow-[0_12px_40px_rgba(0,0,0,0.08)] md:px-5'
-    : 'search-field flex items-center gap-2 rounded-xl bg-white px-3 shadow-sm';
+    : isHeader
+      ? 'search-field flex h-11 w-full items-center gap-2 rounded-full border border-neutral-200/90 bg-neutral-50/90 pl-4 pr-0 focus-within:border-neutral-300 focus-within:bg-white'
+      : 'search-field flex items-center gap-2 rounded-2xl border border-neutral-200/80 bg-neutral-50/80 px-4 focus-within:border-neutral-300 focus-within:bg-white';
 
-  const buttonSizeClass = isPage ? 'px-7 py-3.5' : 'px-5 py-2.5 text-xs';
+  const buttonSizeClass = isPage
+    ? 'px-7 py-3.5'
+    : isHeader
+      ? 'ml-auto !h-9 min-h-9 shrink-0 px-5 text-xs shadow-none hover:translate-y-0'
+      : 'px-5 py-2.5 text-sm';
 
   return (
-    <div className={isPage ? 'max-w-3xl' : undefined}>
+    <div className={isPage ? 'max-w-3xl' : 'w-full'}>
       <div className={wrapperClassName}>
-        <SearchIcon
-          className={
-            isPage
-              ? 'h-5 w-5 shrink-0 text-neutral-400'
-              : 'h-4 w-4 shrink-0 text-neutral-400'
-          }
-        />
+        {!isHeader ? (
+          <SearchIcon className="h-5 w-5 shrink-0 text-neutral-400" />
+        ) : null}
         <input
           ref={inputRef}
           className={inputClassName}
@@ -65,8 +78,10 @@ export function SearchField({
           onChange={onChange}
           onFocus={onFocus}
           placeholder={placeholder}
-          type="text"
+          type="search"
           role="searchbox"
+          aria-controls={ariaControls}
+          aria-expanded={ariaExpanded}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
