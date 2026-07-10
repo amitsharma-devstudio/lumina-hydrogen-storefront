@@ -50,9 +50,9 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [ ] Confirm each pulls real data and is responsive
 
 ### 2.5 Cart conversion features
-- [ ] Discount code + gift card UI (action already supports both)
-- [ ] Free-shipping progress bar / threshold nudge
-- [ ] Cross-sell / "complete your routine" upsell in cart
+- [x] Discount code + gift card UI (action already supports both)
+- [x] Free-shipping progress bar / threshold nudge
+- [x] Cross-sell / "complete your routine" upsell in cart
 
 ---
 

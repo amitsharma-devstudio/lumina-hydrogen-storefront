@@ -26,5 +26,13 @@ export const RecommendedProductFragment = `#graphql
         height
       }
     }
+    selectedOrFirstAvailableVariant(
+      selectedOptions: []
+      ignoreUnknownOptions: true
+      caseInsensitiveMatch: true
+    ) {
+      id
+      availableForSale
+    }
   }
 `;

@@ -5,7 +5,10 @@ import {CartForm, useOptimisticCart} from '@shopify/hydrogen';
 import {CartPageEmpty} from '~/components/cart/CartPageEmpty';
 import {CartPageLineItem} from '~/components/cart/CartPageLineItem';
 import {CartOrderSummary} from '~/components/cart/CartOrderSummary';
+import {CartFreeShippingProgress} from '~/components/cart/CartFreeShippingProgress';
+import {CartUpsellsSection} from '~/components/cart/CartUpsellsSection';
 import {loadCart} from '~/lib/loadCart';
+import {loadCartUpsells} from '~/lib/loadCartUpsells';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Your Cart | Lumina'}];
@@ -100,11 +103,17 @@ export async function action({request, context}: Route.ActionArgs) {
 }
 
 export async function loader({context}: Route.LoaderArgs) {
-  return loadCart(context);
+  const cart = await loadCart(context);
+  const upsells = await loadCartUpsells({
+    storefront: context.storefront,
+    cart,
+  });
+
+  return {cart, upsells};
 }
 
 export default function Cart() {
-  const originalCart = useLoaderData<typeof loader>();
+  const {cart: originalCart, upsells} = useLoaderData<typeof loader>();
   const cart = useOptimisticCart(originalCart);
   const lines = cart?.lines?.nodes ?? [];
   const hasLines = lines.length > 0;
@@ -128,11 +137,19 @@ export default function Cart() {
           ) : null}
         </header>
 
+        <div className="mb-8">
+          <CartFreeShippingProgress
+            subtotalAmount={cart?.cost?.subtotalAmount}
+          />
+        </div>
+
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3 lg:gap-10">
           <div className="min-w-0 space-y-5 lg:col-span-2">
             {lines.map((line) => (
               <CartPageLineItem key={line.id} line={line} />
             ))}
+
+            <CartUpsellsSection upsells={upsells} />
           </div>
 
           <aside className="w-full lg:col-span-1 lg:self-stretch">

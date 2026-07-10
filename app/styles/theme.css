@@ -161,6 +161,35 @@ a {
   margin-bottom: 0;
 }
 
+/* Cart page: reset.css zeroes horizontal padding on all <section> */
+main.cart-page section {
+  padding: 0;
+}
+
+main.cart-page .cart-free-shipping-progress {
+  padding-block: 1.25rem;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  main.cart-page .cart-free-shipping-progress {
+    padding-block: 1.5rem;
+    padding-inline: 1.75rem;
+  }
+}
+
+main.cart-page .cart-upsells-section {
+  padding-block: 1.5rem;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  main.cart-page .cart-upsells-section {
+    padding-block: 2rem;
+    padding-inline: 2rem;
+  }
+}
+
 /* Cart page: reset global input margins so promo fields align with Apply buttons */
 .cart-page .cart-order-summary input {
   margin-top: 0;
