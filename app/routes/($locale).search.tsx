@@ -2,6 +2,7 @@ import {useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).search';
 import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {SearchPageView} from '~/components/search/SearchPageView';
+import {ProductCardFragment} from '~/graphql/fragments/ProductCardFragment';
 import {
   type RegularSearchReturn,
   type PredictiveSearchReturn,
@@ -54,42 +55,10 @@ export default function SearchPage() {
 const SEARCH_PRODUCT_FRAGMENT = `#graphql
   fragment SearchProduct on Product {
     __typename
-    handle
-    id
-    publishedAt
-    title
     trackingParameters
-    vendor
-    selectedOrFirstAvailableVariant(
-      selectedOptions: []
-      ignoreUnknownOptions: true
-      caseInsensitiveMatch: true
-    ) {
-      id
-      image {
-        url
-        altText
-        width
-        height
-      }
-      price {
-        amount
-        currencyCode
-      }
-      compareAtPrice {
-        amount
-        currencyCode
-      }
-      selectedOptions {
-        name
-        value
-      }
-      product {
-        handle
-        title
-      }
-    }
+    ...ProductCard
   }
+  ${ProductCardFragment}
 ` as const;
 
 const SEARCH_PAGE_FRAGMENT = `#graphql

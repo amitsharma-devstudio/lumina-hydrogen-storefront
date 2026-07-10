@@ -42,7 +42,7 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [x] Wire header search to predictive endpoint (inline header field + suggestion panel)
 - [x] Fix `SearchField.tsx` ref type error
 - [~] Keyboard nav (↑/↓/enter), recent searches — Escape/close + empty states done; arrow-key nav deferred
-- [ ] `/search` results page polished with catalog card style
+- [x] `/search` results page polished with catalog card style
 
 ### 2.4 Finish the homepage (sections commented out in `_index.tsx`)
 - [ ] Re-enable + finalize: `HomeCollections`, `HomeBestsellers`, `HomeRoutineTeaser`,

@@ -1,6 +1,6 @@
 import {Link} from 'react-router';
-import {Pagination} from '@shopify/hydrogen';
-import {ProductCard} from '~/components/product/ProductCard';
+import {CatalogProductCard} from '~/components/catalog/CatalogProductCard';
+import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {PRODUCT_GRID_CLASSNAME} from '~/components/home/productGridClasses';
 import {SearchSectionHeader} from '~/components/search/SearchSectionHeader';
 import {mapSearchProductToCard} from '~/lib/mapSearchProductToCard';
@@ -121,8 +121,25 @@ function SearchResultsProducts({
 }: PartialSearchResult<'products'>) {
   if (!products?.nodes.length) return null;
 
-  const {hasPreviousPage, hasNextPage} = products.pageInfo ?? {};
   const count = products.nodes.length;
+  const needsPagination =
+    products.pageInfo?.hasPreviousPage || products.pageInfo?.hasNextPage;
+
+  const renderCard = (product: (typeof products.nodes)[number]) => {
+    const productUrl = urlWithTrackingParams({
+      baseUrl: `/products/${product.handle}`,
+      trackingParams: product.trackingParameters,
+      term,
+    });
+
+    return (
+      <CatalogProductCard
+        key={product.id}
+        product={mapSearchProductToCard(product)}
+        productUrl={productUrl}
+      />
+    );
+  };
 
   return (
     <section>
@@ -135,43 +152,18 @@ function SearchResultsProducts({
             : undefined
         }
       />
-      <Pagination connection={products}>
-        {({nodes, isLoading, NextLink, PreviousLink}) => (
-          <>
-            {hasPreviousPage ? (
-              <div className="mb-8">
-                <PreviousLink className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-5 py-2.5 text-sm text-foreground transition-colors hover:border-primary">
-                  {isLoading ? 'Loading…' : '← Previous'}
-                </PreviousLink>
-              </div>
-            ) : null}
-            <div className={PRODUCT_GRID_CLASSNAME}>
-              {nodes.map((product) => {
-                const productUrl = urlWithTrackingParams({
-                  baseUrl: `/products/${product.handle}`,
-                  trackingParams: product.trackingParameters,
-                  term,
-                });
-
-                return (
-                  <ProductCard
-                    key={product.id}
-                    product={mapSearchProductToCard(product)}
-                    productUrl={productUrl}
-                  />
-                );
-              })}
-            </div>
-            {hasNextPage ? (
-              <div className="mt-10 flex justify-center">
-                <NextLink className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-6 py-3 text-sm text-foreground transition-colors hover:border-primary">
-                  {isLoading ? 'Loading…' : 'Load more products →'}
-                </NextLink>
-              </div>
-            ) : null}
-          </>
-        )}
-      </Pagination>
+      {needsPagination ? (
+        <PaginatedResourceSection
+          connection={products}
+          resourcesClassName={PRODUCT_GRID_CLASSNAME}
+        >
+          {({node: product}) => renderCard(product)}
+        </PaginatedResourceSection>
+      ) : (
+        <div className={PRODUCT_GRID_CLASSNAME}>
+          {products.nodes.map((product) => renderCard(product))}
+        </div>
+      )}
     </section>
   );
 }
