@@ -15,16 +15,41 @@ import {
   findFirstPurchasableVariant,
   isVariantPurchasable,
 } from '~/lib/variantAvailability';
+import {buildSeoMeta, getRequestOrigin} from '~/lib/seo';
+import {
+  JsonLd,
+  buildBreadcrumbListJsonLd,
+  buildProductJsonLd,
+} from '~/components/seo/JsonLd';
 
 export const meta: Route.MetaFunction = ({data}) => {
-  const title = data?.product?.title ?? '';
-  return [
-    {title: title ? `${title} | Lumina` : 'Lumina'},
-    {
-      rel: 'canonical',
-      href: `/products/${data?.product?.handle ?? ''}`,
-    },
-  ];
+  const product = data?.product;
+  const title = product?.title ? `${product.title} | Lumina` : 'Lumina';
+  const description =
+    product?.seo?.description ||
+    product?.description?.slice(0, 160) ||
+    'Clinical-grade skincare from Lumina.';
+  const image =
+    product?.selectedOrFirstAvailableVariant?.image ||
+    product?.featuredImage ||
+    product?.images?.nodes?.[0] ||
+    null;
+
+  return buildSeoMeta({
+    title,
+    description,
+    url: `/products/${product?.handle ?? ''}`,
+    origin: data?.seoOrigin,
+    image: image?.url
+      ? {
+          url: image.url,
+          altText: image.altText,
+          width: image.width,
+          height: image.height,
+        }
+      : null,
+    type: 'product',
+  });
 };
 
 export async function loader({context, params, request}: Route.LoaderArgs) {
@@ -48,11 +73,14 @@ export async function loader({context, params, request}: Route.LoaderArgs) {
   );
   if (availabilityRedirect) throw availabilityRedirect;
 
-  return data;
+  return {
+    ...data,
+    seoOrigin: getRequestOrigin(request),
+  };
 }
 
 export default function Product() {
-  const {product, recommendations} = useLoaderData<typeof loader>();
+  const {product, recommendations, seoOrigin} = useLoaderData<typeof loader>();
 
   const optimisticVariant = useOptimisticVariant(
     product.selectedOrFirstAvailableVariant,
@@ -74,6 +102,13 @@ export default function Product() {
     selectedOrFirstAvailableVariant: selectedVariant,
   });
 
+  const productUrl = `${seoOrigin}/products/${product.handle}`;
+  const productImage =
+    selectedVariant?.image?.url ||
+    product.featuredImage?.url ||
+    product.images?.nodes?.[0]?.url ||
+    null;
+
   return (
     <>
       <ProductDetailPage
@@ -83,6 +118,29 @@ export default function Product() {
           selectedOrFirstAvailableVariant: selectedVariant,
         }}
         recommendations={recommendations}
+      />
+      <JsonLd
+        data={buildProductJsonLd({
+          name: product.title,
+          description: product.seo?.description || product.description,
+          url: productUrl,
+          image: productImage,
+          sku: selectedVariant?.sku,
+          brand: product.vendor || 'Lumina',
+          price: selectedVariant?.price?.amount,
+          currencyCode: selectedVariant?.price?.currencyCode,
+          availability: selectedVariant?.availableForSale,
+        })}
+      />
+      <JsonLd
+        data={buildBreadcrumbListJsonLd(
+          [
+            {name: 'Home', url: '/'},
+            {name: 'Catalog', url: '/collections/all'},
+            {name: product.title, url: `/products/${product.handle}`},
+          ],
+          seoOrigin,
+        )}
       />
       <Analytics.ProductView
         data={{

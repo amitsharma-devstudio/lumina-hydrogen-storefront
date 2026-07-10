@@ -6,7 +6,14 @@ export const ProductBaseFieldsFragment = `#graphql
         handle
         description
         descriptionHtml
-        
+        featuredImage {
+            ...ImageFields
+        }
+        seo {
+            title
+            description
+        }
+
         encodedVariantExistence
         encodedVariantAvailability
 

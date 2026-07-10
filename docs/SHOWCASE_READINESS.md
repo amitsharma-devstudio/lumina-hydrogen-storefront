@@ -60,19 +60,19 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 
 ### 3.1 Analytics (Provider + Product/Collection/Search views done)
 - [x] `Analytics.Provider` in root; `ProductView`, `CollectionView`, `SearchView`
-- [ ] Add `Analytics.CartView`; verify add-to-cart/update events fire
-- [ ] Confirm events reach Shopify analytics (network check)
+- [x] Add `Analytics.CartView`; cart mutations return `analytics.cartId` (add/update/remove auto via Provider + `cart.updatedAt`)
+- [~] Confirm events reach Shopify analytics (network check in browser / Admin)
 
-### 3.2 Consent (wired in `root.tsx`, `withPrivacyBanner: false`)
-- [~] Consent config present but banner disabled
-- [ ] Enable Shopify privacy banner OR branded cookie-consent via Customer Privacy API
-- [ ] Gate analytics on consent; banner localizes per market
+### 3.2 Consent (wired in `root.tsx`)
+- [x] Consent config present; Shopify privacy banner enabled (`withPrivacyBanner: true`)
+- [x] Banner localized via storefront `country` / `language`
+- [~] Gate analytics on consent — handled by Hydrogen `Analytics.Provider` + Customer Privacy API (verify in browser)
 
 ### 3.3 SEO (per-route `meta`, sitemap.xml + robots.txt done)
 - [x] Per-route `meta`, `sitemap.xml`, `robots.txt`
-- [ ] JSON-LD: `Product` (PDP), `BreadcrumbList`, `Organization`/`WebSite` (root)
-- [ ] Canonical URLs + Open Graph / Twitter cards (shared SEO helper)
-- [ ] Dynamic `<html lang>` from locale (hardcoded `"en"` today)
+- [x] JSON-LD: `Product` (PDP), `BreadcrumbList` (PDP + collection), `Organization`/`WebSite` (home)
+- [x] Canonical URLs + Open Graph / Twitter cards (shared `buildSeoMeta` helper)
+- [x] Dynamic `<html lang>` from storefront locale
 
 ### 3.4 Performance / Core Web Vitals
 - [ ] Cache-strategy audit — `CacheLong`/`CacheShort` on collection/PDP/metaobject queries

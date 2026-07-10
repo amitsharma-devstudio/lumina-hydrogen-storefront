@@ -12,9 +12,20 @@ import type {
   RegularSearchQuery,
   PredictiveSearchQuery,
 } from 'storefrontapi.generated';
+import {buildSeoMeta, getRequestOrigin} from '~/lib/seo';
 
-export const meta: Route.MetaFunction = () => {
-  return [{title: 'Search | Lumina'}];
+export const meta: Route.MetaFunction = ({data}) => {
+  const term = data?.term?.trim();
+  const title = term ? `Search “${term}” | Lumina` : 'Search | Lumina';
+  return buildSeoMeta({
+    title,
+    description: term
+      ? `Search results for “${term}” at Lumina.`
+      : 'Search Lumina products, collections, and pages.',
+    url: term ? `/search?q=${encodeURIComponent(term)}` : '/search',
+    origin: data?.seoOrigin,
+    type: 'website',
+  });
 };
 
 export async function loader({request, context}: Route.LoaderArgs) {
@@ -30,7 +41,11 @@ export async function loader({request, context}: Route.LoaderArgs) {
     return {term: '', result: null, error: error.message};
   });
 
-  return await searchPromise;
+  const result = await searchPromise;
+  return {
+    ...result,
+    seoOrigin: getRequestOrigin(request),
+  };
 }
 
 /**

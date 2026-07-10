@@ -18,6 +18,7 @@ import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
 import {loadCart} from '~/lib/loadCart';
+import {languageToHtmlLang} from '~/lib/seo';
 
 export type RootLoader = typeof loader;
 
@@ -87,11 +88,12 @@ export async function loader(args: Route.LoaderArgs) {
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      withPrivacyBanner: false,
+      withPrivacyBanner: true,
       // localize the privacy banner
       country: args.context.storefront.i18n.country,
       language: args.context.storefront.i18n.language,
     },
+    htmlLang: args.context.storefront.i18n.language,
   };
 }
 
@@ -145,9 +147,11 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
+  const data = useRouteLoaderData<RootLoader>('root');
+  const htmlLang = languageToHtmlLang(data?.htmlLang);
 
   return (
-    <html lang="en">
+    <html lang={htmlLang}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />

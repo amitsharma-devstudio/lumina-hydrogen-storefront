@@ -3,9 +3,31 @@ import type {Route} from './+types/($locale).collections.$handle';
 import {CollectionProductsPage} from '~/components/catalog/CollectionProductsPage';
 import {loadCollectionProducts} from '~/lib/loadCollectionProducts';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {buildSeoMeta, getRequestOrigin} from '~/lib/seo';
+import {JsonLd, buildBreadcrumbListJsonLd} from '~/components/seo/JsonLd';
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `${data?.collection.title ?? 'Collection'} | Lumina`}];
+  const collection = data?.collection;
+  const title = `${collection?.title ?? 'Collection'} | Lumina`;
+  const description =
+    collection?.description?.slice(0, 160) ||
+    `Shop the ${collection?.title ?? 'collection'} at Lumina.`;
+
+  return buildSeoMeta({
+    title,
+    description,
+    url: `/collections/${collection?.handle ?? ''}`,
+    origin: data?.seoOrigin,
+    image: collection?.image?.url
+      ? {
+          url: collection.image.url,
+          altText: collection.image.altText,
+          width: collection.image.width,
+          height: collection.image.height,
+        }
+      : null,
+    type: 'website',
+  });
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -29,13 +51,35 @@ export async function loader(args: Route.LoaderArgs) {
 
   redirectIfHandleIsLocalized(args.request, {handle, data: result.collection});
 
-  return result;
+  return {
+    ...result,
+    seoOrigin: getRequestOrigin(args.request),
+  };
 }
 
 export default function Collection() {
-  const {collection, sort, facets} = useLoaderData<typeof loader>();
+  const {collection, sort, facets, seoOrigin} = useLoaderData<typeof loader>();
 
   return (
-    <CollectionProductsPage collection={collection} sort={sort} facets={facets} />
+    <>
+      <CollectionProductsPage
+        collection={collection}
+        sort={sort}
+        facets={facets}
+      />
+      <JsonLd
+        data={buildBreadcrumbListJsonLd(
+          [
+            {name: 'Home', url: '/'},
+            {name: 'Collections', url: '/collections'},
+            {
+              name: collection.title,
+              url: `/collections/${collection.handle}`,
+            },
+          ],
+          seoOrigin,
+        )}
+      />
+    </>
   );
 }

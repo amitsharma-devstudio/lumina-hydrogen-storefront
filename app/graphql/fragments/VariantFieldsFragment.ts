@@ -1,13 +1,16 @@
-// Define this once
 export const VariantFieldsFragment = `#graphql
   fragment VariantFields on ProductVariant {
     id
     title
+    sku
     availableForSale
     quantityAvailable
     selectedOptions {
       name
       value
+    }
+    image {
+      ...ImageFields
     }
     price {
       ...MoneyFields
