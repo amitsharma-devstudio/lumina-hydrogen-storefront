@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 
 /**
  * Friendly placeholder shown when a footer/info destination (a Shopify page or

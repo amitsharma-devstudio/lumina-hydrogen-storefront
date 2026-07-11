@@ -18,8 +18,10 @@ import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
 import {ErrorPage} from '~/components/ErrorPage';
+import {HreflangLinks} from '~/components/HreflangLinks';
 import {loadCart} from '~/lib/loadCart';
-import {languageToHtmlLang} from '~/lib/seo';
+import {getRequestOrigin, languageToHtmlLang} from '~/lib/seo';
+import {getLocaleFromRequest} from '~/lib/i18n';
 
 export type RootLoader = typeof loader;
 
@@ -36,6 +38,16 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 
   // revalidate when manually revalidating via useRevalidator
   if (currentUrl.toString() === nextUrl.toString()) return true;
+
+  // Revalidate when market / locale prefix changes so prices & i18n stay in sync
+  const currentLocale = getLocaleFromRequest(new Request(currentUrl));
+  const nextLocale = getLocaleFromRequest(new Request(nextUrl));
+  if (
+    currentLocale.language !== nextLocale.language ||
+    currentLocale.country !== nextLocale.country
+  ) {
+    return true;
+  }
 
   // Defaulting to no revalidation for root loader data to improve performance.
   // When using this feature, you risk your UI getting out of sync with your server.
@@ -81,6 +93,8 @@ export async function loader(args: Route.LoaderArgs) {
   return {
     ...deferredData,
     ...criticalData,
+    selectedLocale: args.context.storefront.i18n,
+    requestOrigin: getRequestOrigin(args.request),
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
     shop: getShopAnalytics({
       storefront,
@@ -159,6 +173,9 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <link rel="stylesheet" href={tailwindCss}></link>
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
+        {data?.requestOrigin ? (
+          <HreflangLinks origin={data.requestOrigin} />
+        ) : null}
         <Meta />
         <Links />
       </head>
@@ -184,7 +201,10 @@ export default function App() {
       shop={data.shop}
       consent={data.consent}
     >
-      <PageLayout {...data}>
+      <PageLayout
+        key={`${data.selectedLocale.language}-${data.selectedLocale.country}`}
+        {...data}
+      >
         <Outlet />
       </PageLayout>
     </Analytics.Provider>

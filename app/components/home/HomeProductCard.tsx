@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 import {Money} from '@shopify/hydrogen';
 import {ProductCardImageCarousel} from '~/components/home/ProductCardImageCarousel';
 import type {CollectionProductNode} from '~/components/home/productsSection.types';

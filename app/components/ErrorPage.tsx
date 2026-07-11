@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 import {SkipToContent} from '~/components/SkipToContent';
 import {btnPrimaryLinkClass, btnSecondaryClass} from '~/lib/theme';
 

@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 import {Image} from '@shopify/hydrogen';
 import {type KeyboardEvent} from 'react';
 import {HOME_SECTION_SURFACE_FLUSH} from '~/components/home/homeSectionStyles';

@@ -1,5 +1,6 @@
 import {useCallback, useRef, useState} from 'react';
-import {Link} from 'react-router';
+import {Link} from '~/components/Link';
+
 import {Image} from '@shopify/hydrogen';
 import {
   PRODUCT_CARD_IMAGE_HEIGHT,

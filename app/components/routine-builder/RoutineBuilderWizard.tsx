@@ -1,11 +1,12 @@
 import {useEffect, useMemo, useState} from 'react';
+import {Link} from '~/components/Link';
 import {
   CartForm,
   Image,
   Money,
   type OptimisticCartLineInput,
 } from '@shopify/hydrogen';
-import {Link, useNavigate, type FetcherWithComponents} from 'react-router';
+import {useNavigate, type FetcherWithComponents} from 'react-router';
 import type {RoutineBundle, RoutineProductOption} from '~/lib/routineBundles.types';
 import {
   ROUTINE_BUILDER_STEP_KEYS,

@@ -1,4 +1,5 @@
-import {Link, redirect, useLoaderData} from 'react-router';
+import {redirect, useLoaderData} from 'react-router';
+import {Link} from '~/components/Link';
 import type {Route} from './+types/($locale).account.orders.$id';
 import {Money, Image} from '@shopify/hydrogen';
 import type {

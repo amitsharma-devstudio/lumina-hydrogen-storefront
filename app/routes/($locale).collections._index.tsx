@@ -1,4 +1,5 @@
-import {Link, useLoaderData} from 'react-router';
+import {useLoaderData} from 'react-router';
+import {Link} from '~/components/Link';
 import type {Route} from './+types/($locale).collections._index';
 import {CollectionCard} from '~/components/collection/CollectionCard';
 import {Breadcrumbs} from '~/components/ui/Breadcrumbs';

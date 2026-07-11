@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 import type {RegimenDisplay} from '~/lib/skincare';
 
 /**

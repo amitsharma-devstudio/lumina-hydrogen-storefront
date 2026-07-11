@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import { NavLink, Await } from "react-router";
+import {Link} from '~/components/Link';
+import {Await} from 'react-router';
 import type { FooterQuery, HeaderQuery } from "storefrontapi.generated";
 import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
 import {FooterSkeleton} from '~/components/ui/Skeleton';
@@ -227,9 +228,9 @@ function FooterSection({
                   {item.title}
                 </a>
               ) : (
-                <NavLink to={url} className="lumina-footer__link transition-colors">
+                <Link variant="nav" to={url} className="lumina-footer__link transition-colors">
                   {item.title}
-                </NavLink>
+                </Link>
               )}
             </li>
 

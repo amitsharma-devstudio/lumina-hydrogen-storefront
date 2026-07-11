@@ -1,14 +1,8 @@
 import type {Route} from './+types/($locale)';
+import {localeMatchesPrefix} from '~/lib/i18n';
 
-export async function loader({params, context}: Route.LoaderArgs) {
-  const {language, country} = context.storefront.i18n;
-
-  if (
-    params.locale &&
-    params.locale.toLowerCase() !== `${language}-${country}`.toLowerCase()
-  ) {
-    // If the locale URL param is defined, yet we still are still at the default locale
-    // then the the locale param must be invalid, send to the 404 page
+export async function loader({params}: Route.LoaderArgs) {
+  if (params.locale && !localeMatchesPrefix(params.locale)) {
     throw new Response(null, {status: 404});
   }
 

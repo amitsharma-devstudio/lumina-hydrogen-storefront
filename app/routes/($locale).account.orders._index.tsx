@@ -1,10 +1,6 @@
-import {
-  Link,
-  useLoaderData,
-  useNavigation,
-  useSearchParams,
-} from 'react-router';
+import {useLoaderData, useNavigation, useSearchParams} from 'react-router';
 import type {Route} from './+types/($locale).account.orders._index';
+import {Link} from '~/components/Link';
 import {useRef} from 'react';
 import {
   Money,

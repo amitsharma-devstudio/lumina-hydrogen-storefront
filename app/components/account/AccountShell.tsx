@@ -1,4 +1,5 @@
-import {Form, NavLink, Outlet} from 'react-router';
+import {Form, Outlet} from 'react-router';
+import {Link} from '~/components/Link';
 import type {CustomerFragment} from 'customer-accountapi.generated';
 import {Breadcrumbs} from '~/components/ui/Breadcrumbs';
 import {btnLinkClass, btnSecondaryClass} from '~/lib/theme';
@@ -46,7 +47,7 @@ export function AccountShell({
             aria-label="Account sections"
           >
             {ACCOUNT_NAV.map(({to, label}) => (
-              <NavLink
+              <Link variant="nav"
                 key={to}
                 to={to}
                 prefetch="intent"
@@ -60,7 +61,7 @@ export function AccountShell({
                 }
               >
                 {label}
-              </NavLink>
+              </Link>
             ))}
             <Form
               method="POST"
@@ -118,13 +119,13 @@ export function AccountEmptyState({
     <div className="rounded-2xl border border-dashed border-neutral-200 bg-neutral-50/60 px-6 py-10 text-center">
       <p className="text-sm text-neutral-600">{message}</p>
       {action ? (
-        <NavLink
+        <Link variant="nav"
           to={action.to}
           prefetch="intent"
           className={`${btnLinkClass} mt-4 inline-block text-sm font-medium`}
         >
           {action.label} →
-        </NavLink>
+        </Link>
       ) : null}
     </div>
   );

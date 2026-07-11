@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 import {
   HOME_BTN_SECONDARY,
   HOME_SECTION_HEADER,

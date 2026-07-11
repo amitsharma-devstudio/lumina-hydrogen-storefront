@@ -1,5 +1,6 @@
 import {Suspense} from 'react';
-import {Await, NavLink} from 'react-router';
+import {Link} from '~/components/Link';
+import {Await} from 'react-router';
 
 function AccountIcon() {
   return (
@@ -35,7 +36,7 @@ export function AccountHeaderLink({
     >
       <Await resolve={isLoggedIn}>
         {(loggedIn) => (
-          <NavLink
+          <Link variant="nav"
             to={loggedIn ? '/account' : '/account/login'}
             prefetch="intent"
             aria-label={loggedIn ? 'My account' : 'Sign in'}
@@ -43,7 +44,7 @@ export function AccountHeaderLink({
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-neutral-700 transition-colors hover:border-neutral-200 hover:bg-neutral-50 hover:text-black"
           >
             <AccountIcon />
-          </NavLink>
+          </Link>
         )}
       </Await>
     </Suspense>

@@ -85,10 +85,10 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 ## Step 4 — i18n/markets, CSP, resilience, a11y
 
 ### 4.1 i18n / Markets (path-prefix scaffold in `lib/i18n.ts`)
-- [~] URL path-prefix locale parsing
-- [ ] Define supported markets/locales; country + language selector UI
-- [ ] All internal `Link`s respect `pathPrefix` (localized routing)
-- [ ] Currency/price per market; `hreflang` alternate tags
+- [x] URL path-prefix locale parsing (`SUPPORTED_LOCALES`: EN-US default, EN-CA, FR-CA)
+- [x] Define supported markets/locales; country + language selector UI (`CountrySelector` in header)
+- [x] All internal `Link`s respect `pathPrefix` (locale-aware `~/components/Link`)
+- [x] Currency/price per market (`@inContext` + cart buyer identity); `hreflang` alternate tags
 
 ### 4.2 CSP (baseline `createContentSecurityPolicy` in `entry.server.tsx`)
 - [x] Baseline CSP with nonce

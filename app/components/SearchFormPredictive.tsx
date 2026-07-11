@@ -6,6 +6,7 @@ import {
 } from 'react-router';
 import React, {useRef} from 'react';
 import type {PredictiveSearchReturn} from '~/lib/search';
+import {useLocalizedPath} from '~/lib/i18n';
 import {useAside} from './Aside';
 
 type SearchFormPredictiveChildren = (args: {
@@ -33,12 +34,13 @@ export function SearchFormPredictive({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const aside = useAside();
+  const searchPath = useLocalizedPath(SEARCH_ENDPOINT);
 
   /** Navigate to the search page with the current input value */
   function goToSearch() {
     const term = inputRef?.current?.value?.trim();
     void navigate(
-      SEARCH_ENDPOINT + (term ? `?q=${encodeURIComponent(term)}` : ''),
+      searchPath + (term ? `?q=${encodeURIComponent(term)}` : ''),
     );
     aside.close();
   }
@@ -47,7 +49,7 @@ export function SearchFormPredictive({
   function fetchResults(value: string) {
     void fetcher.submit(
       {q: value || '', limit: 5, predictive: true},
-      {method: 'GET', action: SEARCH_ENDPOINT},
+      {method: 'GET', action: searchPath},
     );
   }
 

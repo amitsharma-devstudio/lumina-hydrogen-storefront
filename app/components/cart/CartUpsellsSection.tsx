@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 import {Image, Money} from '@shopify/hydrogen';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import type {CartUpsellItem, CartUpsells} from '~/lib/loadCartUpsells';

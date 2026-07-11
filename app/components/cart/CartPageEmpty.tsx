@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 import {btnPrimaryLinkClass} from '~/lib/theme';
 
 export function CartPageEmpty() {

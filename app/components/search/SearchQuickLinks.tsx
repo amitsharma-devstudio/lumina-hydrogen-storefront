@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
 
 const QUICK_LINKS = [

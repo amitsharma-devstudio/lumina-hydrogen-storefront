@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 import {CatalogProductCard} from '~/components/catalog/CatalogProductCard';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {PRODUCT_GRID_CLASSNAME} from '~/components/home/productGridClasses';

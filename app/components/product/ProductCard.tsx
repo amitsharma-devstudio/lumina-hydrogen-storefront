@@ -1,4 +1,5 @@
-import {Link} from 'react-router';
+
+import {Link} from '~/components/Link';
 import {Money} from '@shopify/hydrogen';
 import {useVariantUrl} from '~/lib/variants';
 import {ProductCardImageCarousel} from '~/components/home/ProductCardImageCarousel';

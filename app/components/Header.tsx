@@ -1,8 +1,10 @@
 import {Suspense} from 'react';
-import {NavLink, Await} from 'react-router';
+import {Await} from 'react-router';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {AccountHeaderLink} from '~/components/account/AccountHeaderLink';
+import {CountrySelector} from '~/components/CountrySelector';
 import {HeaderSearch} from '~/components/search/HeaderSearch';
+import {Link} from '~/components/Link';
 
 function CartIcon() {
   return (
@@ -35,25 +37,29 @@ export function Header({isLoggedIn, cart}: HeaderProps) {
       <div className="mx-auto max-w-7xl px-6">
         {/* Desktop: logo | centered search | icons. Mobile: logo + icons, search on next row */}
         <nav className="grid grid-cols-[1fr_auto] items-center gap-x-4 py-3 md:grid-cols-[1fr_minmax(16rem,36rem)_1fr] md:gap-x-6 md:py-0 md:h-[76px]">
-          <NavLink
+          <Link
+            variant="nav"
             to="/"
             prefetch="intent"
+            end
             className="group inline-flex shrink-0 flex-col justify-self-start leading-none text-black no-underline"
           >
             <span className="text-[0.72rem] font-semibold uppercase tracking-[0.28em]">
               Lumina
             </span>
             <span className="mt-1 h-px w-full origin-left scale-x-75 bg-primary transition-transform group-hover:scale-x-100" />
-          </NavLink>
+          </Link>
 
           <div className="col-span-2 mt-3 min-w-0 md:col-span-1 md:col-start-2 md:row-start-1 md:mt-0 md:justify-self-stretch">
             <HeaderSearch />
           </div>
 
-          <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-self-end gap-2 sm:gap-3 md:col-start-3">
+          <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-self-end gap-1.5 sm:gap-2 md:col-start-3 md:gap-3">
+            <CountrySelector />
             <AccountHeaderLink isLoggedIn={isLoggedIn} />
 
-            <NavLink
+            <Link
+              variant="nav"
               to="/cart"
               prefetch="intent"
               aria-label="Open shopping cart"
@@ -67,7 +73,7 @@ export function Header({isLoggedIn, cart}: HeaderProps) {
               >
                 <CartCount cart={cart} />
               </span>
-            </NavLink>
+            </Link>
           </div>
         </nav>
       </div>

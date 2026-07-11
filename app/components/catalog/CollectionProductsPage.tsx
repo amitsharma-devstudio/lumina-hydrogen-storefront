@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
-import {Link, useLocation} from 'react-router';
+import {Link} from '~/components/Link';
+import {useLocation} from 'react-router';
 import {Analytics} from '@shopify/hydrogen';
 import {CatalogFilterDrawer} from '~/components/catalog/CatalogFilterDrawer';
 import {CatalogProductGrid} from '~/components/catalog/CatalogProductGrid';
