@@ -26,7 +26,7 @@ export function AccountHeaderLink({
     <Suspense
       fallback={
         <span
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-neutral-400"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-neutral-500"
           aria-hidden
         >
           <AccountIcon />

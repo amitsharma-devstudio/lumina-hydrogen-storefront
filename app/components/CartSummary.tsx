@@ -46,7 +46,7 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
       >
         Continue to Checkout
       </PrimaryLink>
-      <p className="mt-3 text-center text-[10px] leading-relaxed text-neutral-400">
+      <p className="mt-3 text-center text-[10px] leading-relaxed text-neutral-500">
         Shipping calculated at checkout
       </p>
     </div>

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { NavLink, Await } from "react-router";
 import type { FooterQuery, HeaderQuery } from "storefrontapi.generated";
 import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
+import {FooterSkeleton} from '~/components/ui/Skeleton';
 
 /**
  * Dummy fallback menu
@@ -115,7 +116,7 @@ export function Footer({
   publicStoreDomain,
 }: FooterProps) {
   return (
-    <Suspense>
+    <Suspense fallback={<FooterSkeleton />}>
       <Await resolve={footerPromise}>
         {(footer) => {
           // const menu = footer?.menu ?? FALLBACK_FOOTER_MENU;

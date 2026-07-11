@@ -3,6 +3,8 @@ import {
   type ReactNode,
   useContext,
   useEffect,
+  useId,
+  useRef,
   useState,
 } from 'react';
 
@@ -37,6 +39,19 @@ export function Aside({
 }) {
   const {type: activeType, close} = useAside();
   const expanded = type === activeType;
+  const titleId = useId();
+  const panelRef = useRef<HTMLElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+    if (expanded) {
+      overlay.removeAttribute('inert');
+    } else {
+      overlay.setAttribute('inert', '');
+    }
+  }, [expanded]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -51,6 +66,12 @@ export function Aside({
         },
         {signal: abortController.signal},
       );
+
+      // Move focus into the panel when opened
+      const focusable = panelRef.current?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      focusable?.focus();
     }
     return () => abortController.abort();
   }, [close, expanded]);
@@ -59,17 +80,35 @@ export function Aside({
 
   return (
     <div
-      aria-modal
+      ref={overlayRef}
+      aria-modal={expanded || undefined}
+      aria-hidden={!expanded}
       className={`overlay ${expanded ? 'expanded' : ''}${
         isSearchModal ? ' overlay--search' : ''
       }`}
-      role="dialog"
+      role={expanded ? 'dialog' : undefined}
     >
-      <button className="close-outside" onClick={close} />
-      <aside className={asideClassName}>
+      <button
+        type="button"
+        className="close-outside"
+        onClick={close}
+        aria-label="Close dialog"
+        tabIndex={expanded ? 0 : -1}
+      />
+      <aside
+        ref={panelRef}
+        className={asideClassName}
+        aria-labelledby={titleId}
+      >
         <header>
-          <h3>{heading}</h3>
-          <button className="close reset" onClick={close} aria-label="Close">
+          <h3 id={titleId}>{heading}</h3>
+          <button
+            type="button"
+            className="close reset"
+            onClick={close}
+            aria-label="Close"
+            tabIndex={expanded ? 0 : -1}
+          >
             &times;
           </button>
         </header>

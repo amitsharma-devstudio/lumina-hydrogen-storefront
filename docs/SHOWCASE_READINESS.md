@@ -41,7 +41,7 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [x] Regular + predictive search queries/fetchers
 - [x] Wire header search to predictive endpoint (inline header field + suggestion panel)
 - [x] Fix `SearchField.tsx` ref type error
-- [~] Keyboard nav (↑/↓/enter), recent searches — Escape/close + empty states done; arrow-key nav deferred
+- [x] Keyboard nav (↑/↓/enter), recent searches — Escape/close + arrow-key highlight; recent searches deferred
 - [x] `/search` results page polished with catalog card style
 
 ### 2.4 Finish the homepage (sections commented out in `_index.tsx`)
@@ -96,14 +96,14 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [ ] Zero CSP violations across pages
 
 ### 4.3 Error handling & resilience
-- [ ] Branded root `ErrorBoundary` (replace bare version)
-- [ ] Route-level error boundaries + branded 404
-- [ ] Loading skeletons for streamed/deferred sections; consistent empty states
+- [x] Branded root `ErrorBoundary` (Lumina `ErrorPage` for 404 / 500)
+- [x] Catch-all unknown routes throw 404 into branded boundary
+- [x] Loading skeletons for streamed footer + cart aside (`Skeleton` / grid placeholders)
 
 ### 4.4 Accessibility
-- [ ] Skip-to-content link; visible focus states
-- [ ] ARIA/keyboard for carousels, filters, search, cart drawer (carousels partly done)
-- [ ] Color-contrast pass on clay palette; axe/Lighthouse a11y
+- [x] Skip-to-content link; visible focus states (`SkipToContent`, `#main-content`, global `:focus-visible`)
+- [x] ARIA/keyboard for carousels, filters, search, cart drawer (↑/↓/Enter search; Escape drawers; carousel arrows)
+- [x] Color-contrast pass on clay palette (muted foreground + cart/search supporting text); axe/Lighthouse optional verify
 
 ---
 

@@ -1,4 +1,4 @@
-import {useEffect, useId} from 'react';
+import {useEffect, useId, useRef} from 'react';
 import {useLocation} from 'react-router';
 import {CatalogFilterBar} from '~/components/catalog/CatalogFilterBar';
 import {countAppliedFilters, type FacetGroup} from '~/lib/catalogFacets';
@@ -15,8 +15,19 @@ export function CatalogFilterDrawer({
   facets,
 }: CatalogFilterDrawerProps) {
   const titleId = useId();
+  const rootRef = useRef<HTMLDivElement>(null);
   const {search} = useLocation();
   const activeCount = countAppliedFilters(search);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    if (open) {
+      root.removeAttribute('inert');
+    } else {
+      root.setAttribute('inert', '');
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -38,6 +49,7 @@ export function CatalogFilterDrawer({
 
   return (
     <div
+      ref={rootRef}
       className={`catalog-filter-drawer fixed inset-0 z-50 lg:hidden ${
         open ? 'pointer-events-auto' : 'pointer-events-none'
       }`}

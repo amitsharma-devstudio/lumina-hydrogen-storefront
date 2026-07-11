@@ -116,7 +116,7 @@ export function CartOrderSummary({
           </Button>
         )}
 
-        <p className="mt-5 text-center text-[10px] leading-relaxed text-neutral-400">
+        <p className="mt-5 text-center text-[10px] leading-relaxed text-neutral-500">
           Shipping calculated at checkout
         </p>
       </section>

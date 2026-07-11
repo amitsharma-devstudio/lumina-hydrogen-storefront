@@ -1,6 +1,7 @@
 import type {
   ChangeEventHandler,
   FocusEventHandler,
+  KeyboardEventHandler,
   Ref,
 } from 'react';
 import {SearchIcon} from '~/components/search/SearchIcon';
@@ -13,6 +14,7 @@ type SearchFieldProps = {
   placeholder?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   onFocus?: FocusEventHandler<HTMLInputElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   /** Full /search page, predictive modal, or compact header bar */
   variant?: 'page' | 'modal' | 'header';
   submitLabel?: string;
@@ -20,6 +22,7 @@ type SearchFieldProps = {
   onViewAllClick?: () => void;
   ariaControls?: string;
   ariaExpanded?: boolean;
+  ariaActivedescendant?: string;
 };
 
 const searchSubmitClass = [
@@ -36,11 +39,13 @@ export function SearchField({
   placeholder = 'Search products, serums, cleansers…',
   onChange,
   onFocus,
+  onKeyDown,
   variant = 'page',
   submitLabel = 'Search',
   onViewAllClick,
   ariaControls,
   ariaExpanded,
+  ariaActivedescendant,
 }: SearchFieldProps) {
   const isPage = variant === 'page';
   const isHeader = variant === 'header';
@@ -67,7 +72,7 @@ export function SearchField({
     <div className={isPage ? 'max-w-3xl' : 'w-full'}>
       <div className={wrapperClassName}>
         {!isHeader ? (
-          <SearchIcon className="h-5 w-5 shrink-0 text-neutral-400" />
+          <SearchIcon className="h-5 w-5 shrink-0 text-neutral-500" aria-hidden />
         ) : null}
         <input
           ref={inputRef}
@@ -77,11 +82,14 @@ export function SearchField({
           name={name}
           onChange={onChange}
           onFocus={onFocus}
+          onKeyDown={onKeyDown}
           placeholder={placeholder}
           type="search"
-          role="searchbox"
+          role="combobox"
+          aria-autocomplete="list"
           aria-controls={ariaControls}
           aria-expanded={ariaExpanded}
+          aria-activedescendant={ariaActivedescendant}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -106,7 +114,7 @@ export function SearchField({
         )}
       </div>
       {isPage ? (
-        <p className="mt-3 text-xs tracking-wide text-neutral-400">
+        <p className="mt-3 text-xs tracking-wide text-neutral-500">
           Press{' '}
           <kbd className="rounded border border-neutral-200 bg-neutral-50 px-1.5 py-0.5 font-sans text-[10px] text-neutral-600">
             ⌘

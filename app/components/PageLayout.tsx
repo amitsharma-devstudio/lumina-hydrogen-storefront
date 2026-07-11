@@ -9,6 +9,8 @@ import {Aside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
 import {Header} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
+import {CartAsideSkeleton} from '~/components/ui/Skeleton';
+import {SkipToContent} from '~/components/SkipToContent';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
@@ -29,6 +31,7 @@ export function PageLayout({
 }: PageLayoutProps) {
   return (
     <Aside.Provider>
+      <SkipToContent />
       <CartAside cart={cart} />
       {header && (
         <Header
@@ -38,7 +41,9 @@ export function PageLayout({
           publicStoreDomain={publicStoreDomain}
         />
       )}
-      <main>{children}</main>
+      <main id="main-content" tabIndex={-1}>
+        {children}
+      </main>
       <Footer
         footer={footer}
         header={header}
@@ -51,7 +56,7 @@ export function PageLayout({
 function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
   return (
     <Aside type="cart" heading="CART">
-      <Suspense fallback={<p>Loading cart ...</p>}>
+      <Suspense fallback={<CartAsideSkeleton />}>
         <Await resolve={cart}>
           {(cart) => {
             return <CartMain cart={cart} layout="aside" />;

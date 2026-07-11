@@ -17,6 +17,7 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import {ErrorPage} from '~/components/ErrorPage';
 import {loadCart} from '~/lib/loadCart';
 import {languageToHtmlLang} from '~/lib/seo';
 
@@ -192,25 +193,21 @@ export default function App() {
 
 export function ErrorBoundary() {
   const error = useRouteError();
-  let errorMessage = 'Unknown error';
-  let errorStatus = 500;
+  let status = 500;
+  let detail: string | null = null;
 
   if (isRouteErrorResponse(error)) {
-    errorMessage = error?.data?.message ?? error.data;
-    errorStatus = error.status;
+    status = error.status;
+    if (typeof error.data === 'string') {
+      detail = error.data;
+    } else if (error.data?.message) {
+      detail = String(error.data.message);
+    } else if (error.statusText) {
+      detail = error.statusText;
+    }
   } else if (error instanceof Error) {
-    errorMessage = error.message;
+    detail = error.message;
   }
 
-  return (
-    <div className="route-error">
-      <h1>Oops</h1>
-      <h2>{errorStatus}</h2>
-      {errorMessage && (
-        <fieldset>
-          <pre>{errorMessage}</pre>
-        </fieldset>
-      )}
-    </div>
-  );
+  return <ErrorPage status={status} detail={detail} />;
 }

@@ -4,7 +4,7 @@
  */
 
 export const focusRingClass =
-  'focus:outline-none focus:ring-2 focus:ring-primary/35 focus:ring-offset-2';
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2';
 
 /** Shared control height for inputs, selects, and inline buttons */
 export const controlHeightClass = 'h-12 min-h-12';

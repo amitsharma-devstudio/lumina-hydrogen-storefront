@@ -204,6 +204,20 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
               className="mt-5 flex justify-center gap-2"
               role="tablist"
               aria-label="Choose featured product"
+              onKeyDown={(event) => {
+                if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                  event.preventDefault();
+                  goTo(
+                    activeIndex <= 0 ? products.length - 1 : activeIndex - 1,
+                  );
+                } else if (
+                  event.key === 'ArrowRight' ||
+                  event.key === 'ArrowDown'
+                ) {
+                  event.preventDefault();
+                  goTo((activeIndex + 1) % products.length);
+                }
+              }}
             >
               {products.map((product, index) => (
                 <button

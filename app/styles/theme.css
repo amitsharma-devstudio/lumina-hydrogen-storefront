@@ -19,7 +19,8 @@
   --color-primary-muted: var(--color-brand-50);
 
   --color-foreground: #181512;
-  --color-foreground-muted: #625b54;
+  /* ~4.7:1+ on white for AA body/supporting text */
+  --color-foreground-muted: #57504a;
   --color-background: #ffffff;
   --color-background-muted: #faf8f5;
   --color-border: #e6dfd8;
@@ -87,6 +88,40 @@ body {
 
 a {
   text-underline-offset: 0.22em;
+}
+
+/* Skip link — visible on keyboard focus only */
+.skip-to-content {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-160%);
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: 0.65rem 1.15rem;
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
+
+.skip-to-content:focus,
+.skip-to-content:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--color-primary-active);
+  outline-offset: 3px;
+}
+
+/* Global keyboard focus — prefer :focus-visible so mouse clicks stay clean */
+:where(a, button, summary, [role='button'], input, select, textarea):focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-primary) 70%, transparent);
+  outline-offset: 2px;
+}
+
+:where(a, button, summary, [role='button']):focus:not(:focus-visible) {
+  outline: none;
 }
 
 .lumina-btn-primary {
@@ -1089,6 +1124,12 @@ main.routine-builder section {
 .search-modal-view-all {
   color: #fff !important;
   text-decoration: none;
+}
+
+.header-search-panel a[data-active='true'] {
+  background-color: color-mix(in srgb, var(--color-primary) 8%, white);
+  outline: 2px solid color-mix(in srgb, var(--color-primary) 45%, transparent);
+  outline-offset: -2px;
 }
 
 .search-modal-view-all:hover,

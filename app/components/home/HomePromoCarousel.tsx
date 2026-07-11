@@ -1,5 +1,6 @@
 import {Link} from 'react-router';
 import {Image} from '@shopify/hydrogen';
+import {type KeyboardEvent} from 'react';
 import {HOME_SECTION_SURFACE_FLUSH} from '~/components/home/homeSectionStyles';
 import {useCarousel} from '~/components/ui/useCarousel';
 import {toClientPath, type HomePromoSlide} from '~/lib/homepage';
@@ -17,13 +18,28 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
 
   if (!count) return null;
 
+  function onCarouselKeyDown(event: KeyboardEvent<HTMLElement>) {
+    if (!canLoop) return;
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      prev();
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      next();
+    }
+  }
+
   return (
     <section
       className={`home-promo-carousel relative w-full overflow-hidden ${HOME_SECTION_SURFACE_FLUSH}`}
       aria-roledescription="carousel"
       aria-label="Promotions"
+      tabIndex={canLoop ? 0 : undefined}
+      onKeyDown={onCarouselKeyDown}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
     >
       <div className="relative min-h-[240px] w-full bg-neutral-900 sm:min-h-[300px] md:min-h-[360px]">
         {slides.map((slide, index) => {
@@ -40,6 +56,8 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
                   : 'pointer-events-none z-0 opacity-0'
               }`}
               aria-hidden={!isActive}
+              aria-roledescription="slide"
+              aria-label={`${index + 1} of ${count}`}
             >
               <div className="absolute inset-0">
                 {slide.image?.url ? (
