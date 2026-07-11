@@ -20,11 +20,16 @@ export function ProductCardImageCarousel({
   product,
   productUrl,
   variant = 'home',
+  loading = 'lazy',
+  fetchPriority = 'auto',
 }: {
   product: CarouselProduct;
   productUrl: string;
   /** `catalog` = PLP placeholder; `home` = homepage sections */
   variant?: ProductCardImageCarouselVariant;
+  /** Eager-load above-the-fold PLP/home cards for LCP. */
+  loading?: 'eager' | 'lazy';
+  fetchPriority?: 'high' | 'low' | 'auto';
 }) {
   const images = getProductCarouselImages(product, 5);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -97,6 +102,8 @@ export function ProductCardImageCarousel({
                   height={PRODUCT_CARD_IMAGE_HEIGHT}
                   aspectRatio="4/5"
                   sizes={PRODUCT_CARD_IMAGE_SIZES}
+                  loading={index === 0 ? loading : 'lazy'}
+                  fetchPriority={index === 0 ? fetchPriority : 'auto'}
                   className="!h-auto !max-h-full !w-auto !max-w-full object-contain"
                 />
               </div>

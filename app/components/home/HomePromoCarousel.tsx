@@ -49,6 +49,7 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
                     className="h-full w-full object-cover object-center"
                     sizes="100vw"
                     loading={index === 0 ? 'eager' : 'lazy'}
+                    fetchPriority={index === 0 ? 'high' : 'auto'}
                   />
                 ) : null}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />

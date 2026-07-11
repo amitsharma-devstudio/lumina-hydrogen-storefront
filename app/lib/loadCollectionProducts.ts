@@ -37,6 +37,7 @@ export async function loadCollectionProducts({
       ...sortVars,
       filters: productFilters.length > 0 ? productFilters : undefined,
     },
+    cache: storefront.CacheShort(),
   });
 
   if (!collection) {

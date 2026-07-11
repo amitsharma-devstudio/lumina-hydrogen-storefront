@@ -19,6 +19,7 @@ export async function loadProductPageData(
       handle,
       selectedOptions: getSelectedProductOptions(request),
     },
+    cache: storefront.CacheShort(),
   });
 
   if (!product?.id) {
@@ -27,7 +28,10 @@ export async function loadProductPageData(
 
   const recommendationsResponse = await storefront.query(
     ProductRecommendationsQuery,
-    {variables: {productId: product.id}},
+    {
+      variables: {productId: product.id},
+      cache: storefront.CacheShort(),
+    },
   );
 
   return {

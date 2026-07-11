@@ -31,6 +31,7 @@ type LoadAllProductsCatalogArgs = {
 async function loadAllCollectionMeta(storefront: Storefront) {
   const {collection} = await storefront.query(CollectionProductsQuery, {
     variables: {handle: ALL_PRODUCTS_COLLECTION_HANDLE, first: 1},
+    cache: storefront.CacheLong(),
   });
   return collection;
 }
@@ -59,6 +60,7 @@ export async function loadAllProductsCatalog({
         ...paginationVariables,
         ...sortVars,
       },
+      cache: storefront.CacheShort(),
     }),
     loadAllCollectionMeta(storefront),
   ]);

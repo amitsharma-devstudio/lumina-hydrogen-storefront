@@ -84,7 +84,10 @@ async function loadCollectionProductsByHandle(
   handleCandidates: readonly string[],
 ) {
   for (const handle of handleCandidates) {
-    const response = await storefront.query(query, {variables: {handle}});
+    const response = await storefront.query(query, {
+      variables: {handle},
+      cache: storefront.CacheLong(),
+    });
     const nodes = getCollectionProductNodes(response);
     if (nodes.length > 0) {
       return nodes;
@@ -98,15 +101,18 @@ export async function loadHomepageData(storefront: Storefront) {
     await Promise.all([
     storefront.query(FeaturedCollectionsQuery, {
       variables: {first: 24},
+      cache: storefront.CacheLong(),
     }),
     storefront.query(HomeHeroQuery, {
       variables: {type: HOME_HERO_METAOBJECT_TYPE},
+      cache: storefront.CacheLong(),
     }),
     storefront.query(HomePromoBannersQuery, {
       variables: {
         type: HOME_PROMO_BANNER_METAOBJECT_TYPE,
         first: 8,
       },
+      cache: storefront.CacheLong(),
     }),
     loadCollectionProductsByHandle(
       storefront,

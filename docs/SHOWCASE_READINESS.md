@@ -75,10 +75,10 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [x] Dynamic `<html lang>` from storefront locale
 
 ### 3.4 Performance / Core Web Vitals
-- [ ] Cache-strategy audit — `CacheLong`/`CacheShort` on collection/PDP/metaobject queries
-- [ ] Image audit: correct `sizes`, priority on LCP images
-- [ ] Font loading strategy (preload / `font-display`)
-- [ ] Lighthouse pass Home + PDP + PLP; capture before/after
+- [x] Cache-strategy audit — `CacheLong` on home/metaobjects/collections index; `CacheShort` on PDP, PLP, catalog, search
+- [x] Image audit: LCP `fetchPriority`/`eager` on hero, promo, PDP gallery; first 8 PLP cards eager
+- [x] Font loading strategy — system stack only (no custom webfont; N/A for preload/`font-display`)
+- [~] Lighthouse pass Home + PDP + PLP — run manually after deploy / local baseline (capture before/after)
 
 ---
 

@@ -18,6 +18,7 @@ export const meta: Route.MetaFunction = () => {
 export async function loader({context}: Route.LoaderArgs) {
   const {collections} = await context.storefront.query(FeaturedCollectionsQuery, {
     variables: {first: 50},
+    cache: context.storefront.CacheLong(),
   });
 
   const nodes = collections?.nodes ?? [];

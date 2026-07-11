@@ -34,6 +34,7 @@ function Thumbnail({
         data={image}
         aspectRatio="1/1"
         sizes="64px"
+        loading="lazy"
         className="h-full w-full object-contain"
       />
     </button>
@@ -91,6 +92,8 @@ export function ImageGallery({
                 data={selectedImage}
                 aspectRatio="4/5"
                 sizes="(min-width: 1024px) 420px, 100vw"
+                loading="eager"
+                fetchPriority="high"
                 className="h-full w-full object-contain"
               />
             </div>

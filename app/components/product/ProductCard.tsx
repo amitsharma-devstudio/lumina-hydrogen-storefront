@@ -36,10 +36,14 @@ function getBenefitTags(product: ProductCardProduct) {
 export function ProductCard({
   product,
   productUrl: productUrlOverride,
+  loading = 'lazy',
+  fetchPriority = 'auto',
 }: {
   product: ProductCardProduct;
   /** Override link target (e.g. search results with tracking params). */
   productUrl?: string;
+  loading?: 'eager' | 'lazy';
+  fetchPriority?: 'high' | 'low' | 'auto';
 }) {
   const variantUrl = useVariantUrl(product.handle);
   const productUrl = productUrlOverride ?? variantUrl;
@@ -58,6 +62,8 @@ export function ProductCard({
           product={product}
           productUrl={productUrl}
           variant="catalog"
+          loading={loading}
+          fetchPriority={fetchPriority}
         />
       </div>
 

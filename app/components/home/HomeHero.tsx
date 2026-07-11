@@ -156,6 +156,7 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                       alt={product.image.altText ?? product.title}
                       className="h-full min-h-[430px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:min-h-[520px] md:min-h-full"
                       loading={index === 0 ? 'eager' : 'lazy'}
+                      fetchPriority={index === 0 ? 'high' : 'auto'}
                       sizes="(min-width: 45em) 50vw, 100vw"
                     />
                   ) : null}
@@ -167,6 +168,7 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                 alt={hero.image?.altText ?? 'Lumina skincare'}
                 className="relative h-[430px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:h-[520px] md:h-full"
                 loading="eager"
+                fetchPriority="high"
                 sizes="(min-width: 45em) 50vw, 100vw"
               />
             ) : null}
