@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import type {CustomerAddressInput} from '@shopify/hydrogen/customer-account-api-types';
 import type {
   AddressFragment,
@@ -17,7 +18,10 @@ import {
   DELETE_ADDRESS_MUTATION,
   CREATE_ADDRESS_MUTATION,
 } from '~/graphql/customer-account/CustomerAddressMutations';
-import {AccountSection} from '~/components/account/AccountShell';
+import {
+  AccountSection,
+  EditIconButton,
+} from '~/components/account/AccountShell';
 import {Button} from '~/components/ui/Button';
 import {inputFieldClass} from '~/lib/theme';
 
@@ -53,7 +57,6 @@ export async function action({request, context}: Route.ActionArgs) {
       throw new Error('You must provide an address id.');
     }
 
-    // this will ensure redirecting to login never happen for mutatation
     const isLoggedIn = await customerAccount.isLoggedIn();
     if (!isLoggedIn) {
       return data(
@@ -90,7 +93,6 @@ export async function action({request, context}: Route.ActionArgs) {
 
     switch (request.method) {
       case 'POST': {
-        // handle new address creation
         try {
           const {data, errors} = await customerAccount.mutate(
             CREATE_ADDRESS_MUTATION,
@@ -139,7 +141,6 @@ export async function action({request, context}: Route.ActionArgs) {
       }
 
       case 'PUT': {
-        // handle address updates
         try {
           const {data, errors} = await customerAccount.mutate(
             UPDATE_ADDRESS_MUTATION,
@@ -189,7 +190,6 @@ export async function action({request, context}: Route.ActionArgs) {
       }
 
       case 'DELETE': {
-        // handles address deletion
         try {
           const {data, errors} = await customerAccount.mutate(
             DELETE_ADDRESS_MUTATION,
@@ -262,45 +262,160 @@ export async function action({request, context}: Route.ActionArgs) {
 export default function Addresses() {
   const {customer} = useOutletContext<{customer: CustomerFragment}>();
   const {defaultAddress, addresses} = customer;
+  const action = useActionData<ActionResponse>();
+  const [adding, setAdding] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!action || action.error) return;
+    if (action.createdAddress || action.updatedAddress || action.deletedAddress) {
+      setAdding(false);
+      setEditingId(null);
+    }
+  }, [action]);
+
+  const hasAddresses = addresses.nodes.length > 0;
 
   return (
-    <div className="space-y-6">
-      <AccountSection
-        title="Addresses"
-        description="Manage shipping addresses for faster checkout."
-      >
-        {!addresses.nodes.length ? (
-          <div className="space-y-6">
-            <p className="text-sm text-neutral-600">
-              You have no addresses saved yet. Add your first address below.
-            </p>
-            <NewAddressForm />
+    <AccountSection
+      title="Addresses"
+      description="Manage shipping addresses for faster checkout."
+      action={
+        !adding ? (
+          <Button
+            type="button"
+            variant="secondary"
+            className="!h-9 !min-h-9 px-4 text-[11px] uppercase tracking-[0.12em]"
+            onClick={() => {
+              setEditingId(null);
+              setAdding(true);
+            }}
+          >
+            Add address
+          </Button>
+        ) : null
+      }
+    >
+      <div className="space-y-6">
+        {adding ? (
+          <div className="rounded-xl border border-neutral-200/90 bg-neutral-50/40 p-4 sm:p-5">
+            <h3 className="mb-4 text-sm font-medium text-neutral-900">
+              New address
+            </h3>
+            <NewAddressForm onCancel={() => setAdding(false)} />
           </div>
-        ) : (
-          <div className="space-y-8">
-            <div>
-              <h3 className="mb-4 text-sm font-medium text-neutral-900">
-                Add a new address
-              </h3>
-              <NewAddressForm />
-            </div>
-            <div className="border-t border-neutral-100 pt-8">
-              <h3 className="mb-4 text-sm font-medium text-neutral-900">
-                Saved addresses
-              </h3>
-              <ExistingAddresses
-                addresses={addresses}
-                defaultAddress={defaultAddress}
-              />
-            </div>
+        ) : null}
+
+        {!hasAddresses && !adding ? (
+          <p className="text-sm text-neutral-600">
+            You have no addresses saved yet. Use Add address to create one.
+          </p>
+        ) : null}
+
+        {hasAddresses ? (
+          <div className="space-y-4">
+            {addresses.nodes.map((address) => {
+              const isEditing = editingId === address.id;
+              const isDefault = defaultAddress?.id === address.id;
+
+              if (isEditing) {
+                return (
+                  <div
+                    key={address.id}
+                    className="rounded-xl border border-neutral-200/90 bg-neutral-50/40 p-4 sm:p-5"
+                  >
+                    <AddressForm
+                      addressId={address.id}
+                      address={address}
+                      defaultAddress={defaultAddress}
+                    >
+                      {({stateForMethod}) => (
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          <Button
+                            disabled={stateForMethod('PUT') !== 'idle'}
+                            formMethod="PUT"
+                            type="submit"
+                            className="!h-10 !min-h-10 px-5 text-xs"
+                          >
+                            {stateForMethod('PUT') !== 'idle'
+                              ? 'Saving…'
+                              : 'Save'}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            className="!h-10 !min-h-10 px-5 text-xs"
+                            onClick={() => setEditingId(null)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            disabled={stateForMethod('DELETE') !== 'idle'}
+                            formMethod="DELETE"
+                            type="submit"
+                            className="!h-10 !min-h-10 px-5 text-xs"
+                          >
+                            {stateForMethod('DELETE') !== 'idle'
+                              ? 'Deleting…'
+                              : 'Delete'}
+                          </Button>
+                        </div>
+                      )}
+                    </AddressForm>
+                  </div>
+                );
+              }
+
+              return (
+                <article
+                  key={address.id}
+                  className="flex items-start justify-between gap-3 rounded-xl border border-neutral-200/90 bg-white p-4 sm:p-5"
+                >
+                  <div className="min-w-0 space-y-1 text-sm leading-relaxed text-neutral-700">
+                    {isDefault ? (
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-primary">
+                        Default
+                      </p>
+                    ) : null}
+                    <p className="font-medium text-neutral-900">
+                      {[address.firstName, address.lastName]
+                        .filter(Boolean)
+                        .join(' ')}
+                    </p>
+                    {address.company ? <p>{address.company}</p> : null}
+                    <p>{address.address1}</p>
+                    {address.address2 ? <p>{address.address2}</p> : null}
+                    <p>
+                      {[address.city, address.zoneCode, address.zip]
+                        .filter(Boolean)
+                        .join(', ')}
+                    </p>
+                    {address.territoryCode ? (
+                      <p>{address.territoryCode}</p>
+                    ) : null}
+                    {address.phoneNumber ? (
+                      <p className="text-neutral-500">{address.phoneNumber}</p>
+                    ) : null}
+                  </div>
+                  <EditIconButton
+                    label="Edit address"
+                    onClick={() => {
+                      setAdding(false);
+                      setEditingId(address.id);
+                    }}
+                  />
+                </article>
+              );
+            })}
           </div>
-        )}
-      </AccountSection>
-    </div>
+        ) : null}
+      </div>
+    </AccountSection>
   );
 }
 
-function NewAddressForm() {
+function NewAddressForm({onCancel}: {onCancel: () => void}) {
   const newAddress = {
     address1: '',
     address2: '',
@@ -322,62 +437,26 @@ function NewAddressForm() {
       defaultAddress={null}
     >
       {({stateForMethod}) => (
-        <div className="mt-4">
+        <div className="mt-4 flex flex-wrap gap-2">
           <Button
             disabled={stateForMethod('POST') !== 'idle'}
             formMethod="POST"
             type="submit"
             className="!h-10 !min-h-10 px-6 text-xs"
           >
-            {stateForMethod('POST') !== 'idle' ? 'Creating…' : 'Add address'}
+            {stateForMethod('POST') !== 'idle' ? 'Creating…' : 'Save address'}
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            className="!h-10 !min-h-10 px-6 text-xs"
+            onClick={onCancel}
+          >
+            Cancel
           </Button>
         </div>
       )}
     </AddressForm>
-  );
-}
-
-function ExistingAddresses({
-  addresses,
-  defaultAddress,
-}: Pick<CustomerFragment, 'addresses' | 'defaultAddress'>) {
-  return (
-    <div className="space-y-6">
-      {addresses.nodes.map((address) => (
-        <div
-          key={address.id}
-          className="rounded-xl border border-neutral-200/90 bg-neutral-50/30 p-4 sm:p-5"
-        >
-          <AddressForm
-            addressId={address.id}
-            address={address}
-            defaultAddress={defaultAddress}
-          >
-            {({stateForMethod}) => (
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Button
-                  disabled={stateForMethod('PUT') !== 'idle'}
-                  formMethod="PUT"
-                  type="submit"
-                  className="!h-10 !min-h-10 px-5 text-xs"
-                >
-                  {stateForMethod('PUT') !== 'idle' ? 'Saving…' : 'Save'}
-                </Button>
-                <Button
-                  variant="secondary"
-                  disabled={stateForMethod('DELETE') !== 'idle'}
-                  formMethod="DELETE"
-                  type="submit"
-                  className="!h-10 !min-h-10 px-5 text-xs"
-                >
-                  {stateForMethod('DELETE') !== 'idle' ? 'Deleting…' : 'Delete'}
-                </Button>
-              </div>
-            )}
-          </AddressForm>
-        </div>
-      ))}
-    </div>
   );
 }
 
@@ -403,7 +482,10 @@ export function AddressForm({
       <fieldset className="grid gap-4 sm:grid-cols-2">
         <input type="hidden" name="addressId" defaultValue={addressId} />
         <div>
-          <label htmlFor={`${addressId}-firstName`} className="mb-2 block text-sm text-neutral-600">
+          <label
+            htmlFor={`${addressId}-firstName`}
+            className="mb-2 block text-sm text-neutral-600"
+          >
             First name*
           </label>
           <input
@@ -419,7 +501,10 @@ export function AddressForm({
           />
         </div>
         <div>
-          <label htmlFor={`${addressId}-lastName`} className="mb-2 block text-sm text-neutral-600">
+          <label
+            htmlFor={`${addressId}-lastName`}
+            className="mb-2 block text-sm text-neutral-600"
+          >
             Last name*
           </label>
           <input
@@ -435,7 +520,10 @@ export function AddressForm({
           />
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor={`${addressId}-company`} className="mb-2 block text-sm text-neutral-600">
+          <label
+            htmlFor={`${addressId}-company`}
+            className="mb-2 block text-sm text-neutral-600"
+          >
             Company
           </label>
           <input
@@ -450,7 +538,10 @@ export function AddressForm({
           />
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor={`${addressId}-address1`} className="mb-2 block text-sm text-neutral-600">
+          <label
+            htmlFor={`${addressId}-address1`}
+            className="mb-2 block text-sm text-neutral-600"
+          >
             Address line*
           </label>
           <input
@@ -466,7 +557,10 @@ export function AddressForm({
           />
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor={`${addressId}-address2`} className="mb-2 block text-sm text-neutral-600">
+          <label
+            htmlFor={`${addressId}-address2`}
+            className="mb-2 block text-sm text-neutral-600"
+          >
             Address line 2
           </label>
           <input
@@ -481,7 +575,10 @@ export function AddressForm({
           />
         </div>
         <div>
-          <label htmlFor={`${addressId}-city`} className="mb-2 block text-sm text-neutral-600">
+          <label
+            htmlFor={`${addressId}-city`}
+            className="mb-2 block text-sm text-neutral-600"
+          >
             City*
           </label>
           <input
@@ -497,7 +594,10 @@ export function AddressForm({
           />
         </div>
         <div>
-          <label htmlFor={`${addressId}-zoneCode`} className="mb-2 block text-sm text-neutral-600">
+          <label
+            htmlFor={`${addressId}-zoneCode`}
+            className="mb-2 block text-sm text-neutral-600"
+          >
             State / Province*
           </label>
           <input
@@ -513,7 +613,10 @@ export function AddressForm({
           />
         </div>
         <div>
-          <label htmlFor={`${addressId}-zip`} className="mb-2 block text-sm text-neutral-600">
+          <label
+            htmlFor={`${addressId}-zip`}
+            className="mb-2 block text-sm text-neutral-600"
+          >
             Zip / Postal code*
           </label>
           <input
@@ -529,7 +632,10 @@ export function AddressForm({
           />
         </div>
         <div>
-          <label htmlFor={`${addressId}-territoryCode`} className="mb-2 block text-sm text-neutral-600">
+          <label
+            htmlFor={`${addressId}-territoryCode`}
+            className="mb-2 block text-sm text-neutral-600"
+          >
             Country code*
           </label>
           <input
@@ -546,7 +652,10 @@ export function AddressForm({
           />
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor={`${addressId}-phoneNumber`} className="mb-2 block text-sm text-neutral-600">
+          <label
+            htmlFor={`${addressId}-phoneNumber`}
+            className="mb-2 block text-sm text-neutral-600"
+          >
             Phone
           </label>
           <input
@@ -569,7 +678,10 @@ export function AddressForm({
             type="checkbox"
             className="h-4 w-4 rounded border-neutral-300 text-primary focus:ring-primary/30"
           />
-          <label htmlFor={`${addressId}-defaultAddress`} className="text-sm text-neutral-700">
+          <label
+            htmlFor={`${addressId}-defaultAddress`}
+            className="text-sm text-neutral-700"
+          >
             Set as default address
           </label>
         </div>
@@ -580,7 +692,8 @@ export function AddressForm({
         ) : null}
         <div className="sm:col-span-2">
           {children({
-            stateForMethod: (method) => (formMethod === method ? state : 'idle'),
+            stateForMethod: (method) =>
+              formMethod === method ? state : 'idle',
           })}
         </div>
       </fieldset>

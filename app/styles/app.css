@@ -527,6 +527,13 @@ button.reset:hover:not(:has(> *)) {
   display: inline-block;
 }
 
+/* Beat reset.css `a { color: #000 }` on account section pills */
+.account-nav-pill.account-nav-pill--active,
+.account-nav-pill.account-nav-pill--active:visited,
+.account-nav-pill.account-nav-pill--active:hover {
+  color: var(--color-primary-foreground) !important;
+}
+
 /*
 * --------------------------------------------------
 * Order Search Form - Minimal & Responsive
