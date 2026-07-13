@@ -15,8 +15,14 @@ import {ProductBenefitsList} from '~/components/product/ProductBenefitsList';
 import {ProductRecommendations} from '~/components/product/ProductRecommendations';
 import {ProductCartActions} from '~/components/product/ProductCartActions';
 import {RegimenQuickStrip} from '~/components/product/RegimenQuickStrip';
+import {SellingPlanPurchaseOptions} from '~/components/product/SellingPlanPurchaseOptions';
 import {buildSkincareIntelligence} from '~/lib/skincare';
 import {isVariantPurchasable} from '~/lib/variantAvailability';
+import {
+  getSellingPlanPrice,
+  type SellingPlanGroupLike,
+  type SellingPlanLike,
+} from '~/lib/sellingPlan';
 import type {CollectionProductList} from '~/components/home/productsSection.types';
 
 type ProductDetailPageProps = {
@@ -27,6 +33,7 @@ type ProductDetailPageProps = {
     descriptionHtml?: string | null;
     images?: {nodes?: Array<Record<string, unknown>>};
     productOptions?: MappedProductOptions[];
+    sellingPlanGroups?: {nodes: SellingPlanGroupLike[]} | null;
     selectedOrFirstAvailableVariant?: {
       id: string;
       title?: string | null;
@@ -34,15 +41,20 @@ type ProductDetailPageProps = {
       quantityAvailable?: number | null;
       selectedOptions?: Array<{name: string; value: string}>;
       price?: {amount: string; currencyCode: CurrencyCode};
+      sellingPlanAllocations?: {
+        nodes: Array<{sellingPlan: {id: string}}>;
+      } | null;
     } | null;
     [key: string]: unknown;
   };
   recommendations: CollectionProductList;
+  selectedSellingPlan?: SellingPlanLike | null;
 };
 
 export function ProductDetailPage({
   product,
   recommendations,
+  selectedSellingPlan = null,
 }: ProductDetailPageProps) {
   const skincare = buildSkincareIntelligence(product);
   const images = (product.images?.nodes ?? []).map((node) => ({...node}));
@@ -51,6 +63,11 @@ export function ProductDetailPage({
   const canAddToCart = Boolean(
     selectedVariant?.id && isVariantPurchasable(selectedVariant),
   );
+
+  const displayPrice =
+    selectedVariant?.price && selectedSellingPlan
+      ? getSellingPlanPrice(selectedVariant.price, selectedSellingPlan)
+      : selectedVariant?.price;
 
   const [selectedImage, setSelectedImage] = useState(
     (images[0] ?? {}) as Record<string, unknown>,
@@ -78,8 +95,11 @@ export function ProductDetailPage({
               />
 
               <div className="text-2xl font-light text-black lg:text-3xl">
-                {selectedVariant?.price ? (
-                  <Money data={selectedVariant.price} />
+                {displayPrice ? <Money data={displayPrice} /> : null}
+                {selectedSellingPlan ? (
+                  <p className="mt-1 text-xs font-normal tracking-wide text-neutral-500">
+                    Subscription price · cancel anytime
+                  </p>
                 ) : null}
               </div>
 
@@ -93,11 +113,18 @@ export function ProductDetailPage({
             <div className="product-actions flex flex-col gap-5 border-t border-neutral-100 pt-5">
               <VariantPicker options={product.productOptions ?? []} />
 
+              <SellingPlanPurchaseOptions
+                sellingPlanGroups={product.sellingPlanGroups}
+                selectedSellingPlan={selectedSellingPlan}
+                selectedVariant={selectedVariant ?? null}
+              />
+
               <div className="px-0.5">
                 <ProductCartActions
                   productTitle={product.title}
                   productHandle={product.handle}
                   selectedVariant={selectedVariant}
+                  selectedSellingPlanId={selectedSellingPlan?.id ?? null}
                   canAddToCart={canAddToCart}
                 />
               </div>

@@ -26,7 +26,14 @@ function formatVariantLabel(
 }
 
 export function CartPageLineItem({line}: {line: CartLine}) {
-  const {id: lineId, quantity, isOptimistic, merchandise, cost} = line;
+  const {
+    id: lineId,
+    quantity,
+    isOptimistic,
+    merchandise,
+    cost,
+    sellingPlanAllocation,
+  } = line;
   const {product, title, image, selectedOptions} = merchandise;
   const prevQuantity = Math.max(0, quantity - 1);
   const nextQuantity = quantity + 1;
@@ -70,6 +77,11 @@ export function CartPageLineItem({line}: {line: CartLine}) {
               </Link>
               {variantLabel ? (
                 <p className="mt-1 text-sm text-neutral-500">{variantLabel}</p>
+              ) : null}
+              {sellingPlanAllocation?.sellingPlan?.name ? (
+                <p className="mt-1 text-xs uppercase tracking-[0.12em] text-primary">
+                  {sellingPlanAllocation.sellingPlan.name}
+                </p>
               ) : null}
             </div>
             <p className="shrink-0 font-medium tabular-nums text-neutral-900">

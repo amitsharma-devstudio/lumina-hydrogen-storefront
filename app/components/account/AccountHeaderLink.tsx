@@ -124,6 +124,16 @@ function AccountMenu({loggedIn}: {loggedIn: boolean}) {
               <Link
                 variant="nav"
                 role="menuitem"
+                to="/account/subscriptions"
+                prefetch="intent"
+                className={itemClass}
+                onClick={() => setOpen(false)}
+              >
+                Subscriptions
+              </Link>
+              <Link
+                variant="nav"
+                role="menuitem"
                 to="/account/profile"
                 prefetch="intent"
                 className={itemClass}

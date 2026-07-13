@@ -123,22 +123,27 @@ function ProductCartActionsInner({
   cart: originalCart,
   productHandle,
   selectedVariant,
+  selectedSellingPlanId,
   canAddToCart,
 }: {
   cart: CartApiQueryFragment | null;
   productHandle: string;
   selectedVariant: SelectedVariant | null | undefined;
+  selectedSellingPlanId: string | null;
   canAddToCart: boolean;
 }) {
   const cart = useOptimisticCart(originalCart);
   const lines = cart?.lines?.nodes ?? [];
 
   const selectedLine = selectedVariant?.id
-    ? lines.find(
-        (line) =>
+    ? lines.find((line) => {
+        const linePlanId = line.sellingPlanAllocation?.sellingPlan?.id ?? null;
+        return (
           line.merchandise?.product?.handle === productHandle &&
-          line.merchandise?.id === selectedVariant.id,
-      )
+          line.merchandise?.id === selectedVariant.id &&
+          linePlanId === selectedSellingPlanId
+        );
+      })
     : undefined;
 
   const [addQuantity, setAddQuantity] = useState(1);
@@ -148,10 +153,11 @@ function ProductCartActionsInner({
     selectedVariant?.selectedOptions,
     selectedVariant?.title,
   );
+  const addLabel = selectedSellingPlanId ? 'Subscribe' : 'Add to bag';
 
   useEffect(() => {
     if (!inBag) setAddQuantity(1);
-  }, [selectedVariant?.id, inBag]);
+  }, [selectedVariant?.id, selectedSellingPlanId, inBag]);
 
   if (!canAddToCart) {
     return (
@@ -232,13 +238,16 @@ function ProductCartActionsInner({
                   merchandiseId: selectedVariant.id,
                   quantity: addQuantity,
                   selectedVariant,
+                  ...(selectedSellingPlanId
+                    ? {sellingPlanId: selectedSellingPlanId}
+                    : {}),
                 },
               ]
             : []
         }
         className={addButtonClass}
       >
-        Add to bag
+        {addLabel}
       </AddToCartButton>
     );
 
@@ -268,11 +277,14 @@ function ProductCartActionsInner({
 function ProductCartActionsFallback({
   canAddToCart,
   selectedVariant,
+  selectedSellingPlanId,
 }: {
   canAddToCart: boolean;
   selectedVariant: SelectedVariant | null | undefined;
+  selectedSellingPlanId: string | null;
 }) {
   const [addQuantity, setAddQuantity] = useState(1);
+  const addLabel = selectedSellingPlanId ? 'Subscribe' : 'Add to bag';
 
   return (
     <div className="flex gap-3">
@@ -292,13 +304,16 @@ function ProductCartActionsFallback({
                   merchandiseId: selectedVariant.id,
                   quantity: addQuantity,
                   selectedVariant,
+                  ...(selectedSellingPlanId
+                    ? {sellingPlanId: selectedSellingPlanId}
+                    : {}),
                 },
               ]
             : []
         }
         className={addButtonClass}
       >
-        {canAddToCart ? 'Add to bag' : 'Sold out'}
+        {canAddToCart ? addLabel : 'Sold out'}
       </AddToCartButton>
     </div>
   );
@@ -307,11 +322,13 @@ function ProductCartActionsFallback({
 export function ProductCartActions({
   productHandle,
   selectedVariant,
+  selectedSellingPlanId = null,
   canAddToCart,
 }: {
   productTitle: string;
   productHandle: string;
   selectedVariant: SelectedVariant | null | undefined;
+  selectedSellingPlanId?: string | null;
   canAddToCart: boolean;
 }) {
   const rootData = useRouteLoaderData<RootLoader>('root');
@@ -322,6 +339,7 @@ export function ProductCartActions({
         <ProductCartActionsFallback
           canAddToCart={canAddToCart}
           selectedVariant={selectedVariant}
+          selectedSellingPlanId={selectedSellingPlanId}
         />
       }
     >
@@ -331,6 +349,7 @@ export function ProductCartActions({
             cart={cart ?? null}
             productHandle={productHandle}
             selectedVariant={selectedVariant}
+            selectedSellingPlanId={selectedSellingPlanId}
             canAddToCart={canAddToCart}
           />
         )}

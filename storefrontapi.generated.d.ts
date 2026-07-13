@@ -88,6 +88,9 @@ export type ProductBaseFieldsFragment = Pick<
       >;
       price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
       product: Pick<StorefrontAPI.Product, 'handle'>;
+      sellingPlanAllocations: {
+        nodes: Array<{sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id'>}>;
+      };
     }
   >;
   options: Array<
@@ -110,6 +113,11 @@ export type ProductBaseFieldsFragment = Pick<
               >;
               price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
               product: Pick<StorefrontAPI.Product, 'handle'>;
+              sellingPlanAllocations: {
+                nodes: Array<{
+                  sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id'>;
+                }>;
+              };
             }
           >;
         }
@@ -174,6 +182,71 @@ export type RoutineProductFieldsFragment = Pick<
       }
     >;
   }>;
+};
+
+export type SellingPlanMoneyFragment = Pick<
+  StorefrontAPI.MoneyV2,
+  'amount' | 'currencyCode'
+>;
+
+export type SellingPlanFragment = Pick<
+  StorefrontAPI.SellingPlan,
+  'id' | 'name' | 'description' | 'recurringDeliveries'
+> & {
+  options: Array<Pick<StorefrontAPI.SellingPlanOption, 'name' | 'value'>>;
+  priceAdjustments: Array<
+    Pick<StorefrontAPI.SellingPlanPriceAdjustment, 'orderCount'> & {
+      adjustmentValue:
+        | ({__typename: 'SellingPlanFixedAmountPriceAdjustment'} & {
+            adjustmentAmount: Pick<
+              StorefrontAPI.MoneyV2,
+              'amount' | 'currencyCode'
+            >;
+          })
+        | ({__typename: 'SellingPlanFixedPriceAdjustment'} & {
+            price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+          })
+        | ({__typename: 'SellingPlanPercentagePriceAdjustment'} & Pick<
+            StorefrontAPI.SellingPlanPercentagePriceAdjustment,
+            'adjustmentPercentage'
+          >);
+    }
+  >;
+};
+
+export type SellingPlanGroupFragment = Pick<
+  StorefrontAPI.SellingPlanGroup,
+  'name' | 'appName'
+> & {
+  options: Array<Pick<StorefrontAPI.SellingPlanGroupOption, 'name' | 'values'>>;
+  sellingPlans: {
+    nodes: Array<
+      Pick<
+        StorefrontAPI.SellingPlan,
+        'id' | 'name' | 'description' | 'recurringDeliveries'
+      > & {
+        options: Array<Pick<StorefrontAPI.SellingPlanOption, 'name' | 'value'>>;
+        priceAdjustments: Array<
+          Pick<StorefrontAPI.SellingPlanPriceAdjustment, 'orderCount'> & {
+            adjustmentValue:
+              | ({__typename: 'SellingPlanFixedAmountPriceAdjustment'} & {
+                  adjustmentAmount: Pick<
+                    StorefrontAPI.MoneyV2,
+                    'amount' | 'currencyCode'
+                  >;
+                })
+              | ({__typename: 'SellingPlanFixedPriceAdjustment'} & {
+                  price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+                })
+              | ({__typename: 'SellingPlanPercentagePriceAdjustment'} & Pick<
+                  StorefrontAPI.SellingPlanPercentagePriceAdjustment,
+                  'adjustmentPercentage'
+                >);
+          }
+        >;
+      }
+    >;
+  };
 };
 
 export type MetaobjectFieldsFragment = Pick<
@@ -340,6 +413,9 @@ export type VariantFieldsFragment = Pick<
   >;
   price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
   product: Pick<StorefrontAPI.Product, 'handle'>;
+  sellingPlanAllocations: {
+    nodes: Array<{sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id'>}>;
+  };
 };
 
 export type BestsellersProductsQueryVariables = StorefrontAPI.Exact<{
@@ -842,6 +918,9 @@ export type ProductByHandleQuery = {
           >;
           price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
           product: Pick<StorefrontAPI.Product, 'handle'>;
+          sellingPlanAllocations: {
+            nodes: Array<{sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id'>}>;
+          };
         }
       >;
       variants: {
@@ -858,12 +937,66 @@ export type ProductByHandleQuery = {
             >;
             price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
             product: Pick<StorefrontAPI.Product, 'handle'>;
+            sellingPlanAllocations: {
+              nodes: Array<{
+                sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id'>;
+              }>;
+            };
           }
         >;
       };
       images: {
         nodes: Array<
           Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
+        >;
+      };
+      sellingPlanGroups: {
+        nodes: Array<
+          Pick<StorefrontAPI.SellingPlanGroup, 'name' | 'appName'> & {
+            options: Array<
+              Pick<StorefrontAPI.SellingPlanGroupOption, 'name' | 'values'>
+            >;
+            sellingPlans: {
+              nodes: Array<
+                Pick<
+                  StorefrontAPI.SellingPlan,
+                  'id' | 'name' | 'description' | 'recurringDeliveries'
+                > & {
+                  options: Array<
+                    Pick<StorefrontAPI.SellingPlanOption, 'name' | 'value'>
+                  >;
+                  priceAdjustments: Array<
+                    Pick<
+                      StorefrontAPI.SellingPlanPriceAdjustment,
+                      'orderCount'
+                    > & {
+                      adjustmentValue:
+                        | ({
+                            __typename: 'SellingPlanFixedAmountPriceAdjustment';
+                          } & {
+                            adjustmentAmount: Pick<
+                              StorefrontAPI.MoneyV2,
+                              'amount' | 'currencyCode'
+                            >;
+                          })
+                        | ({__typename: 'SellingPlanFixedPriceAdjustment'} & {
+                            price: Pick<
+                              StorefrontAPI.MoneyV2,
+                              'amount' | 'currencyCode'
+                            >;
+                          })
+                        | ({
+                            __typename: 'SellingPlanPercentagePriceAdjustment';
+                          } & Pick<
+                            StorefrontAPI.SellingPlanPercentagePriceAdjustment,
+                            'adjustmentPercentage'
+                          >);
+                    }
+                  >;
+                }
+              >;
+            };
+          }
         >;
       };
       featuredImage?: StorefrontAPI.Maybe<
@@ -883,6 +1016,9 @@ export type ProductByHandleQuery = {
           >;
           price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
           product: Pick<StorefrontAPI.Product, 'handle'>;
+          sellingPlanAllocations: {
+            nodes: Array<{sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id'>}>;
+          };
         }
       >;
       options: Array<
@@ -909,6 +1045,11 @@ export type ProductByHandleQuery = {
                   >;
                   price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
                   product: Pick<StorefrontAPI.Product, 'handle'>;
+                  sellingPlanAllocations: {
+                    nodes: Array<{
+                      sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id'>;
+                    }>;
+                  };
                 }
               >;
             }
@@ -1202,6 +1343,9 @@ export type CartLineFragment = Pick<
       Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
     >;
   };
+  sellingPlanAllocation?: StorefrontAPI.Maybe<{
+    sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id' | 'name'>;
+  }>;
 };
 
 export type CartLineComponentFragment = Pick<
@@ -1232,6 +1376,9 @@ export type CartLineComponentFragment = Pick<
       Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
     >;
   };
+  sellingPlanAllocation?: StorefrontAPI.Maybe<{
+    sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id' | 'name'>;
+  }>;
 };
 
 export type CartApiQueryFragment = Pick<
@@ -1290,6 +1437,9 @@ export type CartApiQueryFragment = Pick<
               Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
             >;
           };
+          sellingPlanAllocation?: StorefrontAPI.Maybe<{
+            sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id' | 'name'>;
+          }>;
         })
       | (Pick<StorefrontAPI.ComponentizableCartLine, 'id' | 'quantity'> & {
           attributes: Array<Pick<StorefrontAPI.Attribute, 'key' | 'value'>>;
@@ -1325,6 +1475,9 @@ export type CartApiQueryFragment = Pick<
               Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
             >;
           };
+          sellingPlanAllocation?: StorefrontAPI.Maybe<{
+            sellingPlan: Pick<StorefrontAPI.SellingPlan, 'id' | 'name'>;
+          }>;
         })
     >;
   };
@@ -1907,7 +2060,7 @@ interface GeneratedQueryTypes {
     return: HomePromoBannersQuery;
     variables: HomePromoBannersQueryVariables;
   };
-  '#graphql\n    query ProductByHandle(\n        $handle: String!,\n        $selectedOptions: [SelectedOptionInput!]!,\n        $country: CountryCode,\n        $language: LanguageCode\n    ) @inContext(country: $country, language: $language) {\n        product(handle: $handle) {\n            ...ProductBaseFields\n            \n            selectedOrFirstAvailableVariant(\n                selectedOptions: $selectedOptions, \n                ignoreUnknownOptions: true, \n                caseInsensitiveMatch: true\n            ) {\n                ...VariantFields\n            }\n\n            variants(first: 100) {\n                nodes {\n                    ...VariantFields\n                }\n            }\n\n            images(first: 10) {\n                nodes { # Switched to nodes for cleaner mapping\n                    ...ImageFields\n                }\n            }\n\n            ...SkincareProduct\n        }\n    }\n    #graphql\n    fragment ProductBaseFields on Product {\n        id\n        title\n        vendor\n        handle\n        description\n        descriptionHtml\n        featuredImage {\n            ...ImageFields\n        }\n        seo {\n            title\n            description\n        }\n\n        encodedVariantExistence\n        encodedVariantAvailability\n\n        adjacentVariants (selectedOptions: $selectedOptions) {\n            ...VariantFields\n        }\n\n        options {\n            name\n            optionValues {\n                name\n                firstSelectableVariant {\n                    ...VariantFields\n                }\n                # ... swatch fields\n            }\n        }\n    }\n\n    #graphql\n    fragment ImageFields on Image {\n        url\n        altText\n        width\n        height\n    }\n\n    #graphql\n    fragment MoneyFields on MoneyV2 {\n        amount\n        currencyCode\n    }\n\n    #graphql\n  fragment VariantFields on ProductVariant {\n    id\n    title\n    sku\n    availableForSale\n    quantityAvailable\n    selectedOptions {\n      name\n      value\n    }\n    image {\n      ...ImageFields\n    }\n    price {\n      ...MoneyFields\n    }\n    # ARCHITECT MOVE: Every variant now knows its parent handle\n    # This satisfies getProductOptions and getAdjacentAndFirstAvailableVariants\n    product {\n      handle\n    }\n  }\n\n    #graphql\n  fragment SkincareProduct on Product {\n    heroClaim: metafield(namespace: "custom", key: "lumina_hero_claim") {\n      id\n      type\n      value\n    }\n\n    howToUse: metafield(namespace: "custom", key: "lumina_how_to_use") {\n      id\n      type\n      value\n    }\n\n    fullIngredients: metafield(namespace: "custom", key: "lumina_full_ingredients") {\n      id\n      type\n      value\n    }\n\n    shippingAndReturns: metafield(namespace: "custom", key: "lumina_shipping_returns") {\n      id\n      type\n      value\n    }\n\n    amPm: metafield(namespace: "custom", key: "lumina_am_pm") {\n      id\n      type\n      value\n    }\n\n    safeWith: metafield(namespace: "custom", key: "lumina_safe_with") {\n      references(first: 10) {\n        nodes {\n          ... on Metaobject {\n            ...MetaobjectFields\n          }\n        }\n      }\n    }\n\n    avoidWith: metafield(namespace: "custom", key: "lumina_avoid_with") {\n      references(first: 10) {\n        nodes {\n          ... on Metaobject {\n            ...MetaobjectFields\n          }\n        }\n      }\n    }\n\n    productBenefits: metafield(namespace: "custom", key: "lumina_product_benefits") {\n      references(first: 5) {\n        nodes {\n          ... on Metaobject {\n            ...MetaobjectFields\n          }\n        }\n      }\n    }\n\n    reviewCount: metafield(namespace: "custom", key: "lumina_reviews") {\n      id\n      type\n      value\n    }\n\n    rating: metafield(namespace: "custom", key: "lumina_rating") {\n      id\n      type\n      value\n    }\n\n    step: metafield(namespace: "custom", key: "lumina_step_order") {\n      id\n      type\n      value\n    }\n\n    skinTypes: metafield(namespace: "custom", key: "skin_compatibility") {\n      references(first: 10) {\n        nodes {\n          ... on Metaobject {\n            ...MetaobjectFields\n          }\n        }\n      }\n    }\n\n    skinCare: metafield(namespace: "custom", key: "lumina_skin_care") {\n      reference {\n        ... on Metaobject {\n          ...MetaobjectFields\n        }\n      }\n    }\n\n    ingredients: metafield(namespace: "custom", key: "lumina_hero_ingredients") {\n      references(first: 10) {\n        nodes {\n          ... on Metaobject {\n            ...MetaobjectFields\n          }\n        }\n      }\n    }\n\n    regimen: metafield(namespace: "custom", key: "lumina_regimen") {\n      reference {\n        ... on Metaobject {\n          id\n          type\n          handle\n          fields {\n            key\n            value\n            references(first: 5) {\n              nodes {\n                ... on Product {\n                  ...RoutineProductFields\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n\n    routineProducts: metafield(namespace: "custom", key: "lumina_routine_products") {\n      references(first: 5) {\n        nodes {\n          ... on Product {\n            ...RoutineProductFields\n          }\n        }\n      }\n    }\n  }\n  #graphql\n  fragment MetaobjectFields on Metaobject {\n    id\n    type\n    fields {\n      key\n      value\n    }\n  }\n\n  #graphql\n  fragment RoutineProductFields on Product {\n    id\n    handle\n    title\n    featuredImage {\n      id\n      url\n      altText\n      width\n      height\n    }\n    priceRange {\n      minVariantPrice {\n        amount\n        currencyCode\n      }\n    }\n    step: metafield(namespace: "custom", key: "lumina_step_order") {\n      value\n    }\n    skinCare: metafield(namespace: "custom", key: "lumina_skin_care") {\n      reference {\n        ... on Metaobject {\n          id\n          type\n          fields {\n            key\n            value\n          }\n        }\n      }\n    }\n  }\n\n\n': {
+  '#graphql\n    query ProductByHandle(\n        $handle: String!,\n        $selectedOptions: [SelectedOptionInput!]!,\n        $country: CountryCode,\n        $language: LanguageCode\n    ) @inContext(country: $country, language: $language) {\n        product(handle: $handle) {\n            ...ProductBaseFields\n            \n            selectedOrFirstAvailableVariant(\n                selectedOptions: $selectedOptions, \n                ignoreUnknownOptions: true, \n                caseInsensitiveMatch: true\n            ) {\n                ...VariantFields\n            }\n\n            variants(first: 100) {\n                nodes {\n                    ...VariantFields\n                }\n            }\n\n            images(first: 10) {\n                nodes { # Switched to nodes for cleaner mapping\n                    ...ImageFields\n                }\n            }\n\n            sellingPlanGroups(first: 10) {\n                nodes {\n                    ...SellingPlanGroup\n                }\n            }\n\n            ...SkincareProduct\n        }\n    }\n    #graphql\n    fragment ProductBaseFields on Product {\n        id\n        title\n        vendor\n        handle\n        description\n        descriptionHtml\n        featuredImage {\n            ...ImageFields\n        }\n        seo {\n            title\n            description\n        }\n\n        encodedVariantExistence\n        encodedVariantAvailability\n\n        adjacentVariants (selectedOptions: $selectedOptions) {\n            ...VariantFields\n        }\n\n        options {\n            name\n            optionValues {\n                name\n                firstSelectableVariant {\n                    ...VariantFields\n                }\n                # ... swatch fields\n            }\n        }\n    }\n\n    #graphql\n    fragment ImageFields on Image {\n        url\n        altText\n        width\n        height\n    }\n\n    #graphql\n    fragment MoneyFields on MoneyV2 {\n        amount\n        currencyCode\n    }\n\n    #graphql\n  fragment VariantFields on ProductVariant {\n    id\n    title\n    sku\n    availableForSale\n    quantityAvailable\n    selectedOptions {\n      name\n      value\n    }\n    image {\n      ...ImageFields\n    }\n    price {\n      ...MoneyFields\n    }\n    # ARCHITECT MOVE: Every variant now knows its parent handle\n    # This satisfies getProductOptions and getAdjacentAndFirstAvailableVariants\n    product {\n      handle\n    }\n    sellingPlanAllocations(first: 10) {\n      nodes {\n        sellingPlan {\n          id\n        }\n      }\n    }\n  }\n\n    #graphql\n  fragment SkincareProduct on Product {\n    heroClaim: metafield(namespace: "custom", key: "lumina_hero_claim") {\n      id\n      type\n      value\n    }\n\n    howToUse: metafield(namespace: "custom", key: "lumina_how_to_use") {\n      id\n      type\n      value\n    }\n\n    fullIngredients: metafield(namespace: "custom", key: "lumina_full_ingredients") {\n      id\n      type\n      value\n    }\n\n    shippingAndReturns: metafield(namespace: "custom", key: "lumina_shipping_returns") {\n      id\n      type\n      value\n    }\n\n    amPm: metafield(namespace: "custom", key: "lumina_am_pm") {\n      id\n      type\n      value\n    }\n\n    safeWith: metafield(namespace: "custom", key: "lumina_safe_with") {\n      references(first: 10) {\n        nodes {\n          ... on Metaobject {\n            ...MetaobjectFields\n          }\n        }\n      }\n    }\n\n    avoidWith: metafield(namespace: "custom", key: "lumina_avoid_with") {\n      references(first: 10) {\n        nodes {\n          ... on Metaobject {\n            ...MetaobjectFields\n          }\n        }\n      }\n    }\n\n    productBenefits: metafield(namespace: "custom", key: "lumina_product_benefits") {\n      references(first: 5) {\n        nodes {\n          ... on Metaobject {\n            ...MetaobjectFields\n          }\n        }\n      }\n    }\n\n    reviewCount: metafield(namespace: "custom", key: "lumina_reviews") {\n      id\n      type\n      value\n    }\n\n    rating: metafield(namespace: "custom", key: "lumina_rating") {\n      id\n      type\n      value\n    }\n\n    step: metafield(namespace: "custom", key: "lumina_step_order") {\n      id\n      type\n      value\n    }\n\n    skinTypes: metafield(namespace: "custom", key: "skin_compatibility") {\n      references(first: 10) {\n        nodes {\n          ... on Metaobject {\n            ...MetaobjectFields\n          }\n        }\n      }\n    }\n\n    skinCare: metafield(namespace: "custom", key: "lumina_skin_care") {\n      reference {\n        ... on Metaobject {\n          ...MetaobjectFields\n        }\n      }\n    }\n\n    ingredients: metafield(namespace: "custom", key: "lumina_hero_ingredients") {\n      references(first: 10) {\n        nodes {\n          ... on Metaobject {\n            ...MetaobjectFields\n          }\n        }\n      }\n    }\n\n    regimen: metafield(namespace: "custom", key: "lumina_regimen") {\n      reference {\n        ... on Metaobject {\n          id\n          type\n          handle\n          fields {\n            key\n            value\n            references(first: 5) {\n              nodes {\n                ... on Product {\n                  ...RoutineProductFields\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n\n    routineProducts: metafield(namespace: "custom", key: "lumina_routine_products") {\n      references(first: 5) {\n        nodes {\n          ... on Product {\n            ...RoutineProductFields\n          }\n        }\n      }\n    }\n  }\n  #graphql\n  fragment MetaobjectFields on Metaobject {\n    id\n    type\n    fields {\n      key\n      value\n    }\n  }\n\n  #graphql\n  fragment RoutineProductFields on Product {\n    id\n    handle\n    title\n    featuredImage {\n      id\n      url\n      altText\n      width\n      height\n    }\n    priceRange {\n      minVariantPrice {\n        amount\n        currencyCode\n      }\n    }\n    step: metafield(namespace: "custom", key: "lumina_step_order") {\n      value\n    }\n    skinCare: metafield(namespace: "custom", key: "lumina_skin_care") {\n      reference {\n        ... on Metaobject {\n          id\n          type\n          fields {\n            key\n            value\n          }\n        }\n      }\n    }\n  }\n\n\n    #graphql\n  fragment SellingPlanMoney on MoneyV2 {\n    amount\n    currencyCode\n  }\n  fragment SellingPlan on SellingPlan {\n    id\n    name\n    description\n    options {\n      name\n      value\n    }\n    priceAdjustments {\n      adjustmentValue {\n        ... on SellingPlanFixedAmountPriceAdjustment {\n          __typename\n          adjustmentAmount {\n            ...SellingPlanMoney\n          }\n        }\n        ... on SellingPlanFixedPriceAdjustment {\n          __typename\n          price {\n            ...SellingPlanMoney\n          }\n        }\n        ... on SellingPlanPercentagePriceAdjustment {\n          __typename\n          adjustmentPercentage\n        }\n      }\n      orderCount\n    }\n    recurringDeliveries\n  }\n  fragment SellingPlanGroup on SellingPlanGroup {\n    name\n    appName\n    options {\n      name\n      values\n    }\n    sellingPlans(first: 10) {\n      nodes {\n        ...SellingPlan\n      }\n    }\n  }\n\n': {
     return: ProductByHandleQuery;
     variables: ProductByHandleQueryVariables;
   };

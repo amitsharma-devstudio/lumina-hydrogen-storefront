@@ -20,5 +20,13 @@ export const VariantFieldsFragment = `#graphql
     product {
       handle
     }
+    sellingPlanAllocations(first: 10) {
+      nodes {
+        sellingPlan {
+          id
+        }
+      }
+    }
   }
 `;
+

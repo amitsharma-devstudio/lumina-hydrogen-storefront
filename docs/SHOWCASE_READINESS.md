@@ -34,6 +34,7 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [~] Customer Account API OAuth login/logout/authorize — **ACTIVE**: UI + routes done; live OAuth blocked on store config (see `docs/CUSTOMER_ACCOUNT_API.md`)
 - [x] Orders list + order detail render real data (themed; live data after OAuth)
 - [x] Profile + addresses (add/edit/delete/default) (themed; live mutations after OAuth)
+- [x] Subscriptions list + cancel (themed; needs Shopify Subscriptions app + selling plans — see `docs/SUBSCRIPTIONS.md`)
 - [x] Re-theme account pages to Lumina design
 - [x] Header account entry point (login vs "my account" when `isLoggedIn`)
 

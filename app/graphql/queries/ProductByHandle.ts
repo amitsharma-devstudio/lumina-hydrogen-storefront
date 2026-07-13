@@ -3,6 +3,7 @@ import { ImageFieldsFragment } from '~/graphql/fragments/ImageFieldsFragment';
 import { VariantFieldsFragment } from '~/graphql/fragments/VariantFieldsFragment';
 import { MoneyFieldsFragment } from '~/graphql/fragments/MoneyFieldsFragment';
 import { SkincareProductFragment } from '~/graphql/fragments/SkincareProductFragment';
+import { SellingPlanFragments } from '~/graphql/fragments/SellingPlanFragments';
 
 export const ProductByHandleQuery = `#graphql
     query ProductByHandle(
@@ -34,6 +35,12 @@ export const ProductByHandleQuery = `#graphql
                 }
             }
 
+            sellingPlanGroups(first: 10) {
+                nodes {
+                    ...SellingPlanGroup
+                }
+            }
+
             ...SkincareProduct
         }
     }
@@ -42,4 +49,6 @@ export const ProductByHandleQuery = `#graphql
     ${MoneyFieldsFragment}
     ${VariantFieldsFragment}
     ${SkincareProductFragment}
+    ${SellingPlanFragments}
 `;
+

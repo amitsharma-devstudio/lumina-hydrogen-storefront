@@ -1,4 +1,4 @@
-import {redirect, useLoaderData} from 'react-router';
+import {useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).products.$handle';
 import {
   Analytics,
@@ -15,6 +15,7 @@ import {
   findFirstPurchasableVariant,
   isVariantPurchasable,
 } from '~/lib/variantAvailability';
+import {findSelectedSellingPlan, findCartSellingPlanIdForVariant} from '~/lib/sellingPlan';
 import {buildSeoMeta, getRequestOrigin} from '~/lib/seo';
 import {
   JsonLd,
@@ -73,14 +74,35 @@ export async function loader({context, params, request}: Route.LoaderArgs) {
   );
   if (availabilityRedirect) throw availabilityRedirect;
 
+  const url = new URL(request.url);
+  let selectedSellingPlanId = url.searchParams.get('selling_plan');
+  const explicitOneTime = url.searchParams.get('purchase') === 'once';
+
+  // If this variant is already in the bag as a subscription, default to that plan
+  // (unless the shopper explicitly chose one-time via purchase=once).
+  if (!selectedSellingPlanId && !explicitOneTime) {
+    const cart = await context.cart.get();
+    selectedSellingPlanId = findCartSellingPlanIdForVariant(
+      cart?.lines?.nodes,
+      data.product.selectedOrFirstAvailableVariant?.id,
+    );
+  }
+
+  const selectedSellingPlan = findSelectedSellingPlan(
+    data.product.sellingPlanGroups,
+    selectedSellingPlanId,
+  );
+
   return {
     ...data,
+    selectedSellingPlan,
     seoOrigin: getRequestOrigin(request),
   };
 }
 
 export default function Product() {
-  const {product, recommendations, seoOrigin} = useLoaderData<typeof loader>();
+  const {product, recommendations, selectedSellingPlan, seoOrigin} =
+    useLoaderData<typeof loader>();
 
   const optimisticVariant = useOptimisticVariant(
     product.selectedOrFirstAvailableVariant,
@@ -118,6 +140,7 @@ export default function Product() {
           selectedOrFirstAvailableVariant: selectedVariant,
         }}
         recommendations={recommendations}
+        selectedSellingPlan={selectedSellingPlan}
       />
       <JsonLd
         data={buildProductJsonLd({

@@ -24,7 +24,7 @@ export function CartLineItem({
   layout: CartLayout;
   line: CartLine;
 }) {
-  const {id, merchandise} = line;
+  const {id, merchandise, sellingPlanAllocation} = line;
   const {product, title, image, selectedOptions} = merchandise;
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
   const {close} = useAside();
@@ -58,6 +58,11 @@ export function CartLineItem({
         </Link>
         <ProductPrice price={line?.cost?.totalAmount} />
         <ul>
+          {sellingPlanAllocation?.sellingPlan?.name ? (
+            <li>
+              <small>{sellingPlanAllocation.sellingPlan.name}</small>
+            </li>
+          ) : null}
           {selectedOptions.map((option) => (
             <li key={option.name}>
               <small>

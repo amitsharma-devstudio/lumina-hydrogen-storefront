@@ -534,6 +534,26 @@ button.reset:hover:not(:has(> *)) {
   color: var(--color-primary-foreground) !important;
 }
 
+/* PDP selling-plan chips / options — reset forces black + underline on hover */
+a.selling-plan-option,
+a.selling-plan-option:visited,
+a.selling-plan-option:hover,
+a.selling-plan-chip,
+a.selling-plan-chip:visited,
+a.selling-plan-chip:hover {
+  text-decoration: none !important;
+}
+
+a.selling-plan-chip {
+  color: #404040;
+}
+
+a.selling-plan-chip.selling-plan-chip--active,
+a.selling-plan-chip.selling-plan-chip--active:visited,
+a.selling-plan-chip.selling-plan-chip--active:hover {
+  color: #fff !important;
+}
+
 /*
 * --------------------------------------------------
 * Order Search Form - Minimal & Responsive
