@@ -1,0 +1,38 @@
+---
+description: Karwa Cloudflare domains and tunnel conventions (all Amit projects)
+alwaysApply: true
+---
+
+# Karwa Cloudflare / domains (shared infra)
+
+Owner context for Cloudflare hostnames across projects (hotel platform + Lumina Shopify, etc.).
+
+## Cloudflare account patterns
+
+- **Apex domain on Cloudflare:** `karwa.io`
+- **Workers.dev project (hotels):** `karwa-platform-hotels.amit…` (Workers/Pages style subdomain)
+- **Existing custom domains (hotel multitenant):**
+  - `northscapestays.karwa.io`
+  - `hoteladmin.karwa.io`
+
+## Conventions when adding a new project
+
+Mirror the hotel pattern: add **subdomains under `karwa.io`**, not a brand-new apex unless asked.
+
+Typical split:
+
+| Role | Hostname pattern | Notes |
+|------|------------------|--------|
+| Production | `<app>.karwa.io` | Custom domain → Workers / Oxygen / tunnel |
+| Local tunnel | `<app>-dev.karwa.io` or `dev.<app>.karwa.io` | Named Cloudflare Tunnel → localhost |
+
+## Lumina (this Hydrogen storefront)
+
+Preferred hostnames (unless user overrides):
+
+- **Production:** `lumina.karwa.io`
+- **Local tunnel:** `lumina-dev.karwa.io`
+
+Customer Account OAuth must register HTTPS callback `/account/authorize` plus JS origin + logout URI for each hostname used.
+
+Do **not** assume `lumina.karwa.io` / `dev.lumina.karwa.io` work until DNS CNAME (proxied) exists under the `karwa.io` Cloudflare zone.

@@ -1,0 +1,22 @@
+# Cloudflare Tunnel — example named config for local Customer Account OAuth
+#
+# Domain convention (karwa.io zone, same as hotel apps):
+#   Local:  lumina-dev.karwa.io
+#   Prod:   lumina.karwa.io
+#
+# 1. brew install cloudflare/cloudflare/cloudflared
+# 2. cloudflared tunnel login
+# 3. cloudflared tunnel create lumina-dev
+# 4. cloudflared tunnel route dns lumina-dev lumina-dev.karwa.io
+# 5. Copy to cloudflare/tunnel.yml and fill tunnel + credentials-file
+# 6. cloudflared tunnel --config cloudflare/tunnel.yml run
+#
+# See docs/CLOUDFLARE_TUNNEL.md
+
+tunnel: <TUNNEL_UUID>
+credentials-file: /Users/<you>/.cloudflared/<TUNNEL_UUID>.json
+
+ingress:
+  - hostname: lumina-dev.karwa.io
+    service: http://localhost:3001
+  - service: http_status:404

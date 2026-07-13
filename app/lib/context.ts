@@ -53,6 +53,10 @@ export async function createHydrogenRouterContext(
       cart: {
         queryFragment: CART_QUERY_FRAGMENT,
       },
+      customerAccount: {
+        // Required for Cloudflare Tunnel / custom HTTPS (not *.tryhydrogen.dev)
+        useCustomAuthDomain: env.PUBLIC_CUSTOM_AUTH_DOMAIN === 'true',
+      },
     },
     additionalContext,
   );

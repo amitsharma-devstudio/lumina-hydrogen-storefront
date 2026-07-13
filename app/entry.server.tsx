@@ -7,6 +7,18 @@ import {
 } from '@shopify/hydrogen';
 import type {EntryContext} from 'react-router';
 
+function tunnelConnectSrc(origin?: string) {
+  if (!origin) return [] as string[];
+  try {
+    const url = new URL(origin);
+    if (url.protocol !== 'https:') return [];
+    // Vite HMR / websocket through Cloudflare Tunnel
+    return [`wss://${url.host}:*`, url.origin];
+  } catch {
+    return [] as string[];
+  }
+}
+
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
@@ -19,6 +31,7 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+    connectSrc: tunnelConnectSrc(context.env.PUBLIC_STOREFRONT_ORIGIN),
   });
 
   const body = await renderToReadableStream(

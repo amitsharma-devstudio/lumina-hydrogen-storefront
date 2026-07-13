@@ -31,9 +31,9 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [x] Empty-cart state + continue-shopping path
 
 ### 2.2 Customer accounts (routes scaffolded: `account.*`)
-- [~] Customer Account API OAuth login/logout/authorize — UI wired; live OAuth deferred to `lumina.karwa.io` deploy (Headless callback URLs; no Hydrogen sales channel on current plan)
-- [x] Orders list + order detail render real data (themed; live data after OAuth on deploy)
-- [x] Profile + addresses (add/edit/delete/default) (themed; live mutations after OAuth on deploy)
+- [~] Customer Account API OAuth login/logout/authorize — **ACTIVE**: UI + routes done; live OAuth blocked on store config (see `docs/CUSTOMER_ACCOUNT_API.md`)
+- [x] Orders list + order detail render real data (themed; live data after OAuth)
+- [x] Profile + addresses (add/edit/delete/default) (themed; live mutations after OAuth)
 - [x] Re-theme account pages to Lumina design
 - [x] Header account entry point (login vs "my account" when `isLoggedIn`)
 
@@ -45,9 +45,9 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [x] `/search` results page polished with catalog card style
 
 ### 2.4 Finish the homepage (sections commented out in `_index.tsx`)
-- [ ] Re-enable + finalize: `HomeCollections`, `HomeBestsellers`, `HomeRoutineTeaser`,
+- [ ] **PARKED** Re-enable + finalize: `HomeCollections`, `HomeBestsellers`, `HomeRoutineTeaser`,
       `HomeSocialProof`, `HomeFeatures`, `HomeNewsletter`
-- [ ] Confirm each pulls real data and is responsive
+- [ ] **PARKED** Confirm each pulls real data and is responsive
 
 ### 2.5 Cart conversion features
 - [x] Discount code + gift card UI (action already supports both)
@@ -61,12 +61,12 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 ### 3.1 Analytics (Provider + Product/Collection/Search views done)
 - [x] `Analytics.Provider` in root; `ProductView`, `CollectionView`, `SearchView`
 - [x] Add `Analytics.CartView`; cart mutations return `analytics.cartId` (add/update/remove auto via Provider + `cart.updatedAt`)
-- [~] Confirm events reach Shopify analytics (network check in browser / Admin)
+- [~] **PARKED** Confirm events reach Shopify analytics (network check in browser / Admin)
 
 ### 3.2 Consent (wired in `root.tsx`)
 - [x] Consent config present; Shopify privacy banner enabled (`withPrivacyBanner: true`)
 - [x] Banner localized via storefront `country` / `language`
-- [~] Gate analytics on consent — handled by Hydrogen `Analytics.Provider` + Customer Privacy API (verify in browser)
+- [~] **PARKED** Gate analytics on consent — handled by Hydrogen `Analytics.Provider` + Customer Privacy API (verify in browser)
 
 ### 3.3 SEO (per-route `meta`, sitemap.xml + robots.txt done)
 - [x] Per-route `meta`, `sitemap.xml`, `robots.txt`
@@ -78,7 +78,7 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [x] Cache-strategy audit — `CacheLong` on home/metaobjects/collections index; `CacheShort` on PDP, PLP, catalog, search
 - [x] Image audit: LCP `fetchPriority`/`eager` on hero, promo, PDP gallery; first 8 PLP cards eager
 - [x] Font loading strategy — system stack only (no custom webfont; N/A for preload/`font-display`)
-- [~] Lighthouse pass Home + PDP + PLP — run manually after deploy / local baseline (capture before/after)
+- [~] **PARKED** Lighthouse pass Home + PDP + PLP — run manually after deploy / local baseline (capture before/after)
 
 ---
 
@@ -92,8 +92,8 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 
 ### 4.2 CSP (baseline `createContentSecurityPolicy` in `entry.server.tsx`)
 - [x] Baseline CSP with nonce
-- [ ] Directives for third parties (Sanity image CDN, fonts, analytics)
-- [ ] Zero CSP violations across pages
+- [ ] **PARKED** Directives for third parties (Sanity image CDN, fonts, analytics)
+- [ ] **PARKED** Zero CSP violations across pages
 
 ### 4.3 Error handling & resilience
 - [x] Branded root `ErrorBoundary` (Lumina `ErrorPage` for 404 / 500)
@@ -108,15 +108,24 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 ---
 
 ## Sanity (headless content — in scope)
-- [ ] Create Sanity client in `context.ts` `additionalContext` (CMS placeholder present)
-- [ ] Model at least one content type (e.g. editorial/landing block)
-- [ ] Render one Sanity-backed page/section in the showcase
-- [ ] Add Sanity image/CDN domains to CSP
+- [ ] **PARKED** Create Sanity client in `context.ts` `additionalContext` (CMS placeholder present)
+- [ ] **PARKED** Model at least one content type (e.g. editorial/landing block)
+- [ ] **PARKED** Render one Sanity-backed page/section in the showcase
+- [ ] **PARKED** Add Sanity image/CDN domains to CSP
+
+---
+
+## Active focus
+
+**Customer Account API OAuth via Cloudflare** — `docs/CLOUDFLARE_TUNNEL.md` + `docs/CUSTOMER_ACCOUNT_API.md`.
+
+Parked items resume after live login works (or on request).
 
 ---
 
 ## Suggested order
 1. Prerequisites (green codegen/typecheck)
-2. Step 2 funnel
+2. Step 2 funnel → **Customer Account API OAuth (now)**
 3. Step 3 perf/analytics/consent/SEO
 4. Step 4 i18n/markets → CSP → error/skeletons → a11y
+5. Parked: homepage polish (2.4), CSP third parties (4.2), Sanity, Lighthouse/analytics verify

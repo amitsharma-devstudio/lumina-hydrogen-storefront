@@ -34,6 +34,7 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ['.tryhydrogen.dev'],
+    // Cloudflare / Hydrogen tunnel hostnames used in local OAuth testing
+    allowedHosts: ['.tryhydrogen.dev', '.karwa.io', 'lumina-dev.karwa.io'],
   },
 });

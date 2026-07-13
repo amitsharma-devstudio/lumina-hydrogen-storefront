@@ -8,6 +8,8 @@
     "build": "shopify hydrogen build --codegen",
     "dev": "shopify hydrogen dev --codegen",
     "dev:accounts": "shopify hydrogen dev --codegen --customer-account-push",
+    "tunnel": "cloudflared tunnel --config cloudflare/tunnel.yml run",
+    "tunnel:quick": "cloudflared tunnel --url http://localhost:3000",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
     "typecheck": "react-router typegen && tsc --noEmit",
