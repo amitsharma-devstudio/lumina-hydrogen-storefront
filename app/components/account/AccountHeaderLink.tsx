@@ -134,6 +134,16 @@ function AccountMenu({loggedIn}: {loggedIn: boolean}) {
               <Link
                 variant="nav"
                 role="menuitem"
+                to="/account/wishlist"
+                prefetch="intent"
+                className={itemClass}
+                onClick={() => setOpen(false)}
+              >
+                Wishlist
+              </Link>
+              <Link
+                variant="nav"
+                role="menuitem"
                 to="/account/profile"
                 prefetch="intent"
                 className={itemClass}

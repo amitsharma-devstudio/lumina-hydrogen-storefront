@@ -4,6 +4,7 @@ import {Money} from '@shopify/hydrogen';
 import {useVariantUrl} from '~/lib/variants';
 import {ProductCardImageCarousel} from '~/components/home/ProductCardImageCarousel';
 import type {ProductCardProduct} from '~/components/product/productCard.types';
+import {WishlistButton} from '~/components/wishlist/WishlistButton';
 
 /**
  * Catalog / collection PLP product card (`/collections/all`, `/collections/{handle}`, search).
@@ -58,6 +59,16 @@ export function ProductCard({
           Out of stock
         </span>
       ) : null}
+      <WishlistButton
+        productId={product.id}
+        productHandle={product.handle}
+        productTitle={product.title}
+        imageUrl={product.featuredImage?.url ?? product.images?.nodes?.[0]?.url}
+        imageAlt={
+          product.featuredImage?.altText ?? product.images?.nodes?.[0]?.altText
+        }
+        className="absolute right-3 top-3 z-30"
+      />
       <div className={soldOut ? 'opacity-55 grayscale' : undefined}>
         <ProductCardImageCarousel
           product={product}

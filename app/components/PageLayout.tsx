@@ -11,6 +11,7 @@ import {Header} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
 import {CartAsideSkeleton} from '~/components/ui/Skeleton';
 import {SkipToContent} from '~/components/SkipToContent';
+import {WishlistProvider} from '~/components/wishlist/WishlistProvider';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
@@ -30,26 +31,28 @@ export function PageLayout({
   publicStoreDomain,
 }: PageLayoutProps) {
   return (
-    <Aside.Provider>
-      <SkipToContent />
-      <CartAside cart={cart} />
-      {header && (
-        <Header
+    <WishlistProvider isLoggedIn={isLoggedIn}>
+      <Aside.Provider>
+        <SkipToContent />
+        <CartAside cart={cart} />
+        {header && (
+          <Header
+            header={header}
+            cart={cart}
+            isLoggedIn={isLoggedIn}
+            publicStoreDomain={publicStoreDomain}
+          />
+        )}
+        <main id="main-content" tabIndex={-1}>
+          {children}
+        </main>
+        <Footer
+          footer={footer}
           header={header}
-          cart={cart}
-          isLoggedIn={isLoggedIn}
           publicStoreDomain={publicStoreDomain}
         />
-      )}
-      <main id="main-content" tabIndex={-1}>
-        {children}
-      </main>
-      <Footer
-        footer={footer}
-        header={header}
-        publicStoreDomain={publicStoreDomain}
-      />
-    </Aside.Provider>
+      </Aside.Provider>
+    </WishlistProvider>
   );
 }
 

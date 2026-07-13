@@ -35,6 +35,7 @@ Legend: `[x]` done · `[~]` partially done (needs finishing/verification) · `[ 
 - [x] Orders list + order detail render real data (themed; live data after OAuth)
 - [x] Profile + addresses (add/edit/delete/default) (themed; live mutations after OAuth)
 - [x] Subscriptions list + cancel (themed; needs Shopify Subscriptions app + selling plans — see `docs/SUBSCRIPTIONS.md`)
+- [x] Wishlist (hearts + account page; guest localStorage + customer metafield — see `docs/WISHLIST.md`)
 - [x] Re-theme account pages to Lumina design
 - [x] Header account entry point (login vs "my account" when `isLoggedIn`)
 

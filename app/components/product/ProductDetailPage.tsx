@@ -16,7 +16,9 @@ import {ProductRecommendations} from '~/components/product/ProductRecommendation
 import {ProductCartActions} from '~/components/product/ProductCartActions';
 import {RegimenQuickStrip} from '~/components/product/RegimenQuickStrip';
 import {SellingPlanPurchaseOptions} from '~/components/product/SellingPlanPurchaseOptions';
+import {WishlistButton} from '~/components/wishlist/WishlistButton';
 import {buildSkincareIntelligence} from '~/lib/skincare';
+
 import {isVariantPurchasable} from '~/lib/variantAvailability';
 import {
   getSellingPlanPrice,
@@ -27,10 +29,15 @@ import type {CollectionProductList} from '~/components/home/productsSection.type
 
 type ProductDetailPageProps = {
   product: {
+    id?: string;
     title: string;
     handle: string;
     description?: string | null;
     descriptionHtml?: string | null;
+    featuredImage?: {
+      url?: string | null;
+      altText?: string | null;
+    } | null;
     images?: {nodes?: Array<Record<string, unknown>>};
     productOptions?: MappedProductOptions[];
     sellingPlanGroups?: {nodes: SellingPlanGroupLike[]} | null;
@@ -119,14 +126,35 @@ export function ProductDetailPage({
                 selectedVariant={selectedVariant ?? null}
               />
 
-              <div className="px-0.5">
-                <ProductCartActions
-                  productTitle={product.title}
-                  productHandle={product.handle}
-                  selectedVariant={selectedVariant}
-                  selectedSellingPlanId={selectedSellingPlan?.id ?? null}
-                  canAddToCart={canAddToCart}
-                />
+              <div className="flex items-stretch gap-3 px-0.5">
+                <div className="min-w-0 flex-1">
+                  <ProductCartActions
+                    productTitle={product.title}
+                    productHandle={product.handle}
+                    selectedVariant={selectedVariant}
+                    selectedSellingPlanId={selectedSellingPlan?.id ?? null}
+                    canAddToCart={canAddToCart}
+                  />
+                </div>
+                {product.id ? (
+                  <WishlistButton
+                    productId={product.id}
+                    productHandle={product.handle}
+                    productTitle={product.title}
+                    imageUrl={
+                      (product.featuredImage?.url as string | undefined) ??
+                      (product.images?.nodes?.[0]?.url as string | undefined)
+                    }
+                    imageAlt={
+                      (product.featuredImage?.altText as string | undefined) ??
+                      (product.images?.nodes?.[0]?.altText as
+                        | string
+                        | undefined)
+                    }
+                    size="md"
+                    className="shrink-0 self-start"
+                  />
+                ) : null}
               </div>
 
               <ProductBenefitsList benefits={skincare.benefits} />

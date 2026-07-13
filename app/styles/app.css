@@ -554,6 +554,15 @@ a.selling-plan-chip.selling-plan-chip--active:hover {
   color: #fff !important;
 }
 
+/* Wishlist heart — keep chrome consistent over card media */
+button.wishlist-button {
+  text-decoration: none;
+}
+
+button.wishlist-button.wishlist-button--active {
+  color: var(--color-primary);
+}
+
 /*
 * --------------------------------------------------
 * Order Search Form - Minimal & Responsive

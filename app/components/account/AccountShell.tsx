@@ -7,6 +7,7 @@ import {btnLinkClass} from '~/lib/theme';
 const ACCOUNT_NAV = [
   {to: '/account/orders', label: 'Orders'},
   {to: '/account/subscriptions', label: 'Subscriptions'},
+  {to: '/account/wishlist', label: 'Wishlist'},
   {to: '/account/profile', label: 'Profile'},
   {to: '/account/addresses', label: 'Addresses'},
 ] as const;

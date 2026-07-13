@@ -4,6 +4,7 @@ import {Money} from '@shopify/hydrogen';
 import {ProductCardImageCarousel} from '~/components/home/ProductCardImageCarousel';
 import type {CollectionProductNode} from '~/components/home/productsSection.types';
 import {useVariantUrl} from '~/lib/variants';
+import {WishlistButton} from '~/components/wishlist/WishlistButton';
 
 const FALLBACK_BENEFITS = [
   'Barrier support',
@@ -35,7 +36,17 @@ export function HomeProductCard({product}: {product: CollectionProductNode}) {
   const benefitTags = getHomeBenefitTags(product);
 
   return (
-    <article className="group/card flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-0.5 hover:border-brand-100 hover:shadow-[0_14px_42px_rgba(28,25,23,0.08)]">
+    <article className="group/card relative flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-0.5 hover:border-brand-100 hover:shadow-[0_14px_42px_rgba(28,25,23,0.08)]">
+      <WishlistButton
+        productId={product.id}
+        productHandle={product.handle}
+        productTitle={product.title}
+        imageUrl={product.featuredImage?.url ?? product.images?.nodes?.[0]?.url}
+        imageAlt={
+          product.featuredImage?.altText ?? product.images?.nodes?.[0]?.altText
+        }
+        className="absolute right-3 top-3 z-30"
+      />
       <ProductCardImageCarousel
         product={product}
         productUrl={productUrl}
