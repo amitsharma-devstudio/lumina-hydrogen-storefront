@@ -18,5 +18,6 @@ credentials-file: /Users/<you>/.cloudflared/<TUNNEL_UUID>.json
 
 ingress:
   - hostname: lumina-dev.karwa.io
-    service: http://localhost:3001
+    # Port is rewritten on the fly by `npm run tunnel` (scripts/tunnel.mjs)
+    service: http://localhost:3000
   - service: http_status:404

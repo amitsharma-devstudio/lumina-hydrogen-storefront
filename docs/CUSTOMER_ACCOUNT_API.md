@@ -42,8 +42,7 @@ Do not wrap values in quotes in `.env`.
 
 ## Production
 
-Register `https://lumina.karwa.io` (callback + origin + logout) alongside local URLs in Headless settings. Point Cloudflare DNS at Oxygen (or a production tunnel).
-
+Register `https://lumina.karwa.io` (callback + origin + logout) alongside local URLs in Headless settings. Deploy the Cloudflare Worker and attach the custom domain — see [CLOUDFLARE_WORKERS_DEPLOY.md](./CLOUDFLARE_WORKERS_DEPLOY.md).
 ## Fallback: Hydrogen tunnel
 
 `npm run dev:accounts` still exists, but needs Hydrogen channel access for `--customer-account-push`. Cloudflare is the path for this Headless store.

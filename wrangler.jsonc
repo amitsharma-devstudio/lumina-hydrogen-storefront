@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "lumina-storefront",
+  "main": "./server.ts",
+  "compatibility_date": "2026-07-26",
+  "compatibility_flags": ["nodejs_compat"],
+  "keep_vars": true,
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true,
+  "routes": [
+    {
+      "pattern": "lumina.karwa.io",
+      "custom_domain": true
+    }
+  ]
+}

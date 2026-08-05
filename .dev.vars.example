@@ -1,0 +1,18 @@
+# Copy to `.dev.vars` for local `wrangler` / Cloudflare Vite plugin.
+# Production: `npx wrangler secret bulk .dev.vars` (or set in CF dashboard).
+#
+# Do not commit `.dev.vars`.
+
+SESSION_SECRET=
+PUBLIC_STORE_DOMAIN=
+PUBLIC_STOREFRONT_API_TOKEN=
+PUBLIC_STOREFRONT_API_VERSION=2025-07
+PUBLIC_CHECKOUT_DOMAIN=
+PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID=
+SHOP_ID=
+PUBLIC_CUSTOM_AUTH_DOMAIN=true
+PUBLIC_STOREFRONT_ORIGIN=https://lumina-dev.karwa.io
+
+# Optional
+# PUBLIC_STOREFRONT_ID=
+# PRIVATE_STOREFRONT_API_TOKEN=

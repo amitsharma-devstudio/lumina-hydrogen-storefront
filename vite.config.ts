@@ -1,21 +1,31 @@
 import {defineConfig} from 'vite';
 import {hydrogen} from '@shopify/hydrogen/vite';
 import {oxygen} from '@shopify/mini-oxygen/vite';
+import {cloudflare} from '@cloudflare/vite-plugin';
 import {reactRouter} from '@react-router/dev/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import tailwindcss from '@tailwindcss/vite';
+
+/**
+ * Local: Mini Oxygen (free local SSR — works on macOS 12).
+ * Prod build/deploy: Cloudflare Workers (`LUMINA_RUNTIME=cloudflare`).
+ * Do not enable oxygen() and cloudflare() at the same time.
+ */
+const useCloudflare = process.env.LUMINA_RUNTIME === 'cloudflare';
 
 export default defineConfig({
   plugins: [
     tailwindcss(),
     hydrogen(),
-    oxygen(),
+    useCloudflare
+      ? cloudflare({viteEnvironment: {name: 'ssr'}})
+      : oxygen(),
     reactRouter(),
     tsconfigPaths(),
   ],
   build: {
     // Allow a strict Content-Security-Policy
-    // withtout inlining assets as base64:
+    // without inlining assets as base64:
     assetsInlineLimit: 0,
   },
   ssr: {
@@ -34,7 +44,7 @@ export default defineConfig({
     },
   },
   server: {
-    // Cloudflare / Hydrogen tunnel hostnames used in local OAuth testing
+    // Cloudflare Tunnel hostnames used in local OAuth testing
     allowedHosts: ['.tryhydrogen.dev', '.karwa.io', 'lumina-dev.karwa.io'],
   },
 });

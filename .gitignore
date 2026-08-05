@@ -5,10 +5,13 @@ node_modules
 /public/build
 /.mf
 .env
+.dev.vars
+.wrangler
 .shopify
 .react-router
 .DS_Store
 tsconfig.tsbuildinfo
 # Named Cloudflare Tunnel config (copy from tunnel.example.yml)
 /cloudflare/tunnel.yml
+/cloudflare/tunnel.runtime.yml
 /cloudflare/*.json
