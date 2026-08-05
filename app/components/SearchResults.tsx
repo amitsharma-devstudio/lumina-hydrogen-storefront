@@ -145,7 +145,6 @@ function SearchResultsProducts({
   return (
     <section>
       <SearchSectionHeader
-        eyebrow="Products"
         title="Matching products"
         description={
           count > 0
