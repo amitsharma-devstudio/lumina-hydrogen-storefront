@@ -3,7 +3,7 @@ import {ProductsGrid} from '~/components/home/ProductsGrid';
 import type {CollectionProductList} from '~/components/home/productsSection.types';
 
 /**
- * Resolved-state body for critical homepage product sections (no Suspense).
+ * Resolved-state body for homepage product grids (used inside Suspense/Await).
  */
 export function ProductsContent({
   products,

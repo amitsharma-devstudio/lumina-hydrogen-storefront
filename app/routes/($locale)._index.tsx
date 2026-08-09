@@ -8,8 +8,10 @@ import {HomeCollections} from '~/components/home/HomeCollections';
 import {HomeBestsellers} from '~/components/home/HomeBestsellers';
 import {HomeRoutineTeaser} from '~/components/home/HomeRoutineTeaser';
 import {HomeSocialProof} from '~/components/home/HomeSocialProof';
-import type {CollectionCardCollection} from '~/lib/collectionCoverImage';
-import {loadHomepageData} from '~/lib/homepageLoader';
+import {
+  loadHomepageCriticalData,
+  loadHomepageDeferredData,
+} from '~/lib/homepageLoader';
 import {buildSeoMeta, getRequestOrigin} from '~/lib/seo';
 import {
   JsonLd,
@@ -39,11 +41,19 @@ export const meta: Route.MetaFunction = ({data}) => {
   });
 };
 
-export async function loader({context, request}: Route.LoaderArgs) {
-  const homepage = await loadHomepageData(context.storefront);
+export async function loader(args: Route.LoaderArgs) {
+  const {storefront} = args.context;
+
+  // Start below-the-fold fetches without blocking time to first byte
+  const deferredData = loadHomepageDeferredData(storefront);
+
+  // Await hero + promo required for above-the-fold paint and SEO meta
+  const criticalData = await loadHomepageCriticalData(storefront);
+
   return {
-    ...homepage,
-    seoOrigin: getRequestOrigin(request),
+    ...deferredData,
+    ...criticalData,
+    seoOrigin: getRequestOrigin(args.request),
   };
 }
 
@@ -54,9 +64,7 @@ export default function Homepage() {
       {data.hero ? <HomeHero hero={data.hero} /> : null}
       <HomePromoCarousel slides={data.promoSlides} />
       <HomeRoutineTeaser />
-      <HomeCollections
-        collections={data.curatedCollections as CollectionCardCollection[]}
-      />
+      <HomeCollections collections={data.curatedCollections} />
       <HomeBestsellers products={data.bestsellers} />
       <HomeSocialProof />
       <HomeFeatures />

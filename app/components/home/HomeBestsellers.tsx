@@ -1,4 +1,5 @@
-
+import {Suspense} from 'react';
+import {Await} from 'react-router';
 import {Link} from '~/components/Link';
 import {
   HOME_BTN_SECONDARY,
@@ -10,9 +11,14 @@ import {
 } from '~/components/home/homeSectionStyles';
 import {ProductsContent} from '~/components/home/ProductsContent';
 import type {CollectionProductList} from '~/components/home/productsSection.types';
+import {ProductGridSkeleton} from '~/components/ui/Skeleton';
 import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
 
-export function HomeBestsellers({products}: {products: CollectionProductList}) {
+export function HomeBestsellers({
+  products,
+}: {
+  products: Promise<CollectionProductList>;
+}) {
   return (
     <section className={HOME_SECTION_MUTED} aria-labelledby="bestsellers">
       <div className="mx-auto max-w-7xl px-6">
@@ -30,10 +36,16 @@ export function HomeBestsellers({products}: {products: CollectionProductList}) {
           </p>
         </header>
 
-        <ProductsContent
-          products={products}
-          emptyMessage="No bestsellers yet. Add products to the “bestsellers” collection in Shopify Admin."
-        />
+        <Suspense fallback={<ProductGridSkeleton count={4} />}>
+          <Await resolve={products}>
+            {(resolved) => (
+              <ProductsContent
+                products={resolved}
+                emptyMessage="No bestsellers yet. Add products to the “bestsellers” collection in Shopify Admin."
+              />
+            )}
+          </Await>
+        </Suspense>
 
         <div className="mt-10">
           <Link

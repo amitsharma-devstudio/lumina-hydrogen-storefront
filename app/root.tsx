@@ -19,6 +19,7 @@ import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
 import {ErrorPage} from '~/components/ErrorPage';
 import {HreflangLinks} from '~/components/HreflangLinks';
+import {ScrollToTopOnNavigate} from '~/components/ScrollToTopOnNavigate';
 import {loadCart} from '~/lib/loadCart';
 import {getRequestOrigin, languageToHtmlLang} from '~/lib/seo';
 import {getLocaleFromRequest} from '~/lib/i18n';
@@ -181,6 +182,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
       </head>
       <body>
         {children}
+        <ScrollToTopOnNavigate />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>

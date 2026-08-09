@@ -12,6 +12,7 @@ import {
   type MetaobjectField,
 } from '~/lib/homepage';
 import {getCollectionProductNodes} from '~/components/home/productsSection.types';
+import type {CollectionProductList} from '~/components/home/productsSection.types';
 import {
   BESTSELLERS_HANDLE_CANDIDATES,
   filterMerchandisingCollections,
@@ -82,7 +83,7 @@ async function loadCollectionProductsByHandle(
   storefront: Storefront,
   query: string,
   handleCandidates: readonly string[],
-) {
+): Promise<CollectionProductList> {
   for (const handle of handleCandidates) {
     const response = await storefront.query(query, {
       variables: {handle},
@@ -96,13 +97,33 @@ async function loadCollectionProductsByHandle(
   return [];
 }
 
-export async function loadHomepageData(storefront: Storefront) {
-  const [featuredCollectionsResponse, heroResponse, promoResponse, bestsellers] =
-    await Promise.all([
-    storefront.query(FeaturedCollectionsQuery, {
-      variables: {first: 24},
-      cache: storefront.CacheLong(),
-    }),
+async function loadCuratedCollections(
+  storefront: Storefront,
+): Promise<FeaturedCollectionFragment[]> {
+  const response = await storefront.query(FeaturedCollectionsQuery, {
+    variables: {first: 24},
+    cache: storefront.CacheLong(),
+  });
+  const collectionNodes: FeaturedCollectionFragment[] =
+    response.collections?.nodes ?? [];
+  return selectCuratedCollections(collectionNodes);
+}
+
+async function loadBestsellers(
+  storefront: Storefront,
+): Promise<CollectionProductList> {
+  return loadCollectionProductsByHandle(
+    storefront,
+    BestsellersProductsQuery,
+    BESTSELLERS_HANDLE_CANDIDATES,
+  );
+}
+
+/**
+ * Above-the-fold homepage data (hero + promo). Awaited before first paint / SEO meta.
+ */
+export async function loadHomepageCriticalData(storefront: Storefront) {
+  const [heroResponse, promoResponse] = await Promise.all([
     storefront.query(HomeHeroQuery, {
       variables: {type: HOME_HERO_METAOBJECT_TYPE},
       cache: storefront.CacheLong(),
@@ -114,15 +135,7 @@ export async function loadHomepageData(storefront: Storefront) {
       },
       cache: storefront.CacheLong(),
     }),
-    loadCollectionProductsByHandle(
-      storefront,
-      BestsellersProductsQuery,
-      BESTSELLERS_HANDLE_CANDIDATES,
-    ),
   ]);
-
-  const collectionNodes: FeaturedCollectionFragment[] =
-    featuredCollectionsResponse.collections?.nodes ?? [];
 
   const heroNode = heroResponse?.metaobjects?.nodes?.[0] ?? null;
   const rawHero = heroNode
@@ -134,12 +147,28 @@ export async function loadHomepageData(storefront: Storefront) {
     : null;
 
   const promoNodes = promoResponse?.metaobjects?.nodes ?? [];
-  const cmsPromoSlides = mapPromoMetaobjectsToSlides(promoNodes);
 
   return {
-    curatedCollections: selectCuratedCollections(collectionNodes),
     hero: rawHero && !isHeroEmpty(rawHero) ? rawHero : null,
-    promoSlides: cmsPromoSlides,
-    bestsellers,
+    promoSlides: mapPromoMetaobjectsToSlides(promoNodes),
+  };
+}
+
+/**
+ * Below-the-fold homepage data. Returned as promises so the route can stream
+ * without blocking TTFB. Errors are swallowed so the page still 200s.
+ */
+export function loadHomepageDeferredData(storefront: Storefront) {
+  return {
+    curatedCollections: loadCuratedCollections(storefront).catch(
+      (error: Error) => {
+        console.error(error);
+        return [] as FeaturedCollectionFragment[];
+      },
+    ),
+    bestsellers: loadBestsellers(storefront).catch((error: Error) => {
+      console.error(error);
+      return [] as CollectionProductList;
+    }),
   };
 }
