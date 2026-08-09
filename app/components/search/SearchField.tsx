@@ -59,13 +59,13 @@ export function SearchField({
   const wrapperClassName = isPage
     ? 'search-field flex items-center gap-2 rounded-2xl bg-white px-4 shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-shadow focus-within:shadow-[0_12px_40px_rgba(0,0,0,0.08)] md:px-5'
     : isHeader
-      ? 'search-field flex h-11 w-full items-center gap-2 rounded-full border border-neutral-200/90 bg-neutral-50/90 pl-4 pr-0 focus-within:border-neutral-300 focus-within:bg-white'
+      ? 'search-field flex h-11 w-full items-center gap-2 overflow-hidden rounded-full border border-neutral-200/90 bg-neutral-50/90 py-1 pl-4 pr-1 focus-within:border-neutral-300 focus-within:bg-white'
       : 'search-field flex items-center gap-2 rounded-2xl border border-neutral-200/80 bg-neutral-50/80 px-4 focus-within:border-neutral-300 focus-within:bg-white';
 
   const buttonSizeClass = isPage
     ? 'px-7 py-3.5'
     : isHeader
-      ? 'ml-auto !h-9 min-h-9 shrink-0 px-5 text-xs shadow-none hover:translate-y-0'
+      ? 'ml-auto !h-full !min-h-0 shrink-0 self-stretch px-5 text-xs shadow-none hover:!translate-y-0'
       : 'px-5 py-2.5 text-sm';
 
   return (

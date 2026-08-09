@@ -46,45 +46,47 @@ export function HomeSocialProof() {
           </p>
         </header>
 
-        <ul className="mb-14 grid grid-cols-1 gap-0 overflow-hidden rounded-2xl border border-brand-100 bg-white sm:grid-cols-3">
-          {STATS.map((stat) => (
-            <li
-              key={stat.label}
-              className="border-b border-brand-100 p-8 sm:border-b-0 sm:border-r last:border-b-0 last:sm:border-r-0"
-            >
-              <p className="text-4xl font-light text-primary md:text-5xl">
-                {stat.value}
-              </p>
-              <p className="mt-3 text-sm uppercase tracking-[0.12em] text-neutral-500">
-                {stat.label}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <div className="flex flex-col gap-10 md:gap-14">
+          <ul className="grid grid-cols-1 gap-0 overflow-hidden rounded-2xl border border-brand-100 bg-white sm:grid-cols-3">
+            {STATS.map((stat) => (
+              <li
+                key={stat.label}
+                className="border-b border-brand-100 p-8 sm:border-b-0 sm:border-r last:border-b-0 last:sm:border-r-0"
+              >
+                <p className="text-4xl font-light text-primary md:text-5xl">
+                  {stat.value}
+                </p>
+                <p className="mt-3 text-sm uppercase tracking-[0.12em] text-neutral-500">
+                  {stat.label}
+                </p>
+              </li>
+            ))}
+          </ul>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
-          {TESTIMONIALS.map((item) => (
-            <blockquote
-              key={item.author}
-              className="rounded-2xl border border-neutral-200/90 bg-white p-8 shadow-[0_1px_0_rgba(0,0,0,0.04)]"
-            >
-              <div className="mb-4 flex gap-0.5 text-primary" aria-hidden>
-                {STAR_KEYS.map((star) => (
-                  <span key={star}>★</span>
-                ))}
-              </div>
-              <p className="text-lg font-light leading-relaxed text-neutral-800">
-                &ldquo;{item.quote}&rdquo;
-              </p>
-              <footer className="mt-6 text-sm text-neutral-500">
-                <cite className="not-italic font-medium text-neutral-900">
-                  {item.author}
-                </cite>
-                <span className="mx-2 text-neutral-300">·</span>
-                {item.detail}
-              </footer>
-            </blockquote>
-          ))}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+            {TESTIMONIALS.map((item) => (
+              <blockquote
+                key={item.author}
+                className="rounded-2xl border border-neutral-200/90 bg-white p-8 shadow-[0_1px_0_rgba(0,0,0,0.04)]"
+              >
+                <div className="mb-4 flex gap-0.5 text-primary" aria-hidden>
+                  {STAR_KEYS.map((star) => (
+                    <span key={star}>★</span>
+                  ))}
+                </div>
+                <p className="text-lg font-light leading-relaxed text-neutral-800">
+                  &ldquo;{item.quote}&rdquo;
+                </p>
+                <footer className="mt-6 text-sm text-neutral-500">
+                  <cite className="not-italic font-medium text-neutral-900">
+                    {item.author}
+                  </cite>
+                  <span className="mx-2 text-neutral-300">·</span>
+                  {item.detail}
+                </footer>
+              </blockquote>
+            ))}
+          </div>
         </div>
       </div>
     </section>
