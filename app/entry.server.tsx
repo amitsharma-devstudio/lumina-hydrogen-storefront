@@ -31,7 +31,13 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
-    connectSrc: tunnelConnectSrc(context.env.PUBLIC_STOREFRONT_ORIGIN),
+    // Cloudflare Web Analytics beacon (injected on Workers custom domains)
+    scriptSrc: ['https://static.cloudflareinsights.com'],
+    scriptSrcElem: ['https://static.cloudflareinsights.com'],
+    connectSrc: [
+      ...tunnelConnectSrc(context.env.PUBLIC_STOREFRONT_ORIGIN),
+      'https://cloudflareinsights.com',
+    ],
   });
 
   const body = await renderToReadableStream(

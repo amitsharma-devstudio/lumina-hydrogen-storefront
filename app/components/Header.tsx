@@ -58,35 +58,51 @@ export function Header({isLoggedIn, cart}: HeaderProps) {
             <CountrySelector />
             <AccountHeaderLink isLoggedIn={isLoggedIn} />
 
-            <Link
-              variant="nav"
-              to="/cart"
-              prefetch="intent"
-              aria-label="Open shopping cart"
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-neutral-700 transition-colors hover:border-neutral-200 hover:bg-neutral-50 hover:text-black"
+            <Suspense
+              fallback={
+                <Link
+                  variant="nav"
+                  to="/cart"
+                  prefetch="intent"
+                  aria-label="Open shopping cart, 0 items"
+                  className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-neutral-700 transition-colors hover:border-neutral-200 hover:bg-neutral-50 hover:text-black"
+                >
+                  <CartIcon />
+                  <span
+                    className="cart-count absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-none text-primary-foreground ring-2 ring-white"
+                    aria-hidden
+                  >
+                    0
+                  </span>
+                </Link>
+              }
             >
-              <CartIcon />
-              <span
-                className="cart-count absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-none text-primary-foreground ring-2 ring-white"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <CartCount cart={cart} />
-              </span>
-            </Link>
+              <Await resolve={cart}>
+                {(resolvedCart) => {
+                  const count = resolvedCart?.totalQuantity ?? 0;
+                  return (
+                    <Link
+                      variant="nav"
+                      to="/cart"
+                      prefetch="intent"
+                      aria-label={`Open shopping cart, ${count} ${count === 1 ? 'item' : 'items'}`}
+                      className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-transparent text-neutral-700 transition-colors hover:border-neutral-200 hover:bg-neutral-50 hover:text-black"
+                    >
+                      <CartIcon />
+                      <span
+                        className="cart-count absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-none text-primary-foreground ring-2 ring-white"
+                        aria-hidden
+                      >
+                        {count}
+                      </span>
+                    </Link>
+                  );
+                }}
+              </Await>
+            </Suspense>
           </div>
         </nav>
       </div>
     </header>
-  );
-}
-
-function CartCount({cart}: {cart: Promise<CartApiQueryFragment | null>}) {
-  return (
-    <Suspense fallback={<span>0</span>}>
-      <Await resolve={cart}>
-        {(cart) => <span>{cart?.totalQuantity ?? 0}</span>}
-      </Await>
-    </Suspense>
   );
 }

@@ -199,9 +199,9 @@ function FooterSection({
 }) {
   return (
     <div>
-      <h4 className="lumina-footer__heading mb-4 text-[10px] font-medium uppercase tracking-[0.2em]">
+      <p className="lumina-footer__heading mb-4 text-[10px] font-medium uppercase tracking-[0.2em]">
         {title}
-      </h4>
+      </p>
 
       <ul className="flex flex-col gap-3 text-sm">
         {items.map((item: NonNullable<FooterQuery["menu"]>["items"][number]) => {

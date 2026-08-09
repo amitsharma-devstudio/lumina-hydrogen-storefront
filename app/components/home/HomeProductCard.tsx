@@ -82,7 +82,7 @@ export function HomeProductCard({product}: {product: CollectionProductNode}) {
               <span>Clinically considered</span>
             </div>
             <div className="flex items-baseline justify-between gap-2">
-              <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+              <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-600">
                 From
               </span>
               <Money

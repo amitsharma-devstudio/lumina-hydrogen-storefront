@@ -61,7 +61,7 @@ export function CollectionCard({collection, loading}: CollectionCardProps) {
             {collection.title}
           </h3>
           <div className="flex items-baseline justify-between gap-2 border-t border-neutral-100 pt-2.5">
-            <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+            <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-600">
               Explore
             </span>
             <span className="text-base font-light text-neutral-900">→</span>

@@ -54,7 +54,11 @@ export function CountrySelector() {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
-        aria-labelledby={triggerId}
+        aria-label={
+          selectedLocale
+            ? `Choose market, ${selectedLocale.country} · ${selectedLocale.currency || selectedLocale.language}`
+            : 'Choose market'
+        }
         onClick={() => setOpen((prev) => !prev)}
       >
         <GlobeIcon />

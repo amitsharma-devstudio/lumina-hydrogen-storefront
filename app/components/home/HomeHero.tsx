@@ -158,7 +158,9 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                       className="h-full min-h-[430px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:min-h-[520px] md:min-h-full"
                       loading={index === 0 ? 'eager' : 'lazy'}
                       fetchPriority={index === 0 ? 'high' : 'auto'}
-                      sizes="(min-width: 45em) 50vw, 100vw"
+                      width={900}
+                      height={1100}
+                      sizes="(min-width: 768px) 50vw, 100vw"
                     />
                   ) : null}
                 </Link>
@@ -170,7 +172,9 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                 className="relative h-[430px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:h-[520px] md:h-full"
                 loading="eager"
                 fetchPriority="high"
-                sizes="(min-width: 45em) 50vw, 100vw"
+                width={900}
+                height={1100}
+                sizes="(min-width: 768px) 50vw, 100vw"
               />
             ) : null}
 
@@ -202,23 +206,9 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
 
           {hasProducts && canLoop ? (
             <div
-              className="mt-5 flex justify-center gap-2"
-              role="tablist"
+              className="mt-5 flex justify-center gap-1"
+              role="group"
               aria-label="Choose featured product"
-              onKeyDown={(event) => {
-                if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-                  event.preventDefault();
-                  goTo(
-                    activeIndex <= 0 ? products.length - 1 : activeIndex - 1,
-                  );
-                } else if (
-                  event.key === 'ArrowRight' ||
-                  event.key === 'ArrowDown'
-                ) {
-                  event.preventDefault();
-                  goTo((activeIndex + 1) % products.length);
-                }
-              }}
             >
               {products.map((product, index) => (
                 <button
@@ -226,13 +216,18 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                   type="button"
                   onClick={() => goTo(index)}
                   aria-label={`Show ${product.title}`}
-                  aria-current={index === activeIndex}
-                  className={`h-2 rounded-full transition-all ${
-                    index === activeIndex
-                      ? 'w-8 bg-primary'
-                      : 'w-2 bg-neutral-300 hover:bg-neutral-400'
-                  }`}
-                />
+                  aria-current={index === activeIndex ? 'true' : undefined}
+                  className="flex h-8 min-w-8 items-center justify-center px-1"
+                >
+                  <span
+                    aria-hidden
+                    className={`block h-2 rounded-full transition-all ${
+                      index === activeIndex
+                        ? 'w-8 bg-primary'
+                        : 'w-2 bg-neutral-300'
+                    }`}
+                  />
+                </button>
               ))}
             </div>
           ) : null}
