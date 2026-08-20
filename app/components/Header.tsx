@@ -33,10 +33,10 @@ interface HeaderProps {
 
 export function Header({isLoggedIn, cart}: HeaderProps) {
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--color-home-border)] bg-white/92 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-6">
+    <header className="site-header sticky top-0 z-30 border-b border-[var(--color-home-border)] bg-white/92 backdrop-blur-xl">
+      <div className="site-header__inner mx-auto max-w-7xl px-6">
         {/* Desktop: logo | centered search | icons. Mobile: logo + icons, search on next row */}
-        <nav className="grid grid-cols-[1fr_auto] items-center gap-x-4 py-3 md:grid-cols-[1fr_minmax(16rem,36rem)_1fr] md:gap-x-6 md:py-0 md:h-[76px]">
+        <nav className="site-header__nav grid grid-cols-[1fr_auto] items-center gap-x-4 py-3 md:grid-cols-[1fr_minmax(16rem,36rem)_1fr] md:gap-x-6 md:py-0 md:h-[76px]">
           <Link
             variant="nav"
             to="/"

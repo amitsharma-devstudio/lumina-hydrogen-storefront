@@ -8,6 +8,17 @@ import {toClientPath, type HeroLink, type HomeHeroData} from '~/lib/homepage';
 
 const HERO_AUTO_ADVANCE_MS = 5000;
 
+/** Fluid srcset — fixed width={700} ignored `sizes` and always fetched 1400px at 2x. */
+const HERO_IMAGE_ASPECT_RATIO = '700/860';
+const HERO_IMAGE_SIZES =
+  '(min-width: 1280px) 640px, (min-width: 768px) 48vw, 360px';
+const HERO_IMAGE_SRCSET_OPTIONS = {
+  intervals: 6,
+  startingWidth: 360,
+  incrementSize: 180,
+  placeholderWidth: 100,
+};
+
 function Cta({
   link,
   variant,
@@ -55,8 +66,10 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
   const priceText = activeProduct?.priceText ?? hero.startingFromValue ?? null;
 
   return (
-    <section className={`relative overflow-hidden ${HOME_SECTION_MUTED_FLUSH}`}>
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-8 px-6 py-10 md:grid-cols-[0.92fr_1.08fr] md:gap-12 md:py-14 lg:min-h-[680px]">
+    <section
+      className={`home-hero relative overflow-hidden ${HOME_SECTION_MUTED_FLUSH}`}
+    >
+      <div className="home-hero__grid relative mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-8 px-6 py-10 md:grid-cols-[0.92fr_1.08fr] md:gap-12 md:py-14 lg:min-h-[680px]">
         <div className="order-2 flex flex-col justify-center gap-8 py-4 md:order-1">
           <div className="flex flex-wrap items-center gap-3 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-neutral-500">
             <span className="text-primary">Lumina</span>
@@ -158,9 +171,9 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                       className="h-full min-h-[430px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:min-h-[520px] md:min-h-full"
                       loading="eager"
                       fetchPriority="high"
-                      width={700}
-                      height={860}
-                      sizes="(min-width: 1280px) 640px, (min-width: 768px) 48vw, 92vw"
+                      aspectRatio={HERO_IMAGE_ASPECT_RATIO}
+                      sizes={HERO_IMAGE_SIZES}
+                      srcSetOptions={HERO_IMAGE_SRCSET_OPTIONS}
                     />
                   ) : (
                     <div
@@ -177,9 +190,9 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                 className="relative h-[430px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:h-[520px] md:h-full"
                 loading="eager"
                 fetchPriority="high"
-                width={700}
-                height={860}
-                sizes="(min-width: 1280px) 640px, (min-width: 768px) 48vw, 92vw"
+                aspectRatio={HERO_IMAGE_ASPECT_RATIO}
+                sizes={HERO_IMAGE_SIZES}
+                srcSetOptions={HERO_IMAGE_SRCSET_OPTIONS}
               />
             ) : null}
 
