@@ -1,7 +1,6 @@
-
 import {Link} from '~/components/Link';
 import {Image} from '@shopify/hydrogen';
-import {type KeyboardEvent} from 'react';
+import {useEffect, useRef, useState, type KeyboardEvent} from 'react';
 import {HOME_SECTION_SURFACE_FLUSH} from '~/components/home/homeSectionStyles';
 import {useCarousel} from '~/components/ui/useCarousel';
 import {toClientPath, type HomePromoSlide} from '~/lib/homepage';
@@ -11,11 +10,61 @@ const AUTO_ADVANCE_MS = 6000;
 const promoCtaClass =
   'inline-flex items-center justify-center rounded-full border-2 border-white/40 bg-white px-8 py-3.5 text-sm font-medium text-primary no-underline shadow-md transition-colors hover:border-white hover:bg-brand-50 hover:text-primary-hover';
 
+function useIsDesktopMd() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 768px)');
+    const sync = () => setIsDesktop(media.matches);
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, []);
+
+  return isDesktop;
+}
+
+function useNearViewport(rootMargin = '200px') {
+  const ref = useRef<HTMLElement | null>(null);
+  const [near, setNear] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || near) return;
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setNear(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setNear(true);
+          observer.disconnect();
+        }
+      },
+      {rootMargin},
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [near, rootMargin]);
+
+  return {ref, near};
+}
+
 export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
   const count = slides.length;
-  const {activeIndex, goTo, next, prev, setPaused, canLoop} = useCarousel(count, {
-    intervalMs: AUTO_ADVANCE_MS,
-  });
+  const isDesktop = useIsDesktopMd();
+  const {ref, near} = useNearViewport('240px');
+  const {activeIndex, goTo, next, prev, setPaused, canLoop} = useCarousel(
+    count,
+    {
+      intervalMs: AUTO_ADVANCE_MS,
+      autoAdvance: isDesktop,
+    },
+  );
 
   if (!count) return null;
 
@@ -32,6 +81,7 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
 
   return (
     <section
+      ref={ref}
       className={`home-promo-carousel relative w-full overflow-hidden ${HOME_SECTION_SURFACE_FLUSH}`}
       aria-roledescription="carousel"
       aria-label="Promotions"
@@ -42,11 +92,12 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      <div className="relative min-h-[240px] w-full bg-neutral-900 sm:min-h-[300px] md:min-h-[360px]">
+      <div className="relative min-h-[220px] w-full bg-neutral-900 sm:min-h-[280px] md:min-h-[360px]">
         {slides.map((slide, index) => {
           const isActive = index === activeIndex;
           const ctaPath = toClientPath(slide.cta?.url ?? null);
           const ctaLabel = slide.cta?.label ?? 'Shop now';
+          const shouldRenderImage = near && (isActive || isDesktop);
 
           return (
             <article
@@ -61,12 +112,14 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
               aria-label={`${index + 1} of ${count}`}
             >
               <div className="absolute inset-0">
-                {slide.image?.url ? (
+                {shouldRenderImage && slide.image?.url ? (
                   <Image
                     data={slide.image}
                     alt={slide.image.altText ?? slide.title}
                     className="h-full w-full object-cover object-center"
-                    sizes="100vw"
+                    sizes="(min-width: 768px) 100vw, 100vw"
+                    width={isDesktop ? 1600 : 750}
+                    height={isDesktop ? 720 : 480}
                     loading="lazy"
                     fetchPriority="low"
                   />
@@ -74,7 +127,7 @@ export function HomePromoCarousel({slides}: {slides: HomePromoSlide[]}) {
                 <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />
               </div>
 
-              <div className="relative z-10 mx-auto flex h-full min-h-[240px] w-full max-w-7xl flex-col justify-center px-6 py-12 sm:min-h-[300px] sm:px-10 md:min-h-[360px] md:px-14">
+              <div className="relative z-10 mx-auto flex h-full min-h-[220px] w-full max-w-7xl flex-col justify-center px-6 py-12 sm:min-h-[280px] sm:px-10 md:min-h-[360px] md:px-14">
                 <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.2em] text-brand-100">
                   Lumina
                 </p>
