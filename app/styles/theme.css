@@ -722,6 +722,12 @@ main.routine-builder section {
   margin-bottom: 1rem;
 }
 
+@media (min-width: 768px) {
+  .routine-builder__accordion {
+    display: none;
+  }
+}
+
 .routine-builder__accordion-item {
   background: var(--rb-surface);
   border: 1px solid var(--rb-border);
@@ -839,11 +845,13 @@ main.routine-builder section {
   border: 1px solid var(--rb-border);
   border-radius: var(--rb-radius-card);
   box-shadow: var(--rb-card-shadow);
+  display: none;
   padding: 1.25rem;
 }
 
 @media (min-width: 768px) {
   .routine-builder__product-panel {
+    display: block;
     padding: 1.5rem;
   }
 }
@@ -945,8 +953,22 @@ main.routine-builder section {
 }
 
 .routine-builder__dock-inner {
+  display: flex;
+  justify-content: center;
   margin: 0 auto;
-  max-width: 40rem;
+  width: 100%;
+}
+
+.routine-builder__dock-body {
+  text-align: left;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .routine-builder__dock-body {
+    /* Shared column so title/list left edge matches the button */
+    max-width: 22rem;
+  }
 }
 
 .routine-builder__dock-title {
@@ -954,6 +976,7 @@ main.routine-builder section {
   font-size: 0.625rem;
   letter-spacing: 0.14em;
   margin-bottom: 0.5rem;
+  text-align: left;
   text-transform: uppercase;
 }
 
@@ -985,9 +1008,21 @@ main.routine-builder section {
   white-space: nowrap;
 }
 
+.routine-builder__dock-cta-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.routine-builder__dock-cta-wrap form {
+  display: block;
+  width: 100%;
+}
+
 .routine-builder__dock-cta {
   display: flex;
-  justify-content: stretch;
+  justify-content: center;
+  text-align: center;
   width: 100%;
 }
 

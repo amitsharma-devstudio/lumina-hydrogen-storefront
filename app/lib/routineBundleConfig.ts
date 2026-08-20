@@ -11,7 +11,7 @@ export const ROUTINE_BUNDLE_CONFIG = [
     bestFor: 'Dullness, uneven tone, city mornings',
     result: 'Fresh, luminous, hydrated skin',
     price: 'From $128',
-    ctaLabel: 'Shop routine',
+    ctaLabel: 'Add to cart',
     sortOrder: 1,
   },
   {
@@ -25,7 +25,7 @@ export const ROUTINE_BUNDLE_CONFIG = [
     bestFor: 'Dryness, sensitivity, compromised barrier',
     result: 'Cushioned, comfortable, resilient skin',
     price: 'From $142',
-    ctaLabel: 'Shop routine',
+    ctaLabel: 'Add to cart',
     sortOrder: 2,
   },
   {
@@ -39,7 +39,7 @@ export const ROUTINE_BUNDLE_CONFIG = [
     bestFor: 'Breakouts, congestion, visible pores',
     result: 'Clearer-looking, smoother-feeling skin',
     price: 'From $118',
-    ctaLabel: 'Shop routine',
+    ctaLabel: 'Add to cart',
     sortOrder: 3,
   },
   {
@@ -53,7 +53,7 @@ export const ROUTINE_BUNDLE_CONFIG = [
     bestFor: 'Texture, early lines, uneven tone',
     result: 'Polished, rested, more refined skin',
     price: 'From $156',
-    ctaLabel: 'Shop routine',
+    ctaLabel: 'Add to cart',
     sortOrder: 4,
   },
 ] as const;

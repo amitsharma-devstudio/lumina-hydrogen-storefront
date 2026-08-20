@@ -47,33 +47,33 @@ function stepOptions(
 /**
  * Adds every selected routine product to the cart in one submission and
  * redirects the shopper to the cart page (the `/cart` action honors
- * `redirectTo`), so "Shop routine" lands them on their filled cart.
+ * `redirectTo`).
  */
-function ShopRoutineButton({
+function AddRoutineToCartButton({
   lines,
-  label,
 }: {
   lines: OptimisticCartLineInput[];
-  label: string;
 }) {
   return (
-    <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines}}>
-      {(fetcher: FetcherWithComponents<unknown>) => {
-        const busy = fetcher.state !== 'idle';
-        return (
-          <>
-            <input type="hidden" name="redirectTo" value="/cart" />
-            <button
-              type="submit"
-              disabled={busy}
-              className="routine-builder__btn-primary routine-builder__dock-cta"
-            >
-              {busy ? 'Adding to cart…' : label}
-            </button>
-          </>
-        );
-      }}
-    </CartForm>
+    <div className="routine-builder__dock-cta-wrap">
+      <CartForm route="/cart" action={CartForm.ACTIONS.LinesAdd} inputs={{lines}}>
+        {(fetcher: FetcherWithComponents<unknown>) => {
+          const busy = fetcher.state !== 'idle';
+          return (
+            <>
+              <input type="hidden" name="redirectTo" value="/cart" />
+              <button
+                type="submit"
+                disabled={busy}
+                className="routine-builder__btn-primary routine-builder__dock-cta"
+              >
+                {busy ? 'Adding to cart…' : 'Add to cart'}
+              </button>
+            </>
+          );
+        }}
+      </CartForm>
+    </div>
   );
 }
 
@@ -333,7 +333,9 @@ export function RoutineBuilderWizard({
   function goToStep(stepKey: RoutineBuilderStepKey) {
     if (!isStepUnlocked(stepKey, selections)) return;
     setVisibleCount(PRODUCTS_PER_PAGE);
-    navigate(routineBuilderPath({...selections, step: stepKey}));
+    navigate(routineBuilderPath({...selections, step: stepKey}), {
+      preventScrollReset: true,
+    });
   }
 
   function selectProduct(handle: string) {
@@ -341,7 +343,9 @@ export function RoutineBuilderWizard({
     let nextStep: RoutineBuilderStepKey = activeStep;
     if (activeStep === 'cleanse') nextStep = 'treat';
     else if (activeStep === 'treat') nextStep = 'moisturize';
-    navigate(routineBuilderPath({...next, step: nextStep}));
+    navigate(routineBuilderPath({...next, step: nextStep}), {
+      preventScrollReset: true,
+    });
   }
 
   return (
@@ -395,11 +399,11 @@ export function RoutineBuilderWizard({
         />
 
         <div
-          className="routine-builder__product-panel hidden md:block"
+          className="routine-builder__product-panel"
           role="tabpanel"
           id={`panel-${activeStep}`}
         >
-          <div className="mb-4 flex justify-end md:mb-5">
+          <div className="mb-4 flex flex-wrap items-end justify-end gap-2 md:mb-5">
             <p className="routine-builder__subtitle text-xs">
               {options.length} product{options.length === 1 ? '' : 's'}
             </p>
@@ -444,30 +448,34 @@ export function RoutineBuilderWizard({
       {allComplete ? (
         <div className="routine-builder__dock" role="region" aria-label="Your routine">
           <div className="routine-builder__dock-inner">
-            <p className="routine-builder__dock-title">Your routine is ready</p>
-            <ul className="routine-builder__dock-list">
-              {selectionSummary.map(({key, type, option}) =>
-                option ? (
-                  <li key={key} className="routine-builder__dock-row">
-                    <span className="routine-builder__dock-row-type">{type}</span>
-                    <span className="routine-builder__dock-row-title">
-                      {option.productTitle}
-                    </span>
-                  </li>
-                ) : null,
+            <div className="routine-builder__dock-body">
+              <p className="routine-builder__dock-title">Your routine is ready</p>
+              <ul className="routine-builder__dock-list">
+                {selectionSummary.map(({key, type, option}) =>
+                  option ? (
+                    <li key={key} className="routine-builder__dock-row">
+                      <span className="routine-builder__dock-row-type">{type}</span>
+                      <span className="routine-builder__dock-row-title">
+                        {option.productTitle}
+                      </span>
+                    </li>
+                  ) : null,
+                )}
+              </ul>
+              {routineLines.length > 0 ? (
+                <AddRoutineToCartButton lines={routineLines} />
+              ) : (
+                <div className="routine-builder__dock-cta-wrap">
+                  <Link
+                    to={routine.collectionPath}
+                    prefetch="intent"
+                    className="routine-builder__btn-primary routine-builder__dock-cta"
+                  >
+                    Add to cart
+                  </Link>
+                </div>
               )}
-            </ul>
-            {routineLines.length > 0 ? (
-              <ShopRoutineButton lines={routineLines} label={routine.ctaLabel} />
-            ) : (
-              <Link
-                to={routine.collectionPath}
-                prefetch="intent"
-                className="routine-builder__btn-primary routine-builder__dock-cta"
-              >
-                {routine.ctaLabel}
-              </Link>
-            )}
+            </div>
           </div>
         </div>
       ) : null}
