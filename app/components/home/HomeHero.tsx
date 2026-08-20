@@ -1,6 +1,7 @@
+
 import {Link} from '~/components/Link';
 import {Image} from '@shopify/hydrogen';
-import {useEffect, useState, type ReactNode} from 'react';
+import type {ReactNode} from 'react';
 import {HOME_SECTION_MUTED_FLUSH} from '~/components/home/homeSectionStyles';
 import {useCarousel} from '~/components/ui/useCarousel';
 import {toClientPath, type HeroLink, type HomeHeroData} from '~/lib/homepage';
@@ -44,48 +45,19 @@ function Cta({
   );
 }
 
-function useIsDesktopMd() {
-  // Mobile-first default helps Lighthouse/mobile first paint before hydrate.
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia('(min-width: 768px)');
-    const sync = () => setIsDesktop(media.matches);
-    sync();
-    media.addEventListener('change', sync);
-    return () => media.removeEventListener('change', sync);
-  }, []);
-
-  return isDesktop;
-}
-
 export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
   const products = hero.products ?? [];
   const hasProducts = products.length > 0;
-  const isDesktop = useIsDesktopMd();
   const {activeIndex, goTo, setPaused, canLoop} = useCarousel(products.length, {
     intervalMs: HERO_AUTO_ADVANCE_MS,
-    // Keep mobile first paint stable; carousel only auto-advances on desktop.
-    autoAdvance: isDesktop,
   });
   const activeProduct = hasProducts ? products[activeIndex] : null;
   const priceText = activeProduct?.priceText ?? hero.startingFromValue ?? null;
 
-  // Mobile: lazy + small transfer so LCP can settle on the headline text.
-  // Desktop: keep eager high-priority hero imagery.
-  const imageLoading = isDesktop ? 'eager' : 'lazy';
-  const imagePriority = isDesktop ? 'high' : 'low';
-  const imageWidth = isDesktop ? 700 : 480;
-  const imageHeight = isDesktop ? 860 : 600;
-  const imageSizes = isDesktop
-    ? '(min-width: 1280px) 640px, 48vw'
-    : '100vw';
-
   return (
     <section className={`relative overflow-hidden ${HOME_SECTION_MUTED_FLUSH}`}>
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-8 px-6 py-10 md:grid-cols-[0.92fr_1.08fr] md:gap-12 md:py-14 lg:min-h-[680px]">
-        {/* Text first on mobile so LCP can be the headline instead of a large image. */}
-        <div className="flex flex-col justify-center gap-8 py-4">
+        <div className="order-2 flex flex-col justify-center gap-8 py-4 md:order-1">
           <div className="flex flex-wrap items-center gap-3 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-neutral-500">
             <span className="text-primary">Lumina</span>
             <span className="h-px w-8 bg-brand-200" aria-hidden />
@@ -95,7 +67,7 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
             {hero.headline}
           </h1>
           {hero.subhead ? (
-            <p className="mt-1 hidden max-w-xl text-lg leading-8 text-neutral-600 md:mt-0 md:block md:text-xl md:leading-9">
+            <p className="max-w-xl text-lg leading-8 text-neutral-600 md:text-xl md:leading-9">
               {hero.subhead}
             </p>
           ) : null}
@@ -126,7 +98,7 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
             ) : null}
           </div>
 
-          <dl className="hidden max-w-xl grid-cols-3 border-y border-[var(--color-home-border)] py-5 md:grid">
+          <dl className="grid max-w-xl grid-cols-3 border-y border-[var(--color-home-border)] py-5">
             <div>
               <dt className="text-[10px] uppercase tracking-[0.14em] text-neutral-500">
                 Clinical
@@ -154,18 +126,15 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
           </dl>
         </div>
 
-        <div className="flex flex-col">
+        <div className="order-1 flex flex-col md:order-2">
           <div
-            className="relative min-h-[280px] flex-1 sm:min-h-[360px] md:min-h-full"
+            className="relative min-h-[430px] flex-1 sm:min-h-[520px] md:min-h-full"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
             aria-roledescription={hasProducts ? 'carousel' : undefined}
             aria-label={hasProducts ? 'Featured products' : undefined}
           >
-            <div
-              className="absolute -inset-4 hidden rounded-[2rem] bg-white/40 md:block"
-              aria-hidden
-            />
+            <div className="absolute -inset-4 rounded-[2rem] bg-white/40" aria-hidden />
 
             {hasProducts ? (
               products.map((product, index) => (
@@ -186,16 +155,16 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                     <Image
                       data={product.image}
                       alt={product.image.altText ?? product.title}
-                      className="h-full min-h-[280px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:min-h-[360px] md:min-h-full"
-                      loading={imageLoading}
-                      fetchPriority={imagePriority}
-                      width={imageWidth}
-                      height={imageHeight}
-                      sizes={imageSizes}
+                      className="h-full min-h-[430px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:min-h-[520px] md:min-h-full"
+                      loading="eager"
+                      fetchPriority="high"
+                      width={700}
+                      height={860}
+                      sizes="(min-width: 1280px) 640px, (min-width: 768px) 48vw, 92vw"
                     />
                   ) : (
                     <div
-                      className="h-full min-h-[280px] w-full rounded-2xl bg-brand-50/40 sm:min-h-[360px] md:min-h-full"
+                      className="h-full min-h-[430px] w-full rounded-2xl bg-brand-50/40 sm:min-h-[520px] md:min-h-full"
                       aria-hidden
                     />
                   )}
@@ -205,12 +174,12 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
               <Image
                 data={hero.image}
                 alt={hero.image?.altText ?? 'Lumina skincare'}
-                className="relative h-[280px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:h-[360px] md:h-full"
-                loading={imageLoading}
-                fetchPriority={imagePriority}
-                width={imageWidth}
-                height={imageHeight}
-                sizes={imageSizes}
+                className="relative h-[430px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:h-[520px] md:h-full"
+                loading="eager"
+                fetchPriority="high"
+                width={700}
+                height={860}
+                sizes="(min-width: 1280px) 640px, (min-width: 768px) 48vw, 92vw"
               />
             ) : null}
 
