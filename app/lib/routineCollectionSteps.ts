@@ -38,9 +38,9 @@ export function inferRoutineStepType(
 }
 
 const STEP_NOTES: Record<RoutineStepType, string> = {
-  Cleanse: 'Choose your cleanse.',
-  Treat: 'Choose your treatment step.',
-  Moisturize: 'Choose how you finish your routine.',
+  Cleanse: '',
+  Treat: '',
+  Moisturize: '',
 };
 
 export function buildRoutineStepsFromCollectionProducts(
