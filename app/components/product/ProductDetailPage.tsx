@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Money, type MappedProductOptions} from '@shopify/hydrogen';
 import type {CurrencyCode} from '@shopify/hydrogen/storefront-api-types';
 import {ImageGallery} from '~/components/ui/ImageGallery';
@@ -26,6 +26,8 @@ import {
   type SellingPlanLike,
 } from '~/lib/sellingPlan';
 import type {CollectionProductList} from '~/components/home/productsSection.types';
+
+type GalleryImage = {url?: string; altText?: string} & Record<string, unknown>;
 
 type ProductDetailPageProps = {
   product: {
@@ -58,13 +60,21 @@ type ProductDetailPageProps = {
   selectedSellingPlan?: SellingPlanLike | null;
 };
 
+function firstGalleryImage(
+  nodes: Array<Record<string, unknown>> | undefined,
+): GalleryImage {
+  return {...(nodes?.[0] ?? {})} as GalleryImage;
+}
+
 export function ProductDetailPage({
   product,
   recommendations,
   selectedSellingPlan = null,
 }: ProductDetailPageProps) {
   const skincare = buildSkincareIntelligence(product);
-  const images = (product.images?.nodes ?? []).map((node) => ({...node}));
+  const images = (product.images?.nodes ?? []).map((node) => ({
+    ...node,
+  })) as GalleryImage[];
   const selectedVariant = product.selectedOrFirstAvailableVariant;
   const hasDescriptionHtml = Boolean(product.descriptionHtml?.trim());
   const canAddToCart = Boolean(
@@ -76,15 +86,21 @@ export function ProductDetailPage({
       ? getSellingPlanPrice(selectedVariant.price, selectedSellingPlan)
       : selectedVariant?.price;
 
-  const [selectedImage, setSelectedImage] = useState(
-    (images[0] ?? {}) as Record<string, unknown>,
+  const [selectedImage, setSelectedImage] = useState<GalleryImage>(() =>
+    firstGalleryImage(product.images?.nodes),
   );
+
+  // PDP→PDP (e.g. recommendations) reuses this component — reset the main image.
+  useEffect(() => {
+    setSelectedImage(firstGalleryImage(product.images?.nodes));
+  }, [product.id, product.handle]);
 
   return (
     <main className="bg-white pt-6 pb-16 lg:pt-8">
       <section className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-10">
           <ImageGallery
+            key={product.id ?? product.handle}
             images={images}
             selectedImage={selectedImage}
             onImageSelect={setSelectedImage}

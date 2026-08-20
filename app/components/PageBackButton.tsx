@@ -1,19 +1,14 @@
 import {useNavigate, useLocation} from 'react-router';
 import {cleanPath} from '~/lib/i18n';
 
-type HistoryIndexState = {
-  idx?: number;
-};
-
 /**
  * Sitewide back control for every non-home page.
- * Uses in-app history when available; otherwise falls back to home.
+ * Matches the browser back button: always go to the previous history entry.
  */
 export function PageBackButton() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const isHome = cleanPath(location.pathname) === '/';
-  const historyIdx = (location.state as HistoryIndexState | null)?.idx ?? 0;
+  const {pathname} = useLocation();
+  const isHome = cleanPath(pathname) === '/';
 
   if (isHome) return null;
 
@@ -23,13 +18,8 @@ export function PageBackButton() {
         <button
           type="button"
           className="inline-flex items-center gap-1.5 rounded-full px-2 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
-          onClick={() => {
-            if (historyIdx > 0) {
-              navigate(-1);
-              return;
-            }
-            navigate('/');
-          }}
+          aria-label="Go back"
+          onClick={() => navigate(-1)}
         >
           <span aria-hidden className="text-base leading-none">
             ←

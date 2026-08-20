@@ -94,6 +94,7 @@ export function ImageGallery({
           <div className="relative overflow-hidden rounded-xl border border-[var(--color-home-border)] bg-[var(--color-home-muted)] shadow-[0_18px_46px_rgba(24,21,18,0.07)]">
             <div className="flex aspect-[4/5] max-h-[min(360px,50vh)] w-full items-center justify-center lg:max-h-[min(420px,55vh)]">
               <Image
+                key={selectedImage?.url ?? 'main'}
                 data={selectedImage}
                 aspectRatio="4/5"
                 sizes="(min-width: 1024px) 420px, 100vw"
