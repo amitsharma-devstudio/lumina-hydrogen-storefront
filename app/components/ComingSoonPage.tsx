@@ -1,5 +1,5 @@
-
 import {Link} from '~/components/Link';
+import {btnPrimaryLinkClass, btnSecondaryClass} from '~/lib/theme';
 
 /**
  * Friendly placeholder shown when a footer/info destination (a Shopify page or
@@ -32,27 +32,18 @@ export function ComingSoonPage({
         <Link
           to="/collections/all"
           prefetch="intent"
-          className="rounded-full bg-neutral-900 px-6 py-2.5 text-xs font-medium uppercase tracking-[0.14em] text-white transition hover:bg-neutral-700"
+          className={`${btnPrimaryLinkClass} text-xs uppercase tracking-[0.14em]`}
         >
           Shop all products
         </Link>
         <Link
           to="/"
           prefetch="intent"
-          className="rounded-full border border-neutral-300 px-6 py-2.5 text-xs font-medium uppercase tracking-[0.14em] text-neutral-700 transition hover:border-neutral-900 hover:text-neutral-900"
+          className={`${btnSecondaryClass} no-underline text-xs uppercase tracking-[0.14em] hover:no-underline`}
         >
           Back to home
         </Link>
       </div>
     </div>
   );
-}
-
-/** Turn a URL handle (e.g. `privacy-policy`) into a readable title (`Privacy Policy`). */
-export function titleFromHandle(handle: string) {
-  return handle
-    .split('-')
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
 }

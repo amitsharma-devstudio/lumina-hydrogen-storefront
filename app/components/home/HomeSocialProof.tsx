@@ -45,6 +45,9 @@ export function HomeSocialProof() {
             voices, and a generous routine promise in view before checkout.
           </p>
         </header>
+        <p className="mb-4 text-sm text-neutral-500">
+          Sample content for demonstration purposes.
+        </p>
 
         <div className="flex flex-col gap-10 md:gap-14">
           <ul className="grid grid-cols-1 gap-0 overflow-hidden rounded-2xl border border-brand-100 bg-white sm:grid-cols-3">

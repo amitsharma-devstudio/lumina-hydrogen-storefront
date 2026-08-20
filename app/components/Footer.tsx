@@ -4,6 +4,32 @@ import {Await} from 'react-router';
 import type { FooterQuery, HeaderQuery } from "storefrontapi.generated";
 import {BESTSELLERS_COLLECTION_PATH} from '~/lib/storeCollections';
 import {FooterSkeleton} from '~/components/ui/Skeleton';
+import {Tooltip} from '~/components/ui/Tooltip';
+import {
+  InstagramIcon,
+  TikTokIcon,
+  YouTubeIcon,
+} from '~/components/icons/SocialIcons';
+
+const DEMO_SOCIAL_TOOLTIP = 'Demo link — not a live brand account';
+
+const FOOTER_SOCIAL_LINKS = [
+  {
+    href: 'https://www.instagram.com',
+    label: 'Instagram',
+    Icon: InstagramIcon,
+  },
+  {
+    href: 'https://www.tiktok.com',
+    label: 'TikTok',
+    Icon: TikTokIcon,
+  },
+  {
+    href: 'https://www.youtube.com',
+    label: 'YouTube',
+    Icon: YouTubeIcon,
+  },
+] as const;
 
 /**
  * Dummy fallback menu
@@ -51,13 +77,6 @@ const FALLBACK_FOOTER_MENU: NonNullable<FooterQuery["menu"]> = {
       id: "5",
       title: "About Us",
       url: "/pages/about",
-      items: [],
-    },
-    {
-      ...FALLBACK_MENU_ITEM_BASE,
-      id: "6",
-      title: "Careers",
-      url: "/pages/careers",
       items: [],
     },
     {
@@ -156,13 +175,13 @@ export function Footer({
                   />
                   <FooterSection
                     title="COMPANY"
-                    items={menu.items.slice(4, 8)}
+                    items={menu.items.slice(4, 7)}
                     publicStoreDomain={publicStoreDomain}
                     primaryDomainUrl={header.shop.primaryDomain?.url}
                   />
                   <FooterSection
                     title="SUPPORT"
-                    items={menu.items.slice(8, 12)}
+                    items={menu.items.slice(7, 11)}
                     publicStoreDomain={publicStoreDomain}
                     primaryDomainUrl={header.shop.primaryDomain?.url}
                   />
@@ -171,10 +190,24 @@ export function Footer({
                 <div className="lumina-footer__bottom flex flex-col items-center justify-between gap-4 border-t pt-8 text-sm md:flex-row">
                   <div>© {new Date().getFullYear()} Lumina. All rights reserved.</div>
 
-                  <div className="flex gap-6">
-                    <a href="https://www.instagram.com" className="lumina-footer__link transition-colors">IG</a>
-                    <a href="https://www.tiktok.com" className="lumina-footer__link transition-colors">TT</a>
-                    <a href="https://www.youtube.com" className="lumina-footer__link transition-colors">YT</a>
+                  <div className="flex items-center gap-5">
+                    {FOOTER_SOCIAL_LINKS.map(({href, label, Icon}) => (
+                      <Tooltip
+                        key={href}
+                        content={DEMO_SOCIAL_TOOLTIP}
+                        side="top"
+                      >
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={label}
+                          className="lumina-footer__social-link inline-flex"
+                        >
+                          <Icon className="h-6 w-6" />
+                        </a>
+                      </Tooltip>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -199,7 +232,7 @@ function FooterSection({
 }) {
   return (
     <div>
-      <p className="lumina-footer__heading mb-4 text-[10px] font-medium uppercase tracking-[0.2em]">
+      <p className="lumina-footer__heading text-[10px] font-medium uppercase tracking-[0.2em]">
         {title}
       </p>
 
