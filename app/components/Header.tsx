@@ -55,7 +55,9 @@ export function Header({isLoggedIn, cart}: HeaderProps) {
           </div>
 
           <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-self-end gap-1.5 sm:gap-2 md:col-start-3 md:gap-3">
-            <CountrySelector />
+            <div className="hidden" aria-hidden>
+              <CountrySelector />
+            </div>
             <AccountHeaderLink isLoggedIn={isLoggedIn} />
 
             <Suspense

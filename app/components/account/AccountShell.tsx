@@ -54,7 +54,7 @@ export function AccountShell({
                 variant="nav"
                 key={to}
                 to={to}
-                prefetch="intent"
+                prefetch="render"
                 className={({isActive}) =>
                   [
                     'account-nav-pill rounded-full px-4 py-2 text-[11px] font-medium uppercase tracking-[0.14em] no-underline transition',

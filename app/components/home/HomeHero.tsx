@@ -151,18 +151,23 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                       : 'pointer-events-none z-0 opacity-0'
                   }`}
                 >
-                  {product.image ? (
+                  {product.image && index === activeIndex ? (
                     <Image
                       data={product.image}
                       alt={product.image.altText ?? product.title}
                       className="h-full min-h-[430px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:min-h-[520px] md:min-h-full"
-                      loading={index === 0 ? 'eager' : 'lazy'}
-                      fetchPriority={index === 0 ? 'high' : 'auto'}
-                      width={900}
-                      height={1100}
-                      sizes="(min-width: 768px) 50vw, 100vw"
+                      loading="eager"
+                      fetchPriority="high"
+                      width={700}
+                      height={860}
+                      sizes="(min-width: 1280px) 640px, (min-width: 768px) 48vw, 92vw"
                     />
-                  ) : null}
+                  ) : (
+                    <div
+                      className="h-full min-h-[430px] w-full rounded-2xl bg-brand-50/40 sm:min-h-[520px] md:min-h-full"
+                      aria-hidden
+                    />
+                  )}
                 </Link>
               ))
             ) : hero.image?.url ? (
@@ -172,9 +177,9 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                 className="relative h-[430px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:h-[520px] md:h-full"
                 loading="eager"
                 fetchPriority="high"
-                width={900}
-                height={1100}
-                sizes="(min-width: 768px) 50vw, 100vw"
+                width={700}
+                height={860}
+                sizes="(min-width: 1280px) 640px, (min-width: 768px) 48vw, 92vw"
               />
             ) : null}
 
