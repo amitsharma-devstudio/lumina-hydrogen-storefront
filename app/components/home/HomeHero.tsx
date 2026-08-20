@@ -72,8 +72,8 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
   const priceText = activeProduct?.priceText ?? hero.startingFromValue ?? null;
 
   return (
-    <section className={`relative overflow-hidden ${HOME_SECTION_MUTED_FLUSH}`}>
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-8 px-6 py-10 md:grid-cols-[0.92fr_1.08fr] md:gap-12 md:py-14 lg:min-h-[680px]">
+    <section className={`relative min-h-[100svh] overflow-hidden md:min-h-0 ${HOME_SECTION_MUTED_FLUSH}`}>
+      <div className="relative mx-auto grid min-h-[100svh] max-w-7xl grid-cols-1 items-stretch gap-8 px-6 py-10 md:min-h-0 md:grid-cols-[0.92fr_1.08fr] md:gap-12 md:py-14 lg:min-h-[680px]">
         {/* Text first on mobile so LCP can be the headline instead of a large image. */}
         <div className="flex flex-col justify-center gap-8 py-4">
           <div className="flex flex-wrap items-center gap-3 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-neutral-500">
