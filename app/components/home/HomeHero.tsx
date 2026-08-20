@@ -71,16 +71,6 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
   const activeProduct = hasProducts ? products[activeIndex] : null;
   const priceText = activeProduct?.priceText ?? hero.startingFromValue ?? null;
 
-  // Mobile: lazy + small transfer so LCP can settle on the headline text.
-  // Desktop: keep eager high-priority hero imagery.
-  const imageLoading = isDesktop ? 'eager' : 'lazy';
-  const imagePriority = isDesktop ? 'high' : 'low';
-  const imageWidth = isDesktop ? 700 : 480;
-  const imageHeight = isDesktop ? 860 : 600;
-  const imageSizes = isDesktop
-    ? '(min-width: 1280px) 640px, 48vw'
-    : '100vw';
-
   return (
     <section className={`relative overflow-hidden ${HOME_SECTION_MUTED_FLUSH}`}>
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-8 px-6 py-10 md:grid-cols-[0.92fr_1.08fr] md:gap-12 md:py-14 lg:min-h-[680px]">
@@ -154,7 +144,8 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
           </dl>
         </div>
 
-        <div className="flex flex-col">
+        {isDesktop ? (
+          <div className="flex flex-col">
           <div
             className="relative min-h-[280px] flex-1 sm:min-h-[360px] md:min-h-full"
             onMouseEnter={() => setPaused(true)}
@@ -163,7 +154,7 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
             aria-label={hasProducts ? 'Featured products' : undefined}
           >
             <div
-              className="absolute -inset-4 hidden rounded-[2rem] bg-white/40 md:block"
+              className="absolute -inset-4 rounded-[2rem] bg-white/40"
               aria-hidden
             />
 
@@ -186,16 +177,16 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
                     <Image
                       data={product.image}
                       alt={product.image.altText ?? product.title}
-                      className="h-full min-h-[280px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:min-h-[360px] md:min-h-full"
-                      loading={imageLoading}
-                      fetchPriority={imagePriority}
-                      width={imageWidth}
-                      height={imageHeight}
-                      sizes={imageSizes}
+                      className="h-full min-h-[280px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 md:min-h-full"
+                      loading="eager"
+                      fetchPriority="high"
+                      width={700}
+                      height={860}
+                      sizes="(min-width: 1280px) 640px, 48vw"
                     />
                   ) : (
                     <div
-                      className="h-full min-h-[280px] w-full rounded-2xl bg-brand-50/40 sm:min-h-[360px] md:min-h-full"
+                      className="h-full min-h-[280px] w-full rounded-2xl bg-brand-50/40 md:min-h-full"
                       aria-hidden
                     />
                   )}
@@ -205,14 +196,19 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
               <Image
                 data={hero.image}
                 alt={hero.image?.altText ?? 'Lumina skincare'}
-                className="relative h-[280px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 sm:h-[360px] md:h-full"
-                loading={imageLoading}
-                fetchPriority={imagePriority}
-                width={imageWidth}
-                height={imageHeight}
-                sizes={imageSizes}
+                className="relative h-[280px] w-full rounded-2xl object-cover shadow-[0_28px_80px_rgba(24,21,18,0.12)] ring-1 ring-black/5 md:h-full"
+                loading="eager"
+                fetchPriority="high"
+                width={700}
+                height={860}
+                sizes="(min-width: 1280px) 640px, 48vw"
               />
-            ) : null}
+            ) : (
+              <div
+                className="relative h-[280px] w-full rounded-2xl bg-brand-50/40 md:h-full"
+                aria-hidden
+              />
+            )}
 
             {priceText ? (
               <div className="absolute bottom-4 left-4 z-20 max-w-[220px] rounded-xl border border-[var(--color-home-border)] bg-white/95 p-5 shadow-[0_18px_48px_rgba(24,21,18,0.12)] backdrop-blur-sm md:bottom-8 md:left-8">
@@ -229,7 +225,7 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
               </div>
             ) : null}
 
-            <div className="absolute right-4 top-4 z-20 hidden max-w-[230px] rounded-xl border border-white/70 bg-white/82 p-4 text-sm text-neutral-700 shadow-[0_16px_46px_rgba(24,21,18,0.10)] backdrop-blur md:block">
+            <div className="absolute right-4 top-4 z-20 max-w-[230px] rounded-xl border border-white/70 bg-white/82 p-4 text-sm text-neutral-700 shadow-[0_16px_46px_rgba(24,21,18,0.10)] backdrop-blur">
               <p className="text-[10px] uppercase tracking-[0.14em] text-primary">
                 Routine intelligence
               </p>
@@ -268,6 +264,7 @@ export function HomeHero({hero}: {hero: NonNullable<HomeHeroData>}) {
             </div>
           ) : null}
         </div>
+        ) : null}
       </div>
     </section>
   );
