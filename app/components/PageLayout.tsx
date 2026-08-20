@@ -10,6 +10,7 @@ import {Footer} from '~/components/Footer';
 import {Header} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
 import {CartAsideSkeleton} from '~/components/ui/Skeleton';
+import {PageBackButton} from '~/components/PageBackButton';
 import {SkipToContent} from '~/components/SkipToContent';
 import {WishlistProvider} from '~/components/wishlist/WishlistProvider';
 
@@ -43,6 +44,7 @@ export function PageLayout({
             publicStoreDomain={publicStoreDomain}
           />
         )}
+        <PageBackButton />
         <main id="main-content" tabIndex={-1}>
           {children}
         </main>

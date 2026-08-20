@@ -1,4 +1,5 @@
 import {Image} from '@shopify/hydrogen';
+import type {ReactNode} from 'react';
 
 type GalleryImage = {url?: string; altText?: string} & Record<string, unknown>;
 
@@ -45,18 +46,22 @@ export function ImageGallery({
   images,
   selectedImage,
   onImageSelect,
+  overlay = null,
 }: {
   images: GalleryImage[];
   selectedImage: GalleryImage;
   onImageSelect: (image: GalleryImage) => void;
+  /** Optional control overlaid on the main image (e.g. wishlist). */
+  overlay?: ReactNode;
 }) {
   if (!images.length) {
     return (
       <div
-        className="flex aspect-[4/5] max-h-[min(360px,50vh)] w-full items-center justify-center rounded-xl bg-[var(--color-home-muted)] text-sm text-neutral-500"
+        className="relative flex aspect-[4/5] max-h-[min(360px,50vh)] w-full items-center justify-center rounded-xl bg-[var(--color-home-muted)] text-sm text-neutral-500"
         aria-hidden="true"
       >
         No images
+        {overlay}
       </div>
     );
   }
@@ -97,6 +102,7 @@ export function ImageGallery({
                 className="h-full w-full object-contain"
               />
             </div>
+            {overlay}
           </div>
         </div>
       </div>

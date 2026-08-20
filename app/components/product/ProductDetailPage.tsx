@@ -88,6 +88,27 @@ export function ProductDetailPage({
             images={images}
             selectedImage={selectedImage}
             onImageSelect={setSelectedImage}
+            overlay={
+              product.id ? (
+                <WishlistButton
+                  productId={product.id}
+                  productHandle={product.handle}
+                  productTitle={product.title}
+                  imageUrl={
+                    (product.featuredImage?.url as string | undefined) ??
+                    (product.images?.nodes?.[0]?.url as string | undefined)
+                  }
+                  imageAlt={
+                    (product.featuredImage?.altText as string | undefined) ??
+                    (product.images?.nodes?.[0]?.altText as
+                      | string
+                      | undefined)
+                  }
+                  size="md"
+                  className="absolute right-3 top-3 z-20"
+                />
+              ) : null
+            }
           />
 
           <div className="flex min-w-0 flex-col gap-5 pl-2 sm:pl-4 lg:pl-8 lg:pr-2">
@@ -126,36 +147,13 @@ export function ProductDetailPage({
                 selectedVariant={selectedVariant ?? null}
               />
 
-              <div className="flex items-stretch gap-3 px-0.5">
-                <div className="min-w-0 flex-1">
-                  <ProductCartActions
-                    productTitle={product.title}
-                    productHandle={product.handle}
-                    selectedVariant={selectedVariant}
-                    selectedSellingPlanId={selectedSellingPlan?.id ?? null}
-                    canAddToCart={canAddToCart}
-                  />
-                </div>
-                {product.id ? (
-                  <WishlistButton
-                    productId={product.id}
-                    productHandle={product.handle}
-                    productTitle={product.title}
-                    imageUrl={
-                      (product.featuredImage?.url as string | undefined) ??
-                      (product.images?.nodes?.[0]?.url as string | undefined)
-                    }
-                    imageAlt={
-                      (product.featuredImage?.altText as string | undefined) ??
-                      (product.images?.nodes?.[0]?.altText as
-                        | string
-                        | undefined)
-                    }
-                    size="md"
-                    className="shrink-0 self-start"
-                  />
-                ) : null}
-              </div>
+              <ProductCartActions
+                productTitle={product.title}
+                productHandle={product.handle}
+                selectedVariant={selectedVariant}
+                selectedSellingPlanId={selectedSellingPlan?.id ?? null}
+                canAddToCart={canAddToCart}
+              />
 
               <ProductBenefitsList benefits={skincare.benefits} />
 

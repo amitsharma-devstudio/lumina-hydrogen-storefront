@@ -1,40 +1,25 @@
-import {useEffect} from 'react';
-import {useLocation, useNavigation} from 'react-router';
-
-type HistoryIndexState = {
-  idx?: number;
-};
+import {useEffect, useRef} from 'react';
+import {useLocation, useNavigationType} from 'react-router';
 
 /**
- * Scroll to top as soon as a forward navigation to a new path starts.
- * React Router's <ScrollRestoration> waits until loaders finish, which leaves
- * the viewport mid-page until the next screen is ready.
- *
- * Back/forward (history idx going down) is left to ScrollRestoration.
+ * Scroll to top after a forward navigation commits (new page is on screen).
+ * Does not scroll during "loading" so the current page does not jump first.
+ * Back/forward (POP) is left to <ScrollRestoration>.
  * Same-path search/hash updates (filters, sort) are ignored.
  */
 export function ScrollToTopOnNavigate() {
   const location = useLocation();
-  const navigation = useNavigation();
+  const navigationType = useNavigationType();
+  const prevPathRef = useRef(location.pathname);
 
   useEffect(() => {
-    if (navigation.state !== 'loading' || !navigation.location) return;
+    if (location.pathname === prevPathRef.current) return;
+    prevPathRef.current = location.pathname;
 
-    const nextPath = navigation.location.pathname;
-    if (nextPath === location.pathname) return;
-
-    const currentIdx = (location.state as HistoryIndexState | null)?.idx;
-    const nextIdx = (navigation.location.state as HistoryIndexState | null)?.idx;
-    if (
-      typeof currentIdx === 'number' &&
-      typeof nextIdx === 'number' &&
-      nextIdx < currentIdx
-    ) {
-      return;
-    }
+    if (navigationType === 'POP') return;
 
     window.scrollTo({top: 0, left: 0, behavior: 'auto'});
-  }, [navigation.state, navigation.location, location.pathname, location.state]);
+  }, [location.pathname, navigationType]);
 
   return null;
 }

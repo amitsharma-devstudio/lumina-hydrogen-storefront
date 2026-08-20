@@ -1,7 +1,7 @@
-
 import {Link} from '~/components/Link';
 import {Image, Money} from '@shopify/hydrogen';
 import {AddToCartButton} from '~/components/AddToCartButton';
+import {HomeSectionCarousel} from '~/components/home/HomeSectionCarousel';
 import type {CartUpsellItem, CartUpsells} from '~/lib/loadCartUpsells';
 import {btnSecondaryClass} from '~/lib/theme';
 
@@ -26,6 +26,53 @@ function UpsellEyebrow({item}: {item: CartUpsellItem}) {
     <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-primary">
       Also in this routine
     </p>
+  );
+}
+
+function UpsellCard({item}: {item: CartUpsellItem}) {
+  return (
+    <div className="flex gap-4 rounded-xl border border-neutral-200/90 bg-white p-5">
+      <Link
+        to={`/products/${item.handle}`}
+        prefetch="intent"
+        className="h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-neutral-100"
+      >
+        {item.featuredImage?.url ? (
+          <Image
+            data={item.featuredImage}
+            aspectRatio="1/1"
+            sizes="80px"
+            className="h-full w-full object-cover"
+            alt={item.title}
+          />
+        ) : null}
+      </Link>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <UpsellEyebrow item={item} />
+        <Link
+          to={`/products/${item.handle}`}
+          prefetch="intent"
+          className="mt-1.5 line-clamp-2 text-sm font-medium text-neutral-900 hover:text-primary"
+        >
+          {item.title}
+        </Link>
+        {item.priceRange?.minVariantPrice ? (
+          <p className="mt-1.5 text-sm tabular-nums text-neutral-600">
+            <Money data={item.priceRange.minVariantPrice} />
+          </p>
+        ) : null}
+
+        <div className="mt-auto pt-4">
+          <AddToCartButton
+            lines={[{merchandiseId: item.variantId, quantity: 1}]}
+            className={`${btnSecondaryClass} !h-9 min-h-9 w-full !px-4 !py-0 text-xs`}
+          >
+            Add to cart
+          </AddToCartButton>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -56,55 +103,13 @@ export function CartUpsellsSection({upsells}: {upsells: CartUpsells}) {
         ) : null}
       </header>
 
-      <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        {upsells.items.map((item) => (
-          <li
-            key={item.id}
-            className="flex gap-4 rounded-xl border border-neutral-200/90 bg-white p-5"
-          >
-            <Link
-              to={`/products/${item.handle}`}
-              prefetch="intent"
-              className="h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-neutral-100"
-            >
-              {item.featuredImage?.url ? (
-                <Image
-                  data={item.featuredImage}
-                  aspectRatio="1/1"
-                  sizes="80px"
-                  className="h-full w-full object-cover"
-                  alt={item.title}
-                />
-              ) : null}
-            </Link>
-
-            <div className="flex min-w-0 flex-1 flex-col">
-              <UpsellEyebrow item={item} />
-              <Link
-                to={`/products/${item.handle}`}
-                prefetch="intent"
-                className="mt-1.5 line-clamp-2 text-sm font-medium text-neutral-900 hover:text-primary"
-              >
-                {item.title}
-              </Link>
-              {item.priceRange?.minVariantPrice ? (
-                <p className="mt-1.5 text-sm tabular-nums text-neutral-600">
-                  <Money data={item.priceRange.minVariantPrice} />
-                </p>
-              ) : null}
-
-              <div className="mt-auto pt-4">
-                <AddToCartButton
-                  lines={[{merchandiseId: item.variantId, quantity: 1}]}
-                  className={`${btnSecondaryClass} !h-9 min-h-9 w-full !px-4 !py-0 text-xs`}
-                >
-                  Add to cart
-                </AddToCartButton>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <HomeSectionCarousel
+        items={upsells.items}
+        getKey={(item) => item.id}
+        ariaLabel="Cart recommendations"
+        desktopClassName="grid-cols-1 gap-5 sm:grid-cols-2"
+        renderItem={(item) => <UpsellCard item={item} />}
+      />
     </section>
   );
 }
