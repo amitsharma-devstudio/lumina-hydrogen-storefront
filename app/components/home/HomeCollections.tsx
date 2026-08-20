@@ -1,6 +1,7 @@
 import {Suspense} from 'react';
 import {Await} from 'react-router';
 import {CollectionCard} from '~/components/collection/CollectionCard';
+import {HomeSectionCarousel} from '~/components/home/HomeSectionCarousel';
 import {
   HOME_SECTION_HEADER,
   HOME_SECTION_EYEBROW,
@@ -35,11 +36,18 @@ function HomeCollectionsResolved({
           </p>
         </header>
 
-        <div className={PRODUCT_GRID_CLASSNAME}>
-          {collections.map((collection) => (
-            <CollectionCard key={collection.id} collection={collection} />
-          ))}
-        </div>
+        <HomeSectionCarousel
+          items={collections}
+          getKey={(collection) => collection.id}
+          ariaLabel="Shop collections"
+          desktopClassName={PRODUCT_GRID_CLASSNAME}
+          renderItem={(collection, index) => (
+            <CollectionCard
+              collection={collection}
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
+          )}
+        />
       </div>
     </section>
   );

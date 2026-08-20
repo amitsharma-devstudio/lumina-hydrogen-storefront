@@ -41,6 +41,7 @@ export function HomeBestsellers({
             {(resolved) => (
               <ProductsContent
                 products={resolved}
+                ariaLabel="Bestsellers"
                 emptyMessage="No bestsellers yet. Add products to the “bestsellers” collection in Shopify Admin."
               />
             )}

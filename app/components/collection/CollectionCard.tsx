@@ -25,7 +25,7 @@ export function CollectionCard({collection, loading}: CollectionCardProps) {
       <Link
         to={collectionUrl}
         prefetch="intent"
-        className="relative block aspect-[4/5] max-h-[320px] w-full overflow-hidden bg-white sm:max-h-[340px]"
+        className="relative flex aspect-[4/5] max-h-[320px] w-full items-center justify-center overflow-hidden bg-white sm:max-h-[340px]"
         aria-label={collection.title}
       >
         {image?.url ? (

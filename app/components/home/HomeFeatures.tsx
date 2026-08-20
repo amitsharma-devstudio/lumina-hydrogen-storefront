@@ -1,4 +1,5 @@
 import {HOME_SECTION_MUTED} from '~/components/home/homeSectionStyles';
+import {HomeSectionCarousel} from '~/components/home/HomeSectionCarousel';
 
 const FEATURES = [
   {
@@ -74,24 +75,50 @@ const FEATURES = [
   },
 ] as const;
 
+function FeatureCard({
+  feature,
+  centered = false,
+}: {
+  feature: (typeof FEATURES)[number];
+  centered?: boolean;
+}) {
+  return (
+    <div
+      className={`flex flex-col gap-4 ${centered ? 'items-center px-2 text-center' : ''}`}
+    >
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-primary">
+        {feature.icon}
+      </div>
+      <h3 className="text-lg font-normal text-black">{feature.title}</h3>
+      <p className="max-w-sm text-sm leading-relaxed text-neutral-500">
+        {feature.description}
+      </p>
+    </div>
+  );
+}
+
 export function HomeFeatures() {
   return (
     <section className={HOME_SECTION_MUTED}>
       <div className="mx-auto max-w-7xl px-6">
-        <div className="grid grid-cols-1 gap-8 border-y border-neutral-200 py-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
-          {FEATURES.map((feature) => (
-            <div key={feature.title} className="flex flex-col gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-primary">
-                {feature.icon}
-              </div>
-              <h3 className="text-lg font-normal text-black">
-                {feature.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-neutral-500">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+        <div className="border-y border-neutral-200 py-10">
+          <div className="md:hidden">
+            <HomeSectionCarousel
+              items={[...FEATURES]}
+              getKey={(feature) => feature.title}
+              ariaLabel="Brand features"
+              mobileOnly
+              renderItem={(feature) => (
+                <FeatureCard feature={feature} centered />
+              )}
+            />
+          </div>
+
+          <div className="hidden gap-8 sm:grid-cols-2 md:grid lg:grid-cols-4 lg:gap-12">
+            {FEATURES.map((feature) => (
+              <FeatureCard key={feature.title} feature={feature} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

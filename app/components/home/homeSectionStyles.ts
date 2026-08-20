@@ -20,15 +20,16 @@ export const HOME_BTN_PRIMARY = 'home-btn-primary';
 /** Secondary outline CTA */
 export const HOME_BTN_SECONDARY = 'home-btn-secondary';
 
-/** Shared homepage section header grid */
+/** Shared homepage section header grid — tighter on mobile */
 export const HOME_SECTION_HEADER =
-  'mb-14 grid gap-6 md:grid-cols-[1fr_0.75fr] md:items-end';
+  'mb-8 grid gap-3 md:mb-14 md:gap-6 md:grid-cols-[1fr_0.75fr] md:items-end';
 
 export const HOME_SECTION_EYEBROW =
   'mb-2 text-xs uppercase tracking-[0.15em] text-primary';
 
 export const HOME_SECTION_TITLE =
-  'max-w-2xl text-4xl font-light text-neutral-950 md:text-5xl';
+  'max-w-2xl text-3xl font-light text-neutral-950 md:text-5xl';
 
+/** Long ledes stay on tablet/desktop; mobile keeps title-focused headers */
 export const HOME_SECTION_LEDE =
-  'max-w-md text-sm leading-relaxed text-neutral-600 md:justify-self-end';
+  'hidden max-w-md text-sm leading-relaxed text-neutral-600 md:block md:justify-self-end';
